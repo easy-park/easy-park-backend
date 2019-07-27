@@ -66,4 +66,19 @@ public class ParkingOrderRepositoryTest {
         assertThat(returnParkingLotList.get(0).getId().equals("121"));
     }
 
+    @Test
+    public void should_update_parkingOrder_status_when_invoke_save_given_parkingOrder(){
+        ParkingBoy parkingBoy = new ParkingBoy("124","123","123","123","sdfsf",1,"12345",new ArrayList<>());
+        parkingBoyRepository.save(parkingBoy);
+        ParkingLot parkingLot = new ParkingLot("224","456",5,5);
+        parkingLotRepository.save(parkingLot);
+        ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,1,parkingBoy,parkingLot);
+
+        ParkingOrder returnParkingOrder = parkingOrderRepository.save(parkingOrder);
+        returnParkingOrder.setStatus(2);
+        ParkingOrder resultParkingOrder = parkingOrderRepository.save(returnParkingOrder);
+
+        assertThat(resultParkingOrder.getStatus().equals(2));
+    }
+
 }

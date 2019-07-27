@@ -24,9 +24,8 @@ import java.util.Date;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -54,6 +53,17 @@ public class ParkingOrderControllerTest {
         ResultActions result = mockMvc.perform(get("/parkingOrders").param("status", "6"));
 
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_return_parkingOrder_when_put_to_parking_orders_given_status() throws Exception {
+        ParkingOrder parkingOrder =  new ParkingOrder("123","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,6,new ParkingBoy(),new ParkingLot());
+        when(parkingOrderService.updateParkingOrderStatus(anyString(),anyInt())).thenReturn(parkingOrder);
+
+        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}","sdfasf").param("status","2"));
+
+        result.andExpect(status().isOk());
+
     }
 
 
