@@ -30,4 +30,15 @@ public class ParkingBoyRepositoryTest {
         Assertions.assertEquals(parkingBoy.getId(), boy.getId());
     }
 
+    @Test
+    void should_return_list_of_case_when_findByCaseName_given() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingBoy parkingBoy = new ParkingBoy("1234567","username","199729","stefan","13192269125",1,"953181215@qq.com",parkingLots);
+        parkingBoyRepository.save(parkingBoy);
+
+        ParkingBoy boy = parkingBoyRepository.findById("1234567").orElse(null);
+
+        Assertions.assertEquals(parkingBoy.getId(), boy.getId());
+    }
+
 }
