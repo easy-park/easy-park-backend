@@ -1,16 +1,15 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
 
-import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
+import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+@CrossOrigin
 @RestController
 public class ParkingOrderController {
 
@@ -18,7 +17,7 @@ public class ParkingOrderController {
     private ParkingOrderService parkingOrderService;
 
     @GetMapping(path = "/parkingOrders",params = "status")
-    public List<ParkingOrder> findParkingOrderByStatus(@RequestParam int status){
-        return parkingOrderService.findParkingOrderByStatus(status);
+    public ResponseVO findParkingOrderByStatus(@RequestParam int status){
+        return ResponseVO.success(parkingOrderService.findParkingOrderByStatus(status));
     }
 }
