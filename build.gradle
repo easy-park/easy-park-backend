@@ -21,7 +21,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'mysql:mysql-connector-java'
-	testCompile "com.h2database:h2:1.4.199"
+	runtime "com.h2database:h2:1.4.199"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation('org.junit.jupiter:junit-jupiter-api:5.0.0')
 	testCompile('org.junit.jupiter:junit-jupiter-params:5.0.0')
