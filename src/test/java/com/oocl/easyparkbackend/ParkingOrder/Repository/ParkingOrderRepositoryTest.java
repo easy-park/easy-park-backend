@@ -5,7 +5,6 @@ import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class ParkingOrderRepositoryTest {
     private ParkingOrderRepository parkingOrderRepository;
 
     @Test
-    public void should_return_historical_list_when_invoke_findAllByStatus(){
+    public void should_return_parkingOrder_list_when_invoke_findAllByStatus_given_status(){
         ParkingBoy parkingBoy = new ParkingBoy("123","123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
         ParkingLot parkingLot = new ParkingLot("123","456",5,5);
@@ -38,9 +37,33 @@ public class ParkingOrderRepositoryTest {
         ParkingOrder parkingOrder = new ParkingOrder("123","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,6,parkingBoy,parkingLot);
 
         parkingOrderRepository.save(parkingOrder);
-        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByStatus(6);
+        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy,6);
 
         assertThat(parkingOrderList.get(0).getCarNumber().equals("eree"));
+        assertThat(parkingOrderList.get(0).getParkingLot().getAvailable().equals(5));
 
     }
+
+    @Test
+    public void should_return_parkingLot_list_when_find_parkingBoy_by_id(){
+        ParkingLot parkingLot1 = new ParkingLot("124","456",5,5);
+        ParkingLot parkingLot2 = new ParkingLot("122","476",5,5);
+        ParkingLot parkingLot3 = new ParkingLot("121","466",5,5);
+        List<ParkingLot> parkingLotList = new ArrayList<>();
+        parkingLotList.add(parkingLot1);
+        parkingLotList.add(parkingLot2);
+        parkingLotList.add(parkingLot3);
+        parkingLotRepository.save(parkingLot1);
+        parkingLotRepository.save(parkingLot2);
+        parkingLotRepository.save(parkingLot3);
+        ParkingBoy parkingBoy = new ParkingBoy("122","123","123","123","sdfsf",1,"12345",parkingLotList);
+        parkingBoyRepository.save(parkingBoy);
+
+        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById("122").get().getParkingLotList();
+
+        assertThat(returnParkingLotList.get(0).getId().equals("124"));
+        assertThat(returnParkingLotList.get(0).getId().equals("122"));
+        assertThat(returnParkingLotList.get(0).getId().equals("121"));
+    }
+
 }
