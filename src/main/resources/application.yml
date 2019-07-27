@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  profiles:
+    active: local
+
+server:
+  port: 8888
