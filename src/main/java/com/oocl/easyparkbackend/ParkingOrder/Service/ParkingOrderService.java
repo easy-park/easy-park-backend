@@ -32,4 +32,10 @@ public class ParkingOrderService {
     private boolean parkingLotListIsFull(List<ParkingLot> parkingLotList) {
         return parkingLotList.stream().map(ParkingLot::getAvailable).reduce(0,(a,b) -> a + b)==0;
     }
+
+    public ParkingOrder updateParkingOrderStatus(String orderId,int status) {
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).get();
+        parkingOrder.setStatus(status);
+        return parkingOrderRepository.save(parkingOrder);
+    }
 }
