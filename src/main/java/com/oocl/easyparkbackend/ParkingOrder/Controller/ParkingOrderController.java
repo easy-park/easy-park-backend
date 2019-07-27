@@ -18,6 +18,6 @@ public class ParkingOrderController {
 
     @GetMapping(path = "/parkingOrders",params = "status")
     public ResponseVO findParkingOrderByStatus(@RequestParam int status){
-        return ResponseVO.success(parkingOrderService.findParkingOrderByStatus(status));
+        return ResponseVO.success(parkingOrderService.findParkingOrderByStatus("123",status));
     }
 }
