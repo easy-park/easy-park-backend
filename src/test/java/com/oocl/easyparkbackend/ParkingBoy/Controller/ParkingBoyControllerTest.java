@@ -41,14 +41,12 @@ public class ParkingBoyControllerTest {
         parkingBoy.setEmail("1052817017@qq.com");
         parkingBoy.setPassword("123");
 
-        when(parkingBoyService.login(any())).thenReturn(parkingBoy);
+        when(parkingBoyService.login(any())).thenReturn(anyString());
         ResultActions resultActions = mvc.perform(post("/parkingBoys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(parkingBoy)));
 
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.email").value(parkingBoy.getEmail()))
-                .andExpect(jsonPath("$.data.password").value(parkingBoy.getPassword()));
+        resultActions.andExpect(status().isOk());
         verify(parkingBoyService).login(any());
 
     }
@@ -59,13 +57,12 @@ public class ParkingBoyControllerTest {
         parkingBoy.setUsername("Sean");
         parkingBoy.setPassword("123");
 
-        when(parkingBoyService.login(any())).thenReturn(parkingBoy);
+        when(parkingBoyService.login(any())).thenReturn(anyString());
         ResultActions resultActions = mvc.perform(post("/parkingBoys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(parkingBoy)));
 
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.username").value(parkingBoy.getUsername()));
+        resultActions.andExpect(status().isOk());
         verify(parkingBoyService).login(any());
     }
 
@@ -75,13 +72,12 @@ public class ParkingBoyControllerTest {
         parkingBoy.setPhoneNumber("15574957517");
         parkingBoy.setPassword("123");
 
-        when(parkingBoyService.login(any())).thenReturn(parkingBoy);
+        when(parkingBoyService.login(any())).thenReturn(anyString());
         ResultActions resultActions = mvc.perform(post("/parkingBoys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(parkingBoy)));
 
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.phoneNumber").value(parkingBoy.getPhoneNumber()));
+        resultActions.andExpect(status().isOk());
         verify(parkingBoyService).login(any());
     }
 
