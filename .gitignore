@@ -30,3 +30,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+## H2 DataBase ##
+.h2
