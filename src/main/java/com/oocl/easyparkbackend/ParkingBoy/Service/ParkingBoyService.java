@@ -15,7 +15,16 @@ public class ParkingBoyService {
     private ParkingBoyRepository repository;
 
     public ParkingBoy login(ParkingBoy parkingBoy) {
-        Optional<ParkingBoy> optionalParkingBoy = repository.getByEmailAndPassword(parkingBoy.getEmail(), parkingBoy.getPassword());
+        Optional<ParkingBoy> optionalParkingBoy = Optional.empty();
+        if (parkingBoy.getEmail() != null && parkingBoy.getPassword() != null) {
+            optionalParkingBoy = repository.getByEmailAndPassword(parkingBoy.getEmail(), parkingBoy.getPassword());
+        }
+        if (parkingBoy.getUsername() != null && parkingBoy.getPassword() != null) {
+            optionalParkingBoy = repository.getByUsernameAndPassword(parkingBoy.getUsername(), parkingBoy.getPassword());
+        }
+        if (parkingBoy.getPhoneNumber() != null && parkingBoy.getPassword() != null) {
+            optionalParkingBoy = repository.getByPhoneNumberAndPassword(parkingBoy.getPhoneNumber(), parkingBoy.getPassword());
+        }
         if (optionalParkingBoy.isPresent()) {
             return optionalParkingBoy.get();
         }

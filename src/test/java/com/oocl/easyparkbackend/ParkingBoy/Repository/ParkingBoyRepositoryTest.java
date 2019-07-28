@@ -22,7 +22,7 @@ public class ParkingBoyRepositoryTest {
     @Test
     void should_return_list_of_case_when_findByCaseName_given_caseName() {
         List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingBoy parkingBoy = new ParkingBoy("1234567","username","199729","stefan","13192269125",1,"953181215@qq.com",parkingLots);
+        ParkingBoy parkingBoy = new ParkingBoy("1234567", "username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLots);
         parkingBoyRepository.save(parkingBoy);
 
         ParkingBoy boy = parkingBoyRepository.findById("1234567").orElse(null);
@@ -33,10 +33,43 @@ public class ParkingBoyRepositoryTest {
     @Test
     void should_return_list_of_case_when_findByCaseName_given() {
         List<ParkingLot> parkingLots = new ArrayList<>();
-        ParkingBoy parkingBoy = new ParkingBoy("1234567","username","199729","stefan","13192269125",1,"953181215@qq.com",parkingLots);
+        ParkingBoy parkingBoy = new ParkingBoy("1234567", "username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLots);
         parkingBoyRepository.save(parkingBoy);
 
         ParkingBoy boy = parkingBoyRepository.findById("1234567").orElse(null);
+
+        Assertions.assertEquals(parkingBoy.getId(), boy.getId());
+    }
+
+    @Test
+    void should_return_parkingBoy_when_getByEmailAndPassword_given_email_and_password() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingBoy parkingBoy = new ParkingBoy("1234567", "username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLots);
+        parkingBoyRepository.save(parkingBoy);
+
+        ParkingBoy boy = parkingBoyRepository.getByEmailAndPassword("953181215@qq.com", "199729").get();
+
+        Assertions.assertEquals(parkingBoy.getId(), boy.getId());
+    }
+
+    @Test
+    void should_return_parkingBoy_when_getByUsernameAndPassword_given_username_and_password() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingBoy parkingBoy = new ParkingBoy("1234567", "username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLots);
+        parkingBoyRepository.save(parkingBoy);
+
+        ParkingBoy boy = parkingBoyRepository.getByUsernameAndPassword("username", "199729").get();
+
+        Assertions.assertEquals(parkingBoy.getId(), boy.getId());
+    }
+
+    @Test
+    void should_return_parkingBoy_when_getByPhoneNumberAndPassword_given_phoneNumber_and_password() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingBoy parkingBoy = new ParkingBoy("1234567", "username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLots);
+        parkingBoyRepository.save(parkingBoy);
+
+        ParkingBoy boy = parkingBoyRepository.getByPhoneNumberAndPassword("13192269125", "199729").get();
 
         Assertions.assertEquals(parkingBoy.getId(), boy.getId());
     }

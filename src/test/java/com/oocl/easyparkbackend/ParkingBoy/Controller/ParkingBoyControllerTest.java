@@ -46,4 +46,36 @@ public class ParkingBoyControllerTest {
         verify(parkingBoyService).login(any());
 
     }
+
+    @Test
+    public void should_return_parkingBoy_when_invoke_login_given_userName_and_password() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy();
+        parkingBoy.setUsername("Sean");
+        parkingBoy.setPassword("123");
+
+        when(parkingBoyService.login(any())).thenReturn(parkingBoy);
+        ResultActions resultActions = mvc.perform(post("/parkingBoys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(parkingBoy)));
+
+        resultActions.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.username").value(parkingBoy.getUsername()));
+        verify(parkingBoyService).login(any());
+    }
+
+    @Test
+    public void should_return_parkingBoy_when_invoke_login_given_phoneNumber_and_password() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy();
+        parkingBoy.setPhoneNumber("15574957517");
+        parkingBoy.setPassword("123");
+
+        when(parkingBoyService.login(any())).thenReturn(parkingBoy);
+        ResultActions resultActions = mvc.perform(post("/parkingBoys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(parkingBoy)));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.phoneNumber").value(parkingBoy.getPhoneNumber()));
+        verify(parkingBoyService).login(any());
+    }
 }

@@ -2,8 +2,22 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  datasource:
+    url: jdbc:h2:file:./h2/easy-park
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2
   profiles:
     active: local
-
+light-security:
+  jwt:
+    # jwt sign算法
+    algorithm: hs512
+    # jwt secret
+    secret: http-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-mehttp-security-secret-modify-me
+    # jwt 有效时间
+    expiration-in-second: 1209600
 server:
   port: 8888
