@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
+import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +65,7 @@ public class ParkingBoyControllerTest {
                 .content(new ObjectMapper().writeValueAsString(parkingBoy)));
 
         resultActions.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.username").value(parkingBoy.getUsername()));
+                .andExpect(jsonPath("$.data.username").value(parkingBoy.getUsername()));
         verify(parkingBoyService).login(any());
     }
 
@@ -77,5 +83,23 @@ public class ParkingBoyControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.phoneNumber").value(parkingBoy.getPhoneNumber()));
         verify(parkingBoyService).login(any());
+    }
+
+    @Test
+    void should_return_parkingLots_when_invoke_getParkingLotsByParkingBoy() throws Exception {
+        List<ParkingLot> parkingLotList = new ArrayList<>();
+        ParkingLot parkingLot1 = new ParkingLot();
+        parkingLot1.setId("1");
+        parkingLot1.setName("停车场1");
+        parkingLot1.setAvailable(20);
+        parkingLot1.setCapacity(10);
+        parkingLotList.add(parkingLot1);
+
+        when(parkingBoyService.getParkingLots(anyString())).thenReturn(parkingLotList);
+        ResultActions resultActions = mvc.perform(get("/parkingBoys"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].name").value("停车场1"));
+
     }
 }
