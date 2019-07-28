@@ -80,21 +80,5 @@ public class ParkingBoyControllerTest {
         verify(parkingBoyService).login(any());
     }
 
-    @Test
-    void should_return_parkingLots_when_invoke_getParkingLotsByParkingBoy() throws Exception {
-        List<ParkingLot> parkingLotList = new ArrayList<>();
-        ParkingLot parkingLot1 = new ParkingLot();
-        parkingLot1.setId("1");
-        parkingLot1.setName("停车场1");
-        parkingLot1.setAvailable(20);
-        parkingLot1.setCapacity(10);
-        parkingLotList.add(parkingLot1);
 
-        when(parkingBoyService.getParkingLots(anyInt())).thenReturn(parkingLotList);
-        ResultActions resultActions = mvc.perform(get("/parkingBoys"));
-
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].name").value("停车场1"));
-
-    }
 }

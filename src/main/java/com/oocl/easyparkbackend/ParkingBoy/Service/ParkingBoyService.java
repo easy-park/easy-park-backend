@@ -44,15 +44,4 @@ public class ParkingBoyService {
         throw new UserNameOrPasswordErrorException();
     }
 
-    public List<ParkingLot> getParkingLots(Integer id) {
-        Optional<ParkingBoy> optionalParkingBoy = Optional.empty();
-        if(id == null) {
-            throw new ParkingBoyIdErrorException();
-        }
-        optionalParkingBoy = repository.findById(id);
-        if (optionalParkingBoy.isPresent()) {
-            return optionalParkingBoy.get().getParkingLotList();
-        }
-        throw new ParkingBoyIdErrorException();
-    }
 }

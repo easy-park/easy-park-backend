@@ -20,12 +20,6 @@ public class ParkingBoyController {
         return ResponseVO.successToken(parkingBoyService.login(parkingBoy));
     }
 
-    @GetMapping
-    public ResponseVO getParkingLotsByParkingBoy() {
-        Integer id = 123456;
-        return ResponseVO.success(parkingBoyService.getParkingLots(id));
-    }
-
     @ExceptionHandler(UserNameOrPasswordErrorException.class)
     public ResponseVO handleUserNameOrPasswordErrorException(UserNameOrPasswordErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
