@@ -82,5 +82,17 @@ public class ParkingOrderControllerTest {
         verify(parkingOrderService).findParkingBoyUnfinishedOrders();
     }
 
+    @Test
+    public void should_return_parkingOrder_when_invoke_finishRobOrder_given_parkingOrderId_and_parkingLotId() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy(123,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
+        when(parkingOrderService.finishRobOrder(anyString(),anyString())).thenReturn(order);
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingOrders").param("parkingOrderId","123456").param("parkingLotId","123456"));
+
+        resultActions.andExpect(status().isOk());
+
+    }
+
 
 }
