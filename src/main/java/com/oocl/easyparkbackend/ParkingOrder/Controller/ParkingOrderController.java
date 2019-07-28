@@ -45,9 +45,9 @@ public class ParkingOrderController {
         return ResponseVO.success(parkingOrderService.finishRobOrder(parkingOrderId, parkingLotId));
     }
 
-    @PutMapping(path = "/parkingOrders/{parkingOrderId}")
-    public ResponseVO receiveOrder(@PathVariable String parkingOrderId) {
-        ParkingOrder parkingOrder = parkingOrderService.receiveOrder(parkingOrderId);
+    @PutMapping(path = "/parkingOrders")
+    public ResponseVO receiveOrder(@RequestBody ParkingOrder order) {
+        ParkingOrder parkingOrder = parkingOrderService.receiveOrder(order.getId());
         return ResponseVO.success(parkingOrder);
     }
 

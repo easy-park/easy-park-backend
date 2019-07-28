@@ -1,5 +1,6 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.ParkingBoy.Controller.ParkingBoyController;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -114,7 +116,8 @@ public class ParkingOrderControllerTest {
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
         when(parkingOrderService.receiveOrder(anyString())).thenReturn(order);
 
-        ResultActions resultActions = mockMvc.perform(put("/parkingOrders/1"));
+        ResultActions resultActions = mockMvc.perform(put("/parkingOrders").contentType(MediaType.APPLICATION_JSON_UTF8)
+        .content(new ObjectMapper().writeValueAsString(order)));
 
         resultActions.andExpect(status().isOk());
 
