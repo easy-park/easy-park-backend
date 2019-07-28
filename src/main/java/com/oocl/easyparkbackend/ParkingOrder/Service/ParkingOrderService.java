@@ -1,5 +1,7 @@
 package com.oocl.easyparkbackend.ParkingOrder.Service;
 
+import com.itmuch.lightsecurity.jwt.User;
+import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
@@ -22,17 +24,23 @@ public class ParkingOrderService {
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
 
-    public List<ParkingOrder> findParkingOrderByStatus(Integer id, int status) {
-        Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(id);
+    @Autowired
+    private UserOperator userOperator;
+
+    public List<ParkingOrder> findParkingOrderByStatus( int status) {
+        User user = userOperator.getUser();
+        Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(user.getId());
         if(!optionalParkingBoy.isPresent()) {
             throw new LoginTokenExpiredException();
         }
         ParkingBoy parkingBoy = optionalParkingBoy.get();
-        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(id).get().getParkingLotList();
+        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(user.getId()).get().getParkingLotList();
         if (status == 1 && parkingLotListIsFull(returnParkingLotList)) {
             return null;
         }
-        return parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, status);
+        List<ParkingOrder> parkingOrderList = new ArrayList<>();
+        parkingOrderList.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, status));
+        return parkingOrderList;
     }
 
     private boolean parkingLotListIsFull(List<ParkingLot> parkingLotList) {

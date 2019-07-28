@@ -15,7 +15,7 @@ public class ParkingOrderController {
 
     @GetMapping(path = "/parkingOrders",params = "status")
     public ResponseVO findParkingOrderByStatus(@RequestParam int status){
-        return ResponseVO.success(parkingOrderService.findParkingOrderByStatus(12345,status));
+        return ResponseVO.success(parkingOrderService.findParkingOrderByStatus(status));
     }
 
     @PutMapping(path = "/parkingOrders/{orderId}",params = "status")
