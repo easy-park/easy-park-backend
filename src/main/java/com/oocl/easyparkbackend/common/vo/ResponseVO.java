@@ -22,6 +22,15 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
+    public static<M> ResponseVO successToken(String token){
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setStatus(200);
+        responseVO.setMsg("登录成功");
+        responseVO.setData(token);
+
+        return responseVO;
+    }
+
     public static<M> ResponseVO success(String msg){
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(200);

@@ -17,7 +17,7 @@ public class ParkingBoyController {
 
     @PostMapping
     public ResponseVO login(@RequestBody ParkingBoy parkingBoy) {
-        return ResponseVO.success(parkingBoyService.login(parkingBoy));
+        return ResponseVO.successToken(parkingBoyService.login(parkingBoy));
     }
 
     @GetMapping
