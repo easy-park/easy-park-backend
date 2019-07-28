@@ -4,10 +4,16 @@ import com.itmuch.lightsecurity.jwt.User;
 import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
+import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
+import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Repository.ParkingOrderRepository;
+import com.oocl.easyparkbackend.common.vo.ParkingBoyStatus;
+import com.oocl.easyparkbackend.common.vo.ParkingOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +29,9 @@ public class ParkingOrderService {
 
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
+
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
 
     @Autowired
     private UserOperator userOperator;
@@ -82,5 +91,33 @@ public class ParkingOrderService {
             return null;
         else
             return orders;
+    }
+
+    public ParkingOrder finishRobOrder(String parkingOrderId, String parkingLotId) {
+        User user = userOperator.getUser();
+        Integer parkingBoyId = user.getId();
+        Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
+        Optional<ParkingOrder> optionalParkingOrder = parkingOrderRepository.findById(parkingOrderId);
+        Optional<ParkingLot> optionalParkingLot = parkingLotRepository.findById(parkingLotId);
+        if (!optionalParkingBoy.isPresent()) {
+            throw new ParkingBoyIdErrorException();
+        }
+        if (!optionalParkingOrder.isPresent()) {
+            throw new ParkingOrderIdErrorException();
+        }
+        if (!optionalParkingLot.isPresent()) {
+            throw new ParkingLotIdErrorException();
+        }
+        ParkingBoy parkingBoy = optionalParkingBoy.get();
+        ParkingOrder parkingOrder = optionalParkingOrder.get();
+        ParkingLot parkingLot = optionalParkingLot.get();
+        parkingBoy.setStatus(ParkingBoyStatus.BUSY);
+        parkingLot.setAvailable(parkingLot.getAvailable() - 1);
+        parkingOrder.setParkingLot(parkingLot);
+        parkingOrder.setParkingBoy(parkingBoy);
+        parkingOrder.setStatus(ParkingOrderStatus.RECEIVED_ORDER);
+        parkingBoyRepository.save(parkingBoy);
+        parkingLotRepository.save(parkingLot);
+        return parkingOrderRepository.save(parkingOrder);
     }
 }
