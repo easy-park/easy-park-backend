@@ -65,6 +65,7 @@ public class ParkingOrderService {
                 break;
             case 5:
                 parkingBoy.setStatus(1);
+                parkingOrder.setParkingLot(addParkingLotAvailable(parkingOrder.getParkingLot().getId()));
                 break;
             case 6:
                 parkingBoy.setStatus(0);
@@ -76,6 +77,12 @@ public class ParkingOrderService {
         parkingOrder.setStatus(status);
         parkingOrder.setParkingBoy(parkingBoy);
         return parkingOrderRepository.save(parkingOrder);
+    }
+
+    private ParkingLot addParkingLotAvailable(String id) {
+        ParkingLot parkingLot = parkingLotRepository.findById(id).orElse(null);
+        parkingLot.setAvailable(parkingLot.getAvailable()+1);
+        return parkingLotRepository.save(parkingLot);
     }
 
     public List<ParkingOrder> findParkingBoyUnfinishedOrders(Integer parkingBoyId) {
