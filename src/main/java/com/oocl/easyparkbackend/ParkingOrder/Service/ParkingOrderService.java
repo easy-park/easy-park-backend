@@ -22,7 +22,7 @@ public class ParkingOrderService {
 
     public List<ParkingOrder> findParkingOrderByStatus(String id, int status) {
         Optional<ParkingBoy> parkingBoy = parkingBoyRepository.findById(id);
-        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById("123").get().getParkingLotList();
+        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(id).get().getParkingLotList();
         if (status == 1 && parkingLotListIsFull(returnParkingLotList)) {
             return null;
         }
