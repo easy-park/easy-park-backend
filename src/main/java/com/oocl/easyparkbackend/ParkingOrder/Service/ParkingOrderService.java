@@ -29,6 +29,7 @@ public class ParkingOrderService {
 
     public List<ParkingOrder> findParkingOrderByStatus( int status) {
         User user = userOperator.getUser();
+        List<ParkingOrder> parkingOrderList = new ArrayList<>();
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(user.getId());
         if(!optionalParkingBoy.isPresent()) {
             throw new LoginTokenExpiredException();
@@ -36,9 +37,8 @@ public class ParkingOrderService {
         ParkingBoy parkingBoy = optionalParkingBoy.get();
         List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(user.getId()).get().getParkingLotList();
         if (status == 1 && parkingLotListIsFull(returnParkingLotList)) {
-            return null;
+            return parkingOrderList;
         }
-        List<ParkingOrder> parkingOrderList = new ArrayList<>();
         parkingOrderList.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, status));
         return parkingOrderList;
     }
