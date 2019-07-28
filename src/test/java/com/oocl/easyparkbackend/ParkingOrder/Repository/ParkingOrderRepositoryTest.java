@@ -31,7 +31,7 @@ public class ParkingOrderRepositoryTest {
 
     @Test
     public void should_return_parkingOrder_list_when_invoke_findAllByStatus_given_status(){
-        ParkingBoy parkingBoy = new ParkingBoy(123,"123","123","123","sdfsf",1,"12345",new ArrayList<>());
+        ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
         ParkingLot parkingLot = new ParkingLot("123","456",5,5);
         parkingLotRepository.save(parkingLot);
@@ -57,10 +57,10 @@ public class ParkingOrderRepositoryTest {
         parkingLotRepository.save(parkingLot1);
         parkingLotRepository.save(parkingLot2);
         parkingLotRepository.save(parkingLot3);
-        ParkingBoy parkingBoy = new ParkingBoy(122,"123","123","123","sdfsf",1,"12345",parkingLotList);
-        parkingBoyRepository.save(parkingBoy);
+        ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",parkingLotList);
+        ParkingBoy returnParkingBoy = parkingBoyRepository.save(parkingBoy);
 
-        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(122).get().getParkingLotList();
+        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(returnParkingBoy.getId()).get().getParkingLotList();
 
         assertThat(returnParkingLotList.get(0).getId().equals("124"));
         assertThat(returnParkingLotList.get(0).getId().equals("122"));
@@ -69,7 +69,7 @@ public class ParkingOrderRepositoryTest {
 
     @Test
     public void should_update_parkingOrder_status_when_invoke_save_given_parkingOrder(){
-        ParkingBoy parkingBoy = new ParkingBoy(124,"123","123","123","sdfsf",1,"12345",new ArrayList<>());
+        ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
         ParkingLot parkingLot = new ParkingLot("224","456",5,5);
         parkingLotRepository.save(parkingLot);
@@ -84,8 +84,8 @@ public class ParkingOrderRepositoryTest {
 
     @Test
     public void should_return_parkingBoy_unfinished_orders_and_will_fetch_first_given_parkingBoy_id() {
-        ParkingBoy parkingBoy1 = new ParkingBoy(1234567,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
-        ParkingBoy parkingBoy2 = new ParkingBoy(1234568,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy1 = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy2 = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
         ParkingOrder order1 = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy1, null);
         ParkingOrder order2 = new ParkingOrder("2", "55554", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy1, null);
         ParkingOrder order3 = new ParkingOrder("3", "55556", new Timestamp(System.currentTimeMillis()), null, null, 4, parkingBoy1, null);

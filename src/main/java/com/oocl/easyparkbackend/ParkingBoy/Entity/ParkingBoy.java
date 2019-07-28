@@ -45,8 +45,7 @@ public class ParkingBoy {
     public ParkingBoy() {
     }
 
-    public ParkingBoy(Integer id, @NotNull String username, @NotNull String password, @NotNull String name, @NotNull String phoneNumber, @NotNull Integer status, @NotNull String email, List<ParkingLot> parkingLotList) {
-        Id = id;
+    public ParkingBoy(@NotNull String username, @NotNull String password, @NotNull String name, @NotNull String phoneNumber, @NotNull Integer status, @NotNull String email, List<ParkingLot> parkingLotList) {
         this.username = username;
         this.password = password;
         this.name = name;

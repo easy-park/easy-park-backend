@@ -1,5 +1,6 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
+import com.oocl.easyparkbackend.ParkingBoy.Controller.ParkingBoyController;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
@@ -70,7 +71,7 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingBoy_unfinished_orders_and_will_fetch_first_given_parkingBoy_id() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy(1234567,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
         List<ParkingOrder> orders = new ArrayList<>();
         orders.add(order);
@@ -85,7 +86,7 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingOrder_when_invoke_finishRobOrder_given_parkingOrderId_and_parkingLotId() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy(123,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
         when(parkingOrderService.finishRobOrder(anyString(),anyString())).thenReturn(order);
 
@@ -97,7 +98,7 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingOrder_when_invoke_getParkingOrder_given_parkingOrderId() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy(123,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
 
         when(parkingOrderService.getOrderById(anyString())).thenReturn(order);
