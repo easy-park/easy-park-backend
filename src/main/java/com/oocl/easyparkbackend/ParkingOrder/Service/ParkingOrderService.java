@@ -125,4 +125,12 @@ public class ParkingOrderService {
         parkingLotRepository.save(parkingLot);
         return parkingOrderRepository.save(parkingOrder);
     }
+
+    public ParkingOrder getOrderById(String id) {
+        Optional<ParkingOrder> optionalParkingOrder = parkingOrderRepository.findById(id);
+        if(optionalParkingOrder.isPresent()) {
+            return optionalParkingOrder.get();
+        }
+        throw new ParkingOrderIdErrorException();
+    }
 }
