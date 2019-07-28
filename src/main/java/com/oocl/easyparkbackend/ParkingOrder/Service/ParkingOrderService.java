@@ -23,12 +23,16 @@ public class ParkingOrderService {
     private ParkingBoyRepository parkingBoyRepository;
 
     public List<ParkingOrder> findParkingOrderByStatus(String id, int status) {
-        Optional<ParkingBoy> parkingBoy = parkingBoyRepository.findById(id);
+        Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(id);
+        if(!optionalParkingBoy.isPresent()) {
+            throw new LoginTokenExpiredException();
+        }
+        ParkingBoy parkingBoy = optionalParkingBoy.get();
         List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(id).get().getParkingLotList();
         if (status == 1 && parkingLotListIsFull(returnParkingLotList)) {
             return null;
         }
-        return parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy.get(), status);
+        return parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, status);
     }
 
     private boolean parkingLotListIsFull(List<ParkingLot> parkingLotList) {
