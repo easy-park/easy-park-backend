@@ -1,6 +1,7 @@
 package com.oocl.easyparkbackend.ParkingOrder.Service;
 
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
@@ -8,6 +9,7 @@ import com.oocl.easyparkbackend.ParkingOrder.Repository.ParkingOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +53,20 @@ public class ParkingOrderService {
         parkingOrder.setStatus(status);
         parkingOrder.setParkingBoy(parkingBoy);
         return parkingOrderRepository.save(parkingOrder);
+    }
+
+    public List<ParkingOrder> findParkingBoyUnfinishedOrders(String parkingBoyId) {
+        Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
+        if(!optionalParkingBoy.isPresent()) {
+            throw new LoginTokenExpiredException();
+        }
+        ParkingBoy parkingBoy = optionalParkingBoy.get();
+        List<ParkingOrder> orders = new ArrayList<>();
+        orders.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, 4));
+        orders.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, 3));
+        if(orders.size()==0)
+            return null;
+        else
+            return orders;
     }
 }

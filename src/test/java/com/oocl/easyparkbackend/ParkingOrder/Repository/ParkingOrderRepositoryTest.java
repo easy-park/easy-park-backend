@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
@@ -80,5 +81,29 @@ public class ParkingOrderRepositoryTest {
 
         assertThat(resultParkingOrder.getStatus().equals(2));
     }
+
+    @Test
+    public void should_return_parkingBoy_unfinished_orders_and_will_fetch_first_given_parkingBoy_id() {
+        ParkingBoy parkingBoy1 = new ParkingBoy("1234567","username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy2 = new ParkingBoy("1234568","username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingOrder order1 = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy1, null);
+        ParkingOrder order2 = new ParkingOrder("2", "55554", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy1, null);
+        ParkingOrder order3 = new ParkingOrder("3", "55556", new Timestamp(System.currentTimeMillis()), null, null, 4, parkingBoy1, null);
+        ParkingOrder order4 = new ParkingOrder("4", "55557", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy2, null);
+        parkingBoyRepository.save(parkingBoy1);
+        parkingBoyRepository.save(parkingBoy2);
+        parkingOrderRepository.save(order1);
+        parkingOrderRepository.save(order2);
+        parkingOrderRepository.save(order3);
+        parkingOrderRepository.save(order4);
+
+        List<ParkingOrder> fetchOrders = parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy1, 4);
+        fetchOrders.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus( parkingBoy1, 3));
+
+        assertThat(fetchOrders.get(0).getId().equals("3"));
+        assertEquals(fetchOrders.size(), 3);
+        assertThat(fetchOrders.get(2).getCarNumber().equals("55554"));
+    }
+
 
 }

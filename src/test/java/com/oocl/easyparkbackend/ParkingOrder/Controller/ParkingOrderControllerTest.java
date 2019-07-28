@@ -1,5 +1,6 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -21,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -64,6 +66,23 @@ public class ParkingOrderControllerTest {
 
         result.andExpect(status().isOk());
 
+    }
+
+
+    @Test
+    public void should_return_parkingBoy_unfinished_orders_and_will_fetch_first_given_parkingBoy_id() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy("1234567","username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
+        List<ParkingOrder> orders = new ArrayList<>();
+        orders.add(order);
+
+        when(parkingOrderService.findParkingBoyUnfinishedOrders(anyString())).thenReturn(orders);
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingOrders")
+                .param("parkingBoyId", "1234567"));
+
+        resultActions.andExpect(status().isOk());
+        verify(parkingOrderService).findParkingBoyUnfinishedOrders(any());
     }
 
 
