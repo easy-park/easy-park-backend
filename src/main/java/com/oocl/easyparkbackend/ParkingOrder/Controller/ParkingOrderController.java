@@ -4,6 +4,7 @@ package com.oocl.easyparkbackend.ParkingOrder.Controller;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
+import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
@@ -42,6 +43,12 @@ public class ParkingOrderController {
     @GetMapping(path = "/parkingOrders", params = {"parkingOrderId", "parkingLotId"})
     public ResponseVO finishRobOrder(@RequestParam String parkingOrderId, @RequestParam String parkingLotId) {
         return ResponseVO.success(parkingOrderService.finishRobOrder(parkingOrderId, parkingLotId));
+    }
+
+    @PostMapping(path = "/parkingOrders/{parkingOrderId}")
+    public ResponseVO reciveOrder(@PathVariable String orderId) {
+        ParkingOrder parkingOrder = ParkingOrderService.recive(orderId);
+        return ResponseVO.success(parkingOrder);
     }
 
     @ExceptionHandler(ParkingBoyIdErrorException.class)
