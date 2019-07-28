@@ -63,4 +63,20 @@ public class ParkingOrderIntegrationTest {
         result.andExpect(status().isOk()).andExpect(jsonPath("$.data.status",is(2)));
         assertThat(parkingOrderRepository.findById("324").get().getStatus().equals(2));
     }
+
+    @Test
+    public void should_update_parking_order_and_parking_boy_status_when_update_parking_order_status() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy("124","123","123","123","sdfsf",1,"12345",new ArrayList<>());
+        parkingBoyRepository.save(parkingBoy);
+        ParkingLot parkingLot = new ParkingLot("224","456",5,5);
+        parkingLotRepository.save(parkingLot);
+        ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,2,parkingBoy,parkingLot);
+        parkingOrderRepository.save(parkingOrder);
+
+        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}","324").param("status","3"));
+
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.status",is(3)));
+        assertThat(parkingOrderRepository.findById("324").get().getStatus().equals(3));
+        assertThat(parkingBoyRepository.findById("124").get().getStatus().equals(0));
+    }
 }
