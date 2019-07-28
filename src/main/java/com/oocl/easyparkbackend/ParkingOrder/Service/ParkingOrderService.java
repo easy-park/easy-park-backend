@@ -69,7 +69,8 @@ public class ParkingOrderService {
         return parkingOrderRepository.save(parkingOrder);
     }
 
-    public List<ParkingOrder> findParkingBoyUnfinishedOrders(Integer parkingBoyId) {
+    public List<ParkingOrder> findParkingBoyUnfinishedOrders() {
+        Integer parkingBoyId = userOperator.getUser().getId();
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
         if(!optionalParkingBoy.isPresent()) {
             throw new LoginTokenExpiredException();
@@ -78,9 +79,6 @@ public class ParkingOrderService {
         List<ParkingOrder> orders = new ArrayList<>();
         orders.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, 4));
         orders.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, 3));
-        if(orders.size()==0)
-            return null;
-        else
-            return orders;
+        return orders;
     }
 }

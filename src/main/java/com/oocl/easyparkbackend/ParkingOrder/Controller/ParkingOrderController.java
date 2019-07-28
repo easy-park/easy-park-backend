@@ -1,6 +1,6 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
-import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,13 @@ public class ParkingOrderController {
         return ResponseVO.success(parkingOrderService.updateParkingOrderStatus(orderId,status));
     }
 
-    @GetMapping(path = "/parkingOrders",params = "parkingBoyId")
-    public ResponseVO findParkingBoyUnfinishedOrders(@RequestParam Integer parkingBoyId) {
-        return ResponseVO.success(parkingOrderService.findParkingBoyUnfinishedOrders(parkingBoyId));
+    @GetMapping(path = "/parkingOrders")
+    public ResponseVO findParkingBoyUnfinishedOrders() {
+        return ResponseVO.success(parkingOrderService.findParkingBoyUnfinishedOrders());
+    }
+
+    @ExceptionHandler(LoginTokenExpiredException.class)
+    public ResponseVO handleUserNameOrPasswordErrorException(LoginTokenExpiredException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
     }
 }

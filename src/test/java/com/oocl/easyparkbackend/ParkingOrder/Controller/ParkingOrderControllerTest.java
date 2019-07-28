@@ -1,6 +1,5 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -76,13 +74,12 @@ public class ParkingOrderControllerTest {
         List<ParkingOrder> orders = new ArrayList<>();
         orders.add(order);
 
-        when(parkingOrderService.findParkingBoyUnfinishedOrders(anyInt())).thenReturn(orders);
+        when(parkingOrderService.findParkingBoyUnfinishedOrders()).thenReturn(orders);
 
-        ResultActions resultActions = mockMvc.perform(get("/parkingOrders")
-                .param("parkingBoyId", "1234567"));
+        ResultActions resultActions = mockMvc.perform(get("/parkingOrders"));
 
         resultActions.andExpect(status().isOk());
-        verify(parkingOrderService).findParkingBoyUnfinishedOrders(any());
+        verify(parkingOrderService).findParkingBoyUnfinishedOrders();
     }
 
 
