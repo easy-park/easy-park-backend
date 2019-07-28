@@ -44,7 +44,7 @@ public class ParkingBoyService {
         throw new UserNameOrPasswordErrorException();
     }
 
-    public List<ParkingLot> getParkingLots(String id) {
+    public List<ParkingLot> getParkingLots(Integer id) {
         Optional<ParkingBoy> optionalParkingBoy = Optional.empty();
         if(id == null) {
             throw new ParkingBoyIdErrorException();

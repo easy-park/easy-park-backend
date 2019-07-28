@@ -13,7 +13,7 @@ public class ParkingBoy {
     @Id
     @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
     @Column(name = "id")
-    private String Id;
+    private Integer Id;
 
     @Column(name = "username")
     @NotNull
@@ -45,7 +45,7 @@ public class ParkingBoy {
     public ParkingBoy() {
     }
 
-    public ParkingBoy(String id, @NotNull String username, @NotNull String password, @NotNull String name, @NotNull String phoneNumber, @NotNull Integer status, @NotNull String email, List<ParkingLot> parkingLotList) {
+    public ParkingBoy(Integer id, @NotNull String username, @NotNull String password, @NotNull String name, @NotNull String phoneNumber, @NotNull Integer status, @NotNull String email, List<ParkingLot> parkingLotList) {
         Id = id;
         this.username = username;
         this.password = password;
@@ -56,11 +56,11 @@ public class ParkingBoy {
         this.parkingLotList = parkingLotList;
     }
 
-    public String getId() {
+    public Integer getId() {
         return Id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         Id = id;
     }
 

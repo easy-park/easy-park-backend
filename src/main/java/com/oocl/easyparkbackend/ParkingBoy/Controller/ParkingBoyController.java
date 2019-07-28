@@ -22,7 +22,7 @@ public class ParkingBoyController {
 
     @GetMapping
     public ResponseVO getParkingLotsByParkingBoy() {
-        String id = "123456";
+        Integer id = 123456;
         return ResponseVO.success(parkingBoyService.getParkingLots(id));
     }
 

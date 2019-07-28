@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ParkingBoyRepository extends JpaRepository<ParkingBoy, String> {
+public interface ParkingBoyRepository extends JpaRepository<ParkingBoy, Integer> {
 
     Optional<ParkingBoy> getByEmailAndPassword(String email, String password);
 

@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,7 +90,7 @@ public class ParkingBoyControllerTest {
         parkingLot1.setCapacity(10);
         parkingLotList.add(parkingLot1);
 
-        when(parkingBoyService.getParkingLots(anyString())).thenReturn(parkingLotList);
+        when(parkingBoyService.getParkingLots(anyInt())).thenReturn(parkingLotList);
         ResultActions resultActions = mvc.perform(get("/parkingBoys"));
 
         resultActions.andExpect(status().isOk())

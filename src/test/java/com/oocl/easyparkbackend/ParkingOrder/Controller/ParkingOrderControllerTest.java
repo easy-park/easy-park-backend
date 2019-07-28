@@ -50,7 +50,7 @@ public class ParkingOrderControllerTest {
         List<ParkingOrder> parkingOrderList = new ArrayList<>();
         ParkingOrder parkingOrder =  new ParkingOrder("123","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,6,new ParkingBoy(),new ParkingLot());
         parkingOrderList.add(parkingOrder);
-        when(parkingOrderService.findParkingOrderByStatus(anyString(),anyInt())).thenReturn(parkingOrderList);
+        when(parkingOrderService.findParkingOrderByStatus(anyInt(),anyInt())).thenReturn(parkingOrderList);
 
         ResultActions result = mockMvc.perform(get("/parkingOrders").param("status", "6"));
 
@@ -71,12 +71,12 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingBoy_unfinished_orders_and_will_fetch_first_given_parkingBoy_id() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy("1234567","username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy(1234567,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
         List<ParkingOrder> orders = new ArrayList<>();
         orders.add(order);
 
-        when(parkingOrderService.findParkingBoyUnfinishedOrders(anyString())).thenReturn(orders);
+        when(parkingOrderService.findParkingBoyUnfinishedOrders(anyInt())).thenReturn(orders);
 
         ResultActions resultActions = mockMvc.perform(get("/parkingOrders")
                 .param("parkingBoyId", "1234567"));

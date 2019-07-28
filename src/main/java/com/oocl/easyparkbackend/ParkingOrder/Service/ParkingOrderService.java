@@ -22,7 +22,7 @@ public class ParkingOrderService {
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
 
-    public List<ParkingOrder> findParkingOrderByStatus(String id, int status) {
+    public List<ParkingOrder> findParkingOrderByStatus(Integer id, int status) {
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(id);
         if(!optionalParkingBoy.isPresent()) {
             throw new LoginTokenExpiredException();
@@ -52,6 +52,8 @@ public class ParkingOrderService {
             case 6:
                 parkingBoy.setStatus(0);
                 break;
+            default:
+                break;
         }
         parkingBoyRepository.save(parkingBoy);
         parkingOrder.setStatus(status);
@@ -59,7 +61,7 @@ public class ParkingOrderService {
         return parkingOrderRepository.save(parkingOrder);
     }
 
-    public List<ParkingOrder> findParkingBoyUnfinishedOrders(String parkingBoyId) {
+    public List<ParkingOrder> findParkingBoyUnfinishedOrders(Integer parkingBoyId) {
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
         if(!optionalParkingBoy.isPresent()) {
             throw new LoginTokenExpiredException();
