@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "parking_boy")
 public class ParkingBoy {
     @Id
-    @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer Id;
 
