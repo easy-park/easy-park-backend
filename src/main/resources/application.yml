@@ -20,4 +20,4 @@ light-security:
     # jwt 有效时间
     expiration-in-second: 1209600
 server:
-  port: 8888
+  port: 8889

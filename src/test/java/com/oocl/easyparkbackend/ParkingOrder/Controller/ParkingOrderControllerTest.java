@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@WebMvcTest(ParkingOrderController.class)
 public class ParkingOrderControllerTest {
 
     @Autowired
@@ -94,5 +95,28 @@ public class ParkingOrderControllerTest {
 
     }
 
+    @Test
+    public void should_return_parkingOrder_when_invoke_getParkingOrder_given_parkingOrderId() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy(123,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
+
+        when(parkingOrderService.getOrderById(anyString())).thenReturn(order);
+        ResultActions resultActions = mockMvc.perform(get("/parkingOrders/1"));
+
+        resultActions.andExpect(status().isOk());
+        verify(parkingOrderService).getOrderById(anyString());
+    }
+
+    @Test
+    public void should_return_parkingOrder_when_invoke_receiveOrder_given_parkingOrderId() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy(123,"username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
+        when(parkingOrderService.receiveOrder(anyString())).thenReturn(order);
+
+        ResultActions resultActions = mockMvc.perform(put("/parkingOrders/1"));
+
+        resultActions.andExpect(status().isOk());
+
+    }
 
 }

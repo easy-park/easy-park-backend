@@ -36,6 +36,7 @@ public class ParkingOrderService {
     @Autowired
     private UserOperator userOperator;
 
+
     public List<ParkingOrder> findParkingOrderByStatus( int status) {
         User user = userOperator.getUser();
         List<ParkingOrder> parkingOrderList = new ArrayList<>();
@@ -99,30 +100,44 @@ public class ParkingOrderService {
     }
 
     public ParkingOrder finishRobOrder(String parkingOrderId, String parkingLotId) {
+        Optional<ParkingOrder> optionalParkingOrder = parkingOrderRepository.findById(parkingOrderId);
+        Optional<ParkingLot> optionalParkingLot = parkingLotRepository.findById(parkingLotId);
+        if (!optionalParkingLot.isPresent()) {
+            throw new ParkingLotIdErrorException();
+        }
+        ParkingOrder parkingOrder = optionalParkingOrder.get();
+        ParkingLot parkingLot = optionalParkingLot.get();
+        parkingLot.setAvailable(parkingLot.getAvailable() - 1);
+        parkingOrder.setParkingLot(parkingLot);
+        parkingLotRepository.save(parkingLot);
+        return parkingOrderRepository.save(parkingOrder);
+    }
+
+    public ParkingOrder getOrderById(String id) {
+        Optional<ParkingOrder> optionalParkingOrder = parkingOrderRepository.findById(id);
+        if(optionalParkingOrder.isPresent()) {
+            return optionalParkingOrder.get();
+        }
+        throw new ParkingOrderIdErrorException();
+    }
+
+    public ParkingOrder receiveOrder(String parkingOrderId) {
         User user = userOperator.getUser();
         Integer parkingBoyId = user.getId();
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
         Optional<ParkingOrder> optionalParkingOrder = parkingOrderRepository.findById(parkingOrderId);
-        Optional<ParkingLot> optionalParkingLot = parkingLotRepository.findById(parkingLotId);
         if (!optionalParkingBoy.isPresent()) {
             throw new ParkingBoyIdErrorException();
         }
         if (!optionalParkingOrder.isPresent()) {
             throw new ParkingOrderIdErrorException();
         }
-        if (!optionalParkingLot.isPresent()) {
-            throw new ParkingLotIdErrorException();
-        }
         ParkingBoy parkingBoy = optionalParkingBoy.get();
         ParkingOrder parkingOrder = optionalParkingOrder.get();
-        ParkingLot parkingLot = optionalParkingLot.get();
         parkingBoy.setStatus(ParkingBoyStatus.BUSY);
-        parkingLot.setAvailable(parkingLot.getAvailable() - 1);
-        parkingOrder.setParkingLot(parkingLot);
-        parkingOrder.setParkingBoy(parkingBoy);
         parkingOrder.setStatus(ParkingOrderStatus.RECEIVED_ORDER);
+        parkingOrder.setParkingBoy(parkingBoy);
         parkingBoyRepository.save(parkingBoy);
-        parkingLotRepository.save(parkingLot);
         return parkingOrderRepository.save(parkingOrder);
     }
 }

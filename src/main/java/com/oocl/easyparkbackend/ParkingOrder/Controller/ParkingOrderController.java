@@ -45,10 +45,15 @@ public class ParkingOrderController {
         return ResponseVO.success(parkingOrderService.finishRobOrder(parkingOrderId, parkingLotId));
     }
 
-    @PostMapping(path = "/parkingOrders/{parkingOrderId}")
-    public ResponseVO reciveOrder(@PathVariable String orderId) {
-        ParkingOrder parkingOrder = ParkingOrderService.recive(orderId);
+    @PutMapping(path = "/parkingOrders/{parkingOrderId}")
+    public ResponseVO receiveOrder(@PathVariable String parkingOrderId) {
+        ParkingOrder parkingOrder = parkingOrderService.receiveOrder(parkingOrderId);
         return ResponseVO.success(parkingOrder);
+    }
+
+    @GetMapping("/parkingOrders/{id}")
+    public ResponseVO getParkingOrder(@PathVariable String id) {
+        return ResponseVO.success(parkingOrderService.getOrderById(id));
     }
 
     @ExceptionHandler(ParkingBoyIdErrorException.class)
@@ -65,4 +70,5 @@ public class ParkingOrderController {
     public ResponseVO handleParkingLotIdErrorException(ParkingLotIdErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
+
 }
