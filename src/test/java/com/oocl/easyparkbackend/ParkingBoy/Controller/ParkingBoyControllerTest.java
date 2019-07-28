@@ -80,5 +80,17 @@ public class ParkingBoyControllerTest {
         verify(parkingBoyService).login(any());
     }
 
+    @Test
+    public void should_return_parkingBoy_when_invoke_find_parkingBoy() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy();
+        parkingBoy.setId(123);
+        parkingBoy.setPhoneNumber("15574957517");
+        parkingBoy.setPassword("123");
 
+        when(parkingBoyService.findParkingBoy()).thenReturn(parkingBoy);
+
+        ResultActions resultActions = mvc.perform(get("/parkingBoys"));
+
+        resultActions.andExpect(status().isOk());
+    }
 }

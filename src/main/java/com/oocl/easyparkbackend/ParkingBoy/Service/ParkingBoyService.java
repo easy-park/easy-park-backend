@@ -2,7 +2,9 @@ package com.oocl.easyparkbackend.ParkingBoy.Service;
 
 import com.itmuch.lightsecurity.jwt.JwtOperator;
 import com.itmuch.lightsecurity.jwt.User;
+import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.NotFindParkingBoyException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
@@ -21,6 +23,8 @@ public class ParkingBoyService {
     private ParkingBoyRepository repository;
     @Autowired
     private JwtOperator jwtOperator;
+    @Autowired
+    private UserOperator userOperator;
 
     public String login(ParkingBoy parkingBoy) {
         Optional<ParkingBoy> optionalParkingBoy = Optional.empty();
@@ -42,6 +46,15 @@ public class ParkingBoyService {
             return jwtOperator.generateToken(user);
         }
         throw new UserNameOrPasswordErrorException();
+    }
+
+    public ParkingBoy findParkingBoy() {
+        User user = userOperator.getUser();
+        ParkingBoy parkingBoy = repository.findById(user.getId()).orElse(null);
+        if(parkingBoy == null){
+            throw  new NotFindParkingBoyException();
+        }
+        return parkingBoy;
     }
 
 }

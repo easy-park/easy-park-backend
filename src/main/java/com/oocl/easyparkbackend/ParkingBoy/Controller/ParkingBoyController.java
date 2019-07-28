@@ -1,6 +1,7 @@
 package com.oocl.easyparkbackend.ParkingBoy.Controller;
 
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.NotFindParkingBoyException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
@@ -20,6 +21,11 @@ public class ParkingBoyController {
         return ResponseVO.successToken(parkingBoyService.login(parkingBoy));
     }
 
+    @GetMapping
+    public ResponseVO findParkingBoy(){
+        return ResponseVO.success(parkingBoyService.findParkingBoy());
+    }
+
     @ExceptionHandler(UserNameOrPasswordErrorException.class)
     public ResponseVO handleUserNameOrPasswordErrorException(UserNameOrPasswordErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
@@ -27,6 +33,11 @@ public class ParkingBoyController {
 
     @ExceptionHandler(ParkingBoyIdErrorException.class)
     public ResponseVO handleParkingBoyIdErrorException(ParkingBoyIdErrorException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(NotFindParkingBoyException.class)
+    public ResponseVO handleNotFindParkingBoyException(NotFindParkingBoyException exception){
         return ResponseVO.serviceFail(exception.getMessage());
     }
 }
