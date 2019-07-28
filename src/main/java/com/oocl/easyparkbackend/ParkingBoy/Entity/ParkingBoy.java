@@ -39,7 +39,7 @@ public class ParkingBoy {
     @NotNull
     private String email;
 
-    @OneToMany
+    @OneToMany(fetch=FetchType.EAGER)
     private List<ParkingLot> parkingLotList;
 
     public ParkingBoy() {
