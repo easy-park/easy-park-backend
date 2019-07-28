@@ -1,6 +1,0 @@
-2019-07-27 19:11:54 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (PARKING_BOY: ""STATUS"" INTEGER NOT NULL)"; SQL statement:
-INSERT INTO "PUBLIC"."PARKING_BOY"("ID","EMAIL","NAME","PASSWORD","PHONE_NUMBER","STATUS","USERNAME")VALUES(?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7) [22018-199]
-2019-07-27 19:11:54 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (PARKING_BOY: ""STATUS"" INTEGER NOT NULL)"; SQL statement:
-INSERT INTO "PUBLIC"."PARKING_BOY"("ID","EMAIL","NAME","PASSWORD","PHONE_NUMBER","STATUS","USERNAME")VALUES(?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7) [22018-199]
