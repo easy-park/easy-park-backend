@@ -35,7 +35,21 @@ public class ParkingOrderService {
 
     public ParkingOrder updateParkingOrderStatus(String orderId,int status) {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).get();
+        ParkingBoy parkingBoy = parkingOrder.getParkingBoy();
+        switch (status){
+            case 3:
+                parkingBoy.setStatus(0);
+                break;
+            case 5:
+                parkingBoy.setStatus(1);
+                break;
+            case 6:
+                parkingBoy.setStatus(0);
+                break;
+        }
+        parkingBoyRepository.save(parkingBoy);
         parkingOrder.setStatus(status);
+        parkingOrder.setParkingBoy(parkingBoy);
         return parkingOrderRepository.save(parkingOrder);
     }
 }
