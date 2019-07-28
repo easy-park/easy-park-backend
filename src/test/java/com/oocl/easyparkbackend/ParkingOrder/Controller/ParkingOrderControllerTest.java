@@ -50,7 +50,7 @@ public class ParkingOrderControllerTest {
         List<ParkingOrder> parkingOrderList = new ArrayList<>();
         ParkingOrder parkingOrder =  new ParkingOrder("123","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,6,new ParkingBoy(),new ParkingLot());
         parkingOrderList.add(parkingOrder);
-        when(parkingOrderService.findParkingOrderByStatus(anyInt(),anyInt())).thenReturn(parkingOrderList);
+        when(parkingOrderService.findParkingOrderByStatus(anyInt())).thenReturn(parkingOrderList);
 
         ResultActions result = mockMvc.perform(get("/parkingOrders").param("status", "6"));
 
