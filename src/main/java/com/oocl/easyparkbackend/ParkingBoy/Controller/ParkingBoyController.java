@@ -40,6 +40,12 @@ public class ParkingBoyController {
         return ResponseVO.success(parkingBoys);
     }
 
+    @GetMapping(path = "/list", params = "phoneNumber")
+    public ResponseVO findParkingBoysByPhoneNumber(@RequestParam String phoneNumber) {
+        List<ParkingBoy> parkingBoys = parkingBoyService.findParkingBoysByPhoneNumber(phoneNumber);
+        return ResponseVO.success(parkingBoys);
+    }
+
     @ExceptionHandler(UserNameOrPasswordErrorException.class)
     public ResponseVO handleUserNameOrPasswordErrorException(UserNameOrPasswordErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());

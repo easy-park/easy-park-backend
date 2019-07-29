@@ -5,7 +5,8 @@ import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.Customer.Exception.NotFindCustomerExcepetion;
 import com.oocl.easyparkbackend.Customer.Repository.CustomerRepository;
-import com.oocl.easyparkbackend.Customer.Service.CustomerService;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
+import com.oocl.easyparkbackend.Util.RedisLock;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
@@ -31,6 +32,11 @@ import java.util.Optional;
 public class ParkingOrderService {
 
     @Autowired
+    private RedisLock redisLock;
+
+    private static final int TIMEOUT = 10 * 1000;
+
+    @Autowired
     private ParkingOrderRepository parkingOrderRepository;
 
     @Autowired
@@ -54,11 +60,11 @@ public class ParkingOrderService {
             throw new LoginTokenExpiredException();
         }
         ParkingBoy parkingBoy = optionalParkingBoy.get();
-        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(user.getId()).get().getParkingLotList();
+        List<ParkingLot> returnParkingLotList = parkingBoy.getParkingLotList();
         if (status == 1 && parkingLotListIsFull(returnParkingLotList)) {
             return parkingOrderList;
         }
-        parkingOrderList.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, status));
+        parkingOrderList.addAll(parkingOrderRepository.findAllByStatus( status));
         return parkingOrderList;
     }
 
@@ -132,6 +138,13 @@ public class ParkingOrderService {
     }
 
     public ParkingOrder receiveOrder(String parkingOrderId) {
+        long time = System.currentTimeMillis() + TIMEOUT;
+        if (!redisLock.lock(parkingOrderId.toString(), String.valueOf(time))) {
+            throw new OrderNotExistException();
+        }
+        if(parkingOrderRepository.findById(parkingOrderId).get().getStatus() != 1){
+            throw new OrderNotExistException();
+        }
         User user = userOperator.getUser();
         Integer parkingBoyId = user.getId();
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
@@ -148,11 +161,13 @@ public class ParkingOrderService {
         parkingOrder.setStatus(ParkingOrderStatus.RECEIVED_ORDER);
         parkingOrder.setParkingBoy(parkingBoy);
         parkingBoyRepository.save(parkingBoy);
+        redisLock.unlock(parkingOrderId.toString(), String.valueOf(time));
         return parkingOrderRepository.save(parkingOrder);
     }
 
     public ParkingOrder generateParkingOrder(String carNumber) {
-        Customer customer = customerRepository.findById(userOperator.getUser().getId()).orElse(null);
+        User user = userOperator.getUser();
+        Customer customer = customerRepository.findById(user.getId()).orElse(null);
         if (customer != null ){
             if (parkingOrderRepository.findByCarNumberAndEndTime(carNumber,null) == null){
                 ParkingOrder parkingOrder = new ParkingOrder();
