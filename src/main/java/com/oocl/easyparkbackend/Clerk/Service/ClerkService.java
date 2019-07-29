@@ -24,8 +24,6 @@ public class ClerkService {
         List<Manage> manageList = manageRepository.findAll();
         clerkList.addAll(manegeToClerk(manageList));
         clerkList.addAll(parkingBoyToClerk(parkingBoyList));
-
-
         return clerkList;
     }
 
@@ -60,6 +58,44 @@ public class ClerkService {
             clerk.setPosition("ParkingBoy");
             clerkList.add(clerk);
         }
+        return clerkList;
+    }
+
+    public List<Clerk> findClerkMessageByName(String name) {
+        List<Clerk> clerkList = new ArrayList<>();
+        List<ParkingBoy> parkingBoyList = parkingBoyRepository.findByNameLike("%"+name+"%");
+        List<Manage> manageList = manageRepository.findAllByNameLike("%"+name+"%");
+        clerkList.addAll(manegeToClerk(manageList));
+        clerkList.addAll(parkingBoyToClerk(parkingBoyList));
+        return clerkList;
+    }
+
+    public List<Clerk> findClerkMessageByPhone(String phone) {
+        List<Clerk> clerkList = new ArrayList<>();
+        List<ParkingBoy> parkingBoyList = parkingBoyRepository.findByPhoneNumberLike("%"+phone+"%");
+        List<Manage> manageList = manageRepository.findAllByPhoneNumberLike("%"+phone+"%");
+        clerkList.addAll(manegeToClerk(manageList));
+        clerkList.addAll(parkingBoyToClerk(parkingBoyList));
+        return clerkList;
+    }
+
+    public List<Clerk> findClerkMessageById(Integer id) {
+        List<Clerk> clerkList = new ArrayList<>();
+        List<Manage> manageList = new ArrayList<>();
+        List<ParkingBoy> parkingBoyList = new ArrayList<>();
+        manageList.add(manageRepository.findById(id).orElse(null));
+        parkingBoyList.add(parkingBoyRepository.findById(id).orElse(null));
+        clerkList.addAll(manegeToClerk(manageList));
+        clerkList.addAll(parkingBoyToClerk(parkingBoyList));
+        return clerkList;
+    }
+
+    public List<Clerk> findClerkMessageByEmail(String email) {
+        List<Clerk> clerkList = new ArrayList<>();
+        List<ParkingBoy> parkingBoyList = parkingBoyRepository.findByEmailLike("%"+email+"%");
+        List<Manage> manageList = manageRepository.findAllByEmailLike("%"+email+"%");
+        clerkList.addAll(manegeToClerk(manageList));
+        clerkList.addAll(parkingBoyToClerk(parkingBoyList));
         return clerkList;
     }
 }
