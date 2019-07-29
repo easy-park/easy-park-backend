@@ -24,13 +24,19 @@ public class ParkingBoyController {
     }
 
     @GetMapping
-    public ResponseVO findParkingBoy(){
+    public ResponseVO findParkingBoy() {
         return ResponseVO.success(parkingBoyService.findParkingBoy());
     }
 
     @GetMapping("/all")
     public ResponseVO getAllParkingBoy() {
         List<ParkingBoy> parkingBoys = parkingBoyService.getAllParkingBoy();
+        return ResponseVO.success(parkingBoys);
+    }
+
+    @GetMapping(path = "/list", params ="name")
+    public ResponseVO findParkingBoysByName(@RequestParam String name) {
+        List<ParkingBoy> parkingBoys = parkingBoyService.findParkingBoysByName(name);
         return ResponseVO.success(parkingBoys);
     }
 
@@ -45,7 +51,7 @@ public class ParkingBoyController {
     }
 
     @ExceptionHandler(NotFindParkingBoyException.class)
-    public ResponseVO handleNotFindParkingBoyException(NotFindParkingBoyException exception){
+    public ResponseVO handleNotFindParkingBoyException(NotFindParkingBoyException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 }

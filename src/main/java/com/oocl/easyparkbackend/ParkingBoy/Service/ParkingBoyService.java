@@ -51,14 +51,19 @@ public class ParkingBoyService {
     public ParkingBoy findParkingBoy() {
         User user = userOperator.getUser();
         ParkingBoy parkingBoy = repository.findById(user.getId()).orElse(null);
-        if(parkingBoy == null){
-            throw  new NotFindParkingBoyException();
+        if (parkingBoy == null) {
+            throw new NotFindParkingBoyException();
         }
         return parkingBoy;
     }
 
     public List<ParkingBoy> getAllParkingBoy() {
         List<ParkingBoy> parkingBoys = repository.findAll();
+        return parkingBoys;
+    }
+
+    public List<ParkingBoy> findParkingBoysByName(String name) {
+        List<ParkingBoy> parkingBoys = repository.findByNameLike("%" + name + "%");
         return parkingBoys;
     }
 }
