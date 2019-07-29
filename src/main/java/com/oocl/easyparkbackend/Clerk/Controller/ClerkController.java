@@ -16,7 +16,7 @@ public class ClerkController {
     private ClerkService clerkService;
 
     @GetMapping("/clerks")
-    public ResponseVO getAllClerkMessage(){
+    public ResponseVO getAllClerkMessage() {
         List<Clerk> clerkList = clerkService.showAllClerkMessage();
         return ResponseVO.success(clerkList);
     }

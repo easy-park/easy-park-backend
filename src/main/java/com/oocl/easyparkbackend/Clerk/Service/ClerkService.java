@@ -29,9 +29,9 @@ public class ClerkService {
         return clerkList;
     }
 
-    private List<Clerk> manegeToClerk(List<Manage> manageList){
+    private List<Clerk> manegeToClerk(List<Manage> manageList) {
         List<Clerk> clerkList = new ArrayList<>();
-        for(int i=0;i<manageList.size();i++){
+        for (int i = 0; i < manageList.size(); i++) {
             Clerk clerk = new Clerk();
             clerk.setEmail(manageList.get(i).getEmail());
             clerk.setId(manageList.get(i).getId());
@@ -46,9 +46,9 @@ public class ClerkService {
         return clerkList;
     }
 
-    private List<Clerk> parkingBoyToClerk(List<ParkingBoy> parkingBoyList){
+    private List<Clerk> parkingBoyToClerk(List<ParkingBoy> parkingBoyList) {
         List<Clerk> clerkList = new ArrayList<>();
-        for(int i=0;i<parkingBoyList.size();i++){
+        for (int i = 0; i < parkingBoyList.size(); i++) {
             Clerk clerk = new Clerk();
             clerk.setEmail(parkingBoyList.get(i).getEmail());
             clerk.setId(parkingBoyList.get(i).getId());

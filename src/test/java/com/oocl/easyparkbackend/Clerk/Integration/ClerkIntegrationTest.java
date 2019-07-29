@@ -71,10 +71,10 @@ public class ClerkIntegrationTest {
         ResultActions result = mockMvc.perform(get("/clerks"));
 
         for (int i = 0; i < 5; i++) {
-            result.andExpect(status().isOk()).andExpect(jsonPath("$.data.["+i+"].username", is("use8855me"+i)));
+            result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[" + i + "].username", is("use8855me" + i)));
         }
-        for(int i=5;i<15;i++) {
-            result.andExpect(status().isOk()).andExpect(jsonPath("$.data.["+i+"].username", is("username"+(i-5))));
+        for (int i = 5; i < 15; i++) {
+            result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[" + i + "].username", is("username" + (i - 5))));
         }
     }
 }
