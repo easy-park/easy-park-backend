@@ -15,4 +15,6 @@ public interface ParkingBoyRepository extends JpaRepository<ParkingBoy, Integer>
     Optional<ParkingBoy> getByUsernameAndPassword(String username, String password);
 
     List<ParkingBoy> findByNameLike(String name);
+
+    List<ParkingBoy> findByPhoneNumberLike(String phoneNumber);
 }
