@@ -16,10 +16,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
-
 import static org.hamcrest.Matchers.is;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,5 +78,51 @@ public class ClerkIntegrationTest {
         }
         manageRepository.deleteAll();
         parkingBoyRepository.deleteAll();
+    }
+
+
+    @Test
+    public void should_return_clerk_list_message_when_get_to_clerklist_when_given_name() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", new ArrayList<>());
+        parkingBoyRepository.save(parkingBoy);
+        Manage manage = new Manage(1, "use8855me", "199529", "st77fan", "13192545625", 1, "953188555@qq.com");
+        manageRepository.save(manage);
+        ResultActions result = mockMvc.perform(get("/clerklist").param("name","fan"));
+
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[1].username", is("username")));
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].username", is("use8855me")));
+        manageRepository.deleteAll();
+        parkingBoyRepository.deleteAll();
+
+    }
+
+    @Test
+    public void should_return_clerk_list_message_when_get_to_clerklist_when_given_phone() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", new ArrayList<>());
+        parkingBoyRepository.save(parkingBoy);
+        Manage manage = new Manage(1, "use8855me", "199529", "st77fan", "13192545625", 1, "953188555@qq.com");
+        manageRepository.save(manage);
+        ResultActions result = mockMvc.perform(get("/clerklist").param("phone","131"));
+
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[1].username", is("username")));
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].username", is("use8855me")));
+        manageRepository.deleteAll();
+        parkingBoyRepository.deleteAll();
+
+    }
+
+    @Test
+    public void should_return_clerk_list_message_when_get_to_clerklist_when_given_email() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", new ArrayList<>());
+        parkingBoyRepository.save(parkingBoy);
+        Manage manage = new Manage(1, "use8855me", "199529", "st77fan", "13192545625", 1, "953188555@qq.com");
+        manageRepository.save(manage);
+        ResultActions result = mockMvc.perform(get("/clerklist").param("email","5@q"));
+
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[1].username", is("username")));
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].username", is("use8855me")));
+        manageRepository.deleteAll();
+        parkingBoyRepository.deleteAll();
+
     }
 }
