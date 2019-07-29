@@ -28,6 +28,9 @@ public class ParkingLot {
     @NotNull
     private Integer available;
 
+    @Column(name = "status")
+    private Boolean status;
+
     public ParkingLot() {
     }
 
@@ -36,6 +39,14 @@ public class ParkingLot {
         this.name = name;
         this.capacity = capacity;
         this.available = available;
+    }
+
+    public ParkingLot(String id, @NotNull String name, @NotNull Integer capacity, @NotNull Integer available, Boolean status) {
+        Id = id;
+        this.name = name;
+        this.capacity = capacity;
+        this.available = available;
+        this.status = status;
     }
 
     public String getId() {
@@ -68,5 +79,13 @@ public class ParkingLot {
 
     public void setAvailable(Integer available) {
         this.available = available;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

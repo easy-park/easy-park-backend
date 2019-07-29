@@ -11,12 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
 public class LightSecurityExceptionHandler {
-    /**
-     * Light Security相关异常
-     *
-     * @param exception 异常
-     * @return 发生异常时的返回
-     */
     @ExceptionHandler(value = {LightSecurityException.class})
     @ResponseBody
     public ResponseVO error(LightSecurityException exception) {
