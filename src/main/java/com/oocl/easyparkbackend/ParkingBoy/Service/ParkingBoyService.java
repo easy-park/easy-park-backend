@@ -12,6 +12,7 @@ import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -51,14 +52,27 @@ public class ParkingBoyService {
     public ParkingBoy findParkingBoy() {
         User user = userOperator.getUser();
         ParkingBoy parkingBoy = repository.findById(user.getId()).orElse(null);
-        if(parkingBoy == null){
-            throw  new NotFindParkingBoyException();
+        if (parkingBoy == null) {
+            throw new NotFindParkingBoyException();
         }
         return parkingBoy;
     }
 
     public List<ParkingBoy> getAllParkingBoy() {
-        List<ParkingBoy> parkingBoys = repository.findAll();
-        return parkingBoys;
+        List<ParkingBoy> returnParkingBoys = new ArrayList<>();
+        returnParkingBoys.addAll(repository.findAll());
+        return returnParkingBoys;
+    }
+
+    public List<ParkingBoy> findParkingBoysByName(String name) {
+        List<ParkingBoy> returnParkingBoys = new ArrayList<>();
+        returnParkingBoys.addAll(repository.findByNameLike("%" + name + "%"));
+        return returnParkingBoys;
+    }
+
+    public List<ParkingBoy> findParkingBoysByPhoneNumber(String phoneNumber) {
+        List<ParkingBoy> returnParkingBoys = new ArrayList<>();
+        returnParkingBoys.addAll(repository.findByPhoneNumberLike("%"+phoneNumber+"%"));
+        return returnParkingBoys;
     }
 }

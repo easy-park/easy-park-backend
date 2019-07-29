@@ -74,4 +74,26 @@ public class ParkingBoyRepositoryTest {
         Assertions.assertEquals(returnParkingBoy.getId(), boy.getId());
     }
 
+    @Test
+    void should_return_parkingBoys_when_findParkingBoysByName_given_name() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingBoy parkingBoy = new ParkingBoy( "username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLots);
+        ParkingBoy returnParkingBoy = parkingBoyRepository.save(parkingBoy);
+
+        List<ParkingBoy> parkingBoys = parkingBoyRepository.findByNameLike("%e%");
+
+        Assertions.assertEquals(returnParkingBoy.getUsername(), parkingBoys.get(0).getUsername());
+    }
+
+    @Test
+    void should_return_parkingBoys_when_findParkingBoysByPhoneNumber_given_phoneNumber() {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingBoy parkingBoy = new ParkingBoy( "username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLots);
+        ParkingBoy returnParkingBoy = parkingBoyRepository.save(parkingBoy);
+
+        List<ParkingBoy> parkingBoys = parkingBoyRepository.findByPhoneNumberLike("%131%");
+
+        Assertions.assertEquals(returnParkingBoy.getUsername(), parkingBoys.get(0).getUsername());
+    }
+
 }

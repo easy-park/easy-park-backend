@@ -105,10 +105,46 @@ public class ParkingBoyControllerTest {
         parkingBoys.add(parkingBoy2);
 
         when(parkingBoyService.getAllParkingBoy()).thenReturn(parkingBoys);
-        ResultActions resultActions= mvc.perform(get("/parkingBoys/all"));
+        ResultActions resultActions = mvc.perform(get("/parkingBoys/all"));
 
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.[0].name").value("sean"))
                 .andExpect(jsonPath("$.data.[1].name").value("sean2"));
+    }
+
+    @Test
+    public void should_return_parkingBoys_when_invoke_findParkingBoysByName_given_name() throws Exception {
+        List<ParkingBoy> parkingBoys = new ArrayList<>();
+        ParkingBoy parkingBoy1 = new ParkingBoy();
+        parkingBoy1.setName("sean");
+        ParkingBoy parkingBoy2 = new ParkingBoy();
+        parkingBoy2.setName("sean2");
+        parkingBoys.add(parkingBoy1);
+        parkingBoys.add(parkingBoy2);
+
+        when(parkingBoyService.findParkingBoysByName(anyString())).thenReturn(parkingBoys);
+        ResultActions resultActions = mvc.perform(get("/parkingBoys/list").param("name","sean"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.[0].name").value("sean"));
+    }
+
+    @Test
+    public void should_return_parkingBoys_when_invoke_findParkingBoysByPhoneNumber_given_phoneNumber() throws Exception {
+        List<ParkingBoy> parkingBoys = new ArrayList<>();
+        ParkingBoy parkingBoy1 = new ParkingBoy();
+        parkingBoy1.setName("sean");
+        parkingBoy1.setPhoneNumber("15574957517");
+        ParkingBoy parkingBoy2 = new ParkingBoy();
+        parkingBoy2.setName("sean2");
+        parkingBoy2.setPhoneNumber("13055192867");
+        parkingBoys.add(parkingBoy1);
+        parkingBoys.add(parkingBoy2);
+
+        when(parkingBoyService.findParkingBoysByPhoneNumber(anyString())).thenReturn(parkingBoys);
+        ResultActions resultActions = mvc.perform(get("/parkingBoys/list").param("phoneNumber","155"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.[0].phoneNumber").value("15574957517"));
     }
 }
