@@ -6,6 +6,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.AlreadyParkingException;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
@@ -88,6 +89,11 @@ public class ParkingOrderController {
 
     @ExceptionHandler(ParkingLotIdErrorException.class)
     public ResponseVO handleParkingLotIdErrorException(ParkingLotIdErrorException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(OrderNotExistException.class)
+    public ResponseVO handleUserOrderNotExistException(OrderNotExistException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 

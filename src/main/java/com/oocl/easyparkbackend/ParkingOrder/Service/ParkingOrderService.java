@@ -5,7 +5,8 @@ import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.Customer.Exception.NotFindCustomerExcepetion;
 import com.oocl.easyparkbackend.Customer.Repository.CustomerRepository;
-import com.oocl.easyparkbackend.Customer.Service.CustomerService;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
+import com.oocl.easyparkbackend.Util.RedisLock;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
@@ -29,6 +30,11 @@ import java.util.Optional;
 
 @Service
 public class ParkingOrderService {
+
+    @Autowired
+    private RedisLock redisLock;
+
+    private static final int TIMEOUT = 10 * 1000;
 
     @Autowired
     private ParkingOrderRepository parkingOrderRepository;
@@ -132,6 +138,13 @@ public class ParkingOrderService {
     }
 
     public ParkingOrder receiveOrder(String parkingOrderId) {
+        long time = System.currentTimeMillis() + TIMEOUT;
+        if (!redisLock.lock(parkingOrderId.toString(), String.valueOf(time))) {
+            throw new OrderNotExistException();
+        }
+        if(parkingOrderRepository.findById(parkingOrderId).get().getStatus() != 1){
+            throw new OrderNotExistException();
+        }
         User user = userOperator.getUser();
         Integer parkingBoyId = user.getId();
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
@@ -148,6 +161,7 @@ public class ParkingOrderService {
         parkingOrder.setStatus(ParkingOrderStatus.RECEIVED_ORDER);
         parkingOrder.setParkingBoy(parkingBoy);
         parkingBoyRepository.save(parkingBoy);
+        redisLock.unlock(parkingOrderId.toString(), String.valueOf(time));
         return parkingOrderRepository.save(parkingOrder);
     }
 
