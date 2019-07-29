@@ -57,4 +57,8 @@ public class ParkingBoyService {
         return parkingBoy;
     }
 
+    public List<ParkingBoy> getAllParkingBoy() {
+        List<ParkingBoy> parkingBoys = repository.findAll();
+        return parkingBoys;
+    }
 }
