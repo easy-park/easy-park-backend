@@ -62,14 +62,12 @@ public class ParkingOrderService {
         ParkingBoy parkingBoy = parkingOrder.getParkingBoy();
         switch (status){
             case 3:
+            case 6:
                 parkingBoy.setStatus(0);
                 break;
             case 5:
                 parkingBoy.setStatus(1);
                 parkingOrder.setParkingLot(addParkingLotAvailable(parkingOrder.getParkingLot().getId()));
-                break;
-            case 6:
-                parkingBoy.setStatus(0);
                 break;
             default:
                 break;
