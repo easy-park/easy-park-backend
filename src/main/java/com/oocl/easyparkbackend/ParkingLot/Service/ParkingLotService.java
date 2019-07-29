@@ -10,6 +10,7 @@ import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,14 @@ public class ParkingLotService {
     }
 
     public List<ParkingLot> getAllParkingLot() {
-        List<ParkingLot> parkingLots = parkingLotRepository.findAll();
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        parkingLots.addAll(parkingLotRepository.findAll());
+        return parkingLots;
+    }
+
+    public List<ParkingLot> findParkingLotsByName(String name) {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        parkingLots.addAll(parkingLotRepository.findByNameLike("%"+name+"%"));
         return parkingLots;
     }
 }
