@@ -54,11 +54,11 @@ public class ParkingOrderService {
             throw new LoginTokenExpiredException();
         }
         ParkingBoy parkingBoy = optionalParkingBoy.get();
-        List<ParkingLot> returnParkingLotList = parkingBoyRepository.findById(user.getId()).get().getParkingLotList();
+        List<ParkingLot> returnParkingLotList = parkingBoy.getParkingLotList();
         if (status == 1 && parkingLotListIsFull(returnParkingLotList)) {
             return parkingOrderList;
         }
-        parkingOrderList.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, status));
+        parkingOrderList.addAll(parkingOrderRepository.findAllByStatus( status));
         return parkingOrderList;
     }
 

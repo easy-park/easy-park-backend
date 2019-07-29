@@ -116,4 +116,15 @@ public class ParkingOrderRepositoryTest {
     }
 
 
+    @Test
+    public void should_return_parkingOrder_list_when_invoke_findAllByStatus(){
+        ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,1,null,null);
+        parkingOrderRepository.save(parkingOrder);
+
+        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByStatus(1);
+
+        assertThat(parkingOrderList.get(0).getCarNumber()).isEqualTo("eree");
+    }
+
+
 }

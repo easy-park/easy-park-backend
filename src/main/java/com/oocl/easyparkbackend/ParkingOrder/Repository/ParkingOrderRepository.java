@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface ParkingOrderRepository extends JpaRepository<ParkingOrder,String> {
 
+    List<ParkingOrder> findAllByStatus( int status);
+    
     List<ParkingOrder> findAllByParkingBoyAndStatus(ParkingBoy parkingBoy, int status);
 
     List<ParkingOrder> findAllByCustomerAndStatus(Customer customer, int status);
