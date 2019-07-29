@@ -17,4 +17,6 @@ public interface ParkingBoyRepository extends JpaRepository<ParkingBoy, Integer>
     List<ParkingBoy> findByNameLike(String name);
 
     List<ParkingBoy> findByPhoneNumberLike(String phoneNumber);
+
+    List<ParkingBoy> findByEmailLike(String email);
 }

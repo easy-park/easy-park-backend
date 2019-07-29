@@ -58,4 +58,42 @@ public class ClerkControllerTest {
         result.andExpect(status().isOk());
     }
 
+    @Test
+    public void should_return_clerk_message_when_get_to_clerkList_given_name() throws Exception {
+        List<Clerk> clerkList = new ArrayList<>();
+        when(clerkService.findClerkMessageByName(anyString())).thenReturn(clerkList);
+
+        ResultActions result = mockMvc.perform(get("/clerklist").param("name","lay"));
+
+        result.andExpect(status().isOk());
+    }
+    @Test
+    public void should_return_clerk_message_when_get_to_clerkList_given_id() throws Exception {
+        List<Clerk> clerkList = new ArrayList<>();
+        when(clerkService.findClerkMessageById(anyInt())).thenReturn(clerkList);
+
+        ResultActions result = mockMvc.perform(get("/clerklist").param("id","111"));
+
+        result.andExpect(status().isOk());
+    }
+    @Test
+    public void should_return_clerk_message_when_get_to_clerkList_given_email() throws Exception {
+        List<Clerk> clerkList = new ArrayList<>();
+        when(clerkService.findClerkMessageByEmail(anyString())).thenReturn(clerkList);
+
+        ResultActions result = mockMvc.perform(get("/clerklist").param("email","lay@126.com"));
+
+        result.andExpect(status().isOk());
+    }
+    @Test
+    public void should_return_clerk_message_when_get_to_clerkList_given_phone() throws Exception {
+        List<Clerk> clerkList = new ArrayList<>();
+        when(clerkService.findClerkMessageByPhone(anyString())).thenReturn(clerkList);
+
+        ResultActions result = mockMvc.perform(get("/clerklist").param("phone","lay"));
+
+        result.andExpect(status().isOk());
+    }
+
+
 }
