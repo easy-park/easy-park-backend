@@ -5,12 +5,15 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.AlreadyParkingException;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -34,12 +37,6 @@ public class ParkingOrderController {
         return ResponseVO.success(parkingOrderService.findParkingBoyUnfinishedOrders());
     }
 
-    @ExceptionHandler(LoginTokenExpiredException.class)
-    public ResponseVO handleUserNameOrPasswordErrorException(LoginTokenExpiredException exception) {
-        return ResponseVO.serviceFail(exception.getMessage());
-    }
-
-
     @GetMapping(path = "/parkingOrders", params = {"parkingOrderId", "parkingLotId"})
     public ResponseVO finishRobOrder(@RequestParam String parkingOrderId, @RequestParam String parkingLotId) {
         return ResponseVO.success(parkingOrderService.finishRobOrder(parkingOrderId, parkingLotId));
@@ -54,6 +51,29 @@ public class ParkingOrderController {
     @GetMapping("/parkingOrders/{id}")
     public ResponseVO getParkingOrder(@PathVariable String id) {
         return ResponseVO.success(parkingOrderService.getOrderById(id));
+    }
+
+    @PostMapping(value = "/parkingOrders",params = "carNumber")
+    public ResponseVO generateParkingOrder(@RequestParam String carNumber){
+        ParkingOrder parkingOrder = parkingOrderService.generateParkingOrder(carNumber);
+        return ResponseVO.success(parkingOrder);
+    }
+
+    @GetMapping("/parking_orders_customer")
+    public ResponseVO getParkingOrderByCustomer(){
+        List<ParkingOrder> list = parkingOrderService.getNotFinishParkingOrderByUser();
+        return ResponseVO.success(list);
+    }
+
+    @ExceptionHandler(AlreadyParkingException.class)
+    public ResponseVO handleAlreadyParkingException(AlreadyParkingException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+
+    @ExceptionHandler(LoginTokenExpiredException.class)
+    public ResponseVO handleUserNameOrPasswordErrorException(LoginTokenExpiredException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
     }
 
     @ExceptionHandler(ParkingBoyIdErrorException.class)

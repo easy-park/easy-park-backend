@@ -105,5 +105,15 @@ public class ParkingOrderRepositoryTest {
         assertThat(fetchOrders.get(2).getCarNumber().equals("55554"));
     }
 
+    @Test
+    public void should_get_parkingOrder_when_invoke_findBycarNumberAndendTime(){
+        ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,1,null,null);
+        parkingOrderRepository.save(parkingOrder);
+
+        ParkingOrder returnParkingOrder = parkingOrderRepository.findByCarNumberAndEndTime("eree",null);
+
+        assertThat(returnParkingOrder.getCarNumber().equals("eree"));
+    }
+
 
 }

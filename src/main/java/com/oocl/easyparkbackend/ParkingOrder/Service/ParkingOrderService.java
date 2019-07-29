@@ -2,6 +2,10 @@ package com.oocl.easyparkbackend.ParkingOrder.Service;
 
 import com.itmuch.lightsecurity.jwt.User;
 import com.itmuch.lightsecurity.jwt.UserOperator;
+import com.oocl.easyparkbackend.Customer.Entity.Customer;
+import com.oocl.easyparkbackend.Customer.Exception.NotFindCustomerExcepetion;
+import com.oocl.easyparkbackend.Customer.Repository.CustomerRepository;
+import com.oocl.easyparkbackend.Customer.Service.CustomerService;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
@@ -10,6 +14,7 @@ import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.AlreadyParkingException;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Repository.ParkingOrderRepository;
 import com.oocl.easyparkbackend.common.vo.ParkingBoyStatus;
@@ -17,6 +22,7 @@ import com.oocl.easyparkbackend.common.vo.ParkingOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +38,9 @@ public class ParkingOrderService {
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Autowired
     private UserOperator userOperator;
@@ -58,7 +67,10 @@ public class ParkingOrderService {
     }
 
     public ParkingOrder updateParkingOrderStatus(String orderId,int status) {
-        ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).get();
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
+        if (parkingOrder == null){
+            throw new LoginTokenExpiredException();
+        }
         ParkingBoy parkingBoy = parkingOrder.getParkingBoy();
         switch (status){
             case 3:
@@ -137,5 +149,41 @@ public class ParkingOrderService {
         parkingOrder.setParkingBoy(parkingBoy);
         parkingBoyRepository.save(parkingBoy);
         return parkingOrderRepository.save(parkingOrder);
+    }
+
+    public ParkingOrder generateParkingOrder(String carNumber) {
+        Customer customer = customerRepository.findById(userOperator.getUser().getId()).orElse(null);
+        if (customer != null ){
+            if (parkingOrderRepository.findByCarNumberAndEndTime(carNumber,null) == null){
+                ParkingOrder parkingOrder = new ParkingOrder();
+                parkingOrder.setCarNumber(carNumber);
+                parkingOrder.setCustomer(customer);
+                parkingOrder.setStartTime(new Timestamp(System.currentTimeMillis()));
+                parkingOrder.setStatus(1);
+                return parkingOrderRepository.save(parkingOrder);
+            }
+            throw new AlreadyParkingException();
+
+        }
+        throw new NotFindCustomerExcepetion();
+    }
+
+    public List<ParkingOrder> getNotFinishParkingOrderByUser() {
+        Customer customer = customerRepository.findById(userOperator.getUser().getId()).orElse(null);
+        if (customer != null ) {
+            List<ParkingOrder> statusOne = parkingOrderRepository.findAllByCustomerAndStatus(customer, 1);
+            List<ParkingOrder> statusTwo = parkingOrderRepository.findAllByCustomerAndStatus(customer, 2);
+            List<ParkingOrder> statusThree = parkingOrderRepository.findAllByCustomerAndStatus(customer, 3);
+            List<ParkingOrder> statusFour = parkingOrderRepository.findAllByCustomerAndStatus(customer, 4);
+            List<ParkingOrder> statusFive = parkingOrderRepository.findAllByCustomerAndStatus(customer, 5);
+            List<ParkingOrder> allList = new ArrayList<>();
+            allList.addAll(statusOne);
+            allList.addAll(statusTwo);
+            allList.addAll(statusThree);
+            allList.addAll(statusFour);
+            allList.addAll(statusFive);
+            return allList;
+        }
+        return null;
     }
 }

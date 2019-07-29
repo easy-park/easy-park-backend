@@ -11,9 +11,10 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "parking_order")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class ParkingOrder {
     @Id
-    @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "jpa-uuid")
     @Column(name = "id")
     private String Id;
 

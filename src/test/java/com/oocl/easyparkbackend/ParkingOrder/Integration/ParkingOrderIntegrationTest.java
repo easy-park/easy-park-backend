@@ -58,13 +58,13 @@ public class ParkingOrderIntegrationTest {
         ParkingLot parkingLot = new ParkingLot("224","456",5,5);
         parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,1,returnParkingBoy,parkingLot);
-        parkingOrderRepository.save(parkingOrder);
+        ParkingOrder orderSave = parkingOrderRepository.save(parkingOrder);
 
-        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}","324").param("status","2"));
+        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}",orderSave.getId()).param("status","2"));
 
 
         result.andExpect(status().isOk()).andExpect(jsonPath("$.data.status",is(2)));
-        assertThat(parkingOrderRepository.findById("324").get().getStatus().equals(2));
+        assertThat(parkingOrderRepository.findById(orderSave.getId()).get().getStatus().equals(2));
     }
 
     @Test
@@ -74,12 +74,12 @@ public class ParkingOrderIntegrationTest {
         ParkingLot parkingLot = new ParkingLot("224","456",5,5);
         parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,2,returnParkingBoy,parkingLot);
-        parkingOrderRepository.save(parkingOrder);
+        ParkingOrder orderSave = parkingOrderRepository.save(parkingOrder);
 
-        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}","324").param("status","3"));
+        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}",orderSave.getId()).param("status","3"));
 
         result.andExpect(status().isOk()).andExpect(jsonPath("$.data.status",is(3)));
-        assertThat(parkingOrderRepository.findById("324").get().getStatus().equals(3));
+        assertThat(parkingOrderRepository.findById(orderSave.getId()).get().getStatus().equals(3));
         assertThat(parkingBoyRepository.findById(returnParkingBoy.getId()).get().getStatus().equals(0));
     }
 
@@ -90,12 +90,12 @@ public class ParkingOrderIntegrationTest {
         ParkingLot parkingLot = new ParkingLot("224","456",5,3);
         parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,2,returnParkingBoy,parkingLot);
-        parkingOrderRepository.save(parkingOrder);
+        ParkingOrder orderSave = parkingOrderRepository.save(parkingOrder);
 
-        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}","324").param("status","5"));
+        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}",orderSave.getId()).param("status","5"));
 
         result.andExpect(status().isOk()).andExpect(jsonPath("$.data.status",is(5)));
-        assertThat(parkingOrderRepository.findById("324").get().getStatus().equals(5));
+        assertThat(parkingOrderRepository.findById(orderSave.getId()).get().getStatus().equals(5));
         assertThat(parkingBoyRepository.findById(returnParkingBoy.getId()).get().getStatus().equals(1));
         assertThat(parkingLotRepository.findById("224").get().getAvailable().equals(4));
     }

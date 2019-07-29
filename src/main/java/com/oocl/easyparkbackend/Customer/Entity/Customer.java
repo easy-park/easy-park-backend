@@ -30,19 +30,15 @@ public class Customer {
     @NotNull
     private String phone;
 
-    @OneToMany
-    private List<Car> carList;
-
     public Customer() {
     }
 
-    public Customer(Integer id, @NotNull String name, @NotNull String username, @NotNull String password, @NotNull String phone, List<Car> carList) {
+    public Customer(Integer id, @NotNull String name, @NotNull String username, @NotNull String password, @NotNull String phone) {
         Id = id;
         this.name = name;
         this.username = username;
         this.password = password;
         this.phone = phone;
-        this.carList = carList;
     }
 
     public Integer getId() {
@@ -83,13 +79,5 @@ public class Customer {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public List<Car> getCarList() {
-        return carList;
-    }
-
-    public void setCarList(List<Car> carList) {
-        this.carList = carList;
     }
 }
