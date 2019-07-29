@@ -21,8 +21,7 @@ public class CustomerRepositoryTest {
 
     @Test
     void should_return_parkingBoy_when_getByUsernameAndPassword_given_username_and_password() {
-        List<Car> cars = new ArrayList<>();
-        Customer customer = new Customer(1,"stefan","123","123","13192269125",cars);
+        Customer customer = new Customer(1,"stefan","123","123","13192269125");
         customerRepository.save(customer);
 
         Customer customerFind = customerRepository.findByUsernameAndPassword("123", "123");
