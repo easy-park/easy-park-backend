@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Date;
 
 @Service
 public class ParkingOrderService {
@@ -85,6 +86,7 @@ public class ParkingOrderService {
                 break;
             case 5:
                 parkingBoy.setStatus(1);
+                parkingOrder.setEndTime(new Timestamp(new Date().getTime()));
                 parkingOrder.setParkingLot(addParkingLotAvailable(parkingOrder.getParkingLot().getId()));
                 break;
             default:
