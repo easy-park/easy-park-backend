@@ -45,4 +45,18 @@ public class ParkingLotControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].name").value("停车场1"));
     }
+
+    @Test
+    void should_return_parkingLots_when_invoke_getAllParkingLots() throws Exception {
+        List<ParkingLot> parkingLots =new ArrayList<>();
+        ParkingLot parkingLot1 = new ParkingLot("123","parkinglot1",40,20);
+        ParkingLot parkingLot2 = new ParkingLot("456","parkinglot2",40,30);
+        parkingLots.add(parkingLot1);
+        parkingLots.add(parkingLot2);
+
+        when(parkingLotService.getAllParkingLot()).thenReturn(parkingLots);
+        ResultActions resultActions = mvc.perform(get("/parkinglots"));
+
+        resultActions.andExpect(status().isOk());
+    }
 }

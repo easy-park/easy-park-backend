@@ -6,6 +6,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
+import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ public class ParkingLotService {
     private ParkingBoyRepository parkingBoyRepository;
     @Autowired
     private UserOperator userOperator;
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
 
 
     public List<ParkingLot> getParkingLotByParkingBoy() {
@@ -31,5 +34,10 @@ public class ParkingLotService {
             return optionalParkingBoy.get().getParkingLotList();
         }
         throw new ParkingBoyIdErrorException();
+    }
+
+    public List<ParkingLot> getAllParkingLot() {
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll();
+        return parkingLots;
     }
 }
