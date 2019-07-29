@@ -50,7 +50,7 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     public void should_return_parking_order_and_update_parking_order_when_put_to_parking_order_given_order_id_and_status() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy(12345,"123","123","123","sdfsf",1,"12345",new ArrayList<>());
+        ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
         ParkingLot parkingLot = new ParkingLot("224","456",5,5);
         parkingLotRepository.save(parkingLot);
@@ -66,7 +66,7 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     public void should_update_parking_order_and_parking_boy_status_when_update_parking_order_status() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy(12345,"123","123","123","sdfsf",1,"12345",new ArrayList<>());
+        ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
         ParkingLot parkingLot = new ParkingLot("224","456",5,5);
         parkingLotRepository.save(parkingLot);
@@ -82,7 +82,7 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     public void should_update_parking_order_and_parking_boy_status_and_parking_lots_capacity_when_update_parking_order_status() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy(12345,"123","123","123","sdfsf",1,"12345",new ArrayList<>());
+        ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
         ParkingLot parkingLot = new ParkingLot("224","456",5,3);
         parkingLotRepository.save(parkingLot);
