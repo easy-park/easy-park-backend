@@ -152,7 +152,8 @@ public class ParkingOrderService {
     }
 
     public ParkingOrder generateParkingOrder(String carNumber) {
-        Customer customer = customerRepository.findById(userOperator.getUser().getId()).orElse(null);
+        User user = userOperator.getUser();
+        Customer customer = customerRepository.findById(user.getId()).orElse(null);
         if (customer != null ){
             if (parkingOrderRepository.findByCarNumberAndEndTime(carNumber,null) == null){
                 ParkingOrder parkingOrder = new ParkingOrder();
