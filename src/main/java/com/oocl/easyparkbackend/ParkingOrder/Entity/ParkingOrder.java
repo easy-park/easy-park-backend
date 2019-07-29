@@ -1,5 +1,6 @@
 package com.oocl.easyparkbackend.ParkingOrder.Entity;
 
+import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import org.hibernate.annotations.GenericGenerator;
@@ -39,6 +40,9 @@ public class ParkingOrder {
     @OneToOne
     private ParkingLot parkingLot;
 
+    @ManyToOne
+    private Customer customer;
+
     public ParkingOrder() {
     }
 
@@ -51,6 +55,18 @@ public class ParkingOrder {
         this.status = status;
         this.parkingBoy = parkingBoy;
         this.parkingLot = parkingLot;
+    }
+
+    public ParkingOrder(String id, @NotNull String carNumber, Timestamp startTime, Timestamp endTime, Double price, @NotNull Integer status, ParkingBoy parkingBoy, ParkingLot parkingLot, Customer customer) {
+        Id = id;
+        this.carNumber = carNumber;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.price = price;
+        this.status = status;
+        this.parkingBoy = parkingBoy;
+        this.parkingLot = parkingLot;
+        this.customer = customer;
     }
 
     public String getId() {
@@ -115,5 +131,13 @@ public class ParkingOrder {
 
     public void setParkingLot(ParkingLot parkingLot) {
         this.parkingLot = parkingLot;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
