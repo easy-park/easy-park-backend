@@ -93,4 +93,22 @@ public class ParkingBoyControllerTest {
 
         resultActions.andExpect(status().isOk());
     }
+
+    @Test
+    public void should_return_parkingBoys_when_invoke_getAllParkingBoy() throws Exception {
+        List<ParkingBoy> parkingBoys = new ArrayList<>();
+        ParkingBoy parkingBoy1 = new ParkingBoy();
+        parkingBoy1.setName("sean");
+        ParkingBoy parkingBoy2 = new ParkingBoy();
+        parkingBoy2.setName("sean2");
+        parkingBoys.add(parkingBoy1);
+        parkingBoys.add(parkingBoy2);
+
+        when(parkingBoyService.getAllParkingBoy()).thenReturn(parkingBoys);
+        ResultActions resultActions= mvc.perform(get("/parkingBoys/all"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.[0].name").value("sean"))
+                .andExpect(jsonPath("$.data.[1].name").value("sean2"));
+    }
 }

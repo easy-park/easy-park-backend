@@ -9,6 +9,8 @@ import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/parkingBoys")
 public class ParkingBoyController {
@@ -24,6 +26,12 @@ public class ParkingBoyController {
     @GetMapping
     public ResponseVO findParkingBoy(){
         return ResponseVO.success(parkingBoyService.findParkingBoy());
+    }
+
+    @GetMapping("/all")
+    public ResponseVO getAllParkingBoy() {
+        List<ParkingBoy> parkingBoys = parkingBoyService.getAllParkingBoy();
+        return ResponseVO.success(parkingBoys);
     }
 
     @ExceptionHandler(UserNameOrPasswordErrorException.class)
