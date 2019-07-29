@@ -55,7 +55,7 @@ public class ParkingLotControllerTest {
         parkingLots.add(parkingLot2);
 
         when(parkingLotService.getAllParkingLot()).thenReturn(parkingLots);
-        ResultActions resultActions = mvc.perform(get("/parkinglots"));
+        ResultActions resultActions = mvc.perform(get("/parking_lots"));
 
         resultActions.andExpect(status().isOk());
     }
