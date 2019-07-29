@@ -3,6 +3,7 @@ package com.oocl.easyparkbackend.Customer.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.Customer.Service.CustomerService;
+import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -80,6 +84,22 @@ public class CustomerControllerTest {
 
         resultActions.andExpect(status().isOk());
         verify(customerService).save(any());
+    }
+
+    @Test
+    public void should_return_historyOrders_when_invoke_getHistoryOrder() throws Exception {
+        Customer customer = new Customer();
+        customer.setId(123);
+        customer.setUsername("15574957517");
+        customer.setPassword("123");
+        List<ParkingOrder> parkingOrders = new ArrayList<>();
+
+
+        when(customerService.getHistoryOrder()).thenReturn(parkingOrders);
+        ResultActions resultActions = mvc.perform(get("/customer/historyorder"));
+
+        resultActions.andExpect(status().isOk());
+        verify(customerService).getHistoryOrder();
     }
 
 }

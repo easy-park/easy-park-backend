@@ -1,5 +1,7 @@
 package com.oocl.easyparkbackend.ParkingOrder.Repository;
 
+import com.oocl.easyparkbackend.Customer.Entity.Customer;
+import com.oocl.easyparkbackend.Customer.Repository.CustomerRepository;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
@@ -28,6 +30,8 @@ public class ParkingOrderRepositoryTest {
     private ParkingLotRepository parkingLotRepository;
     @Autowired
     private ParkingOrderRepository parkingOrderRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Test
     public void should_return_parkingOrder_list_when_invoke_findAllByStatus_given_status(){
@@ -124,6 +128,25 @@ public class ParkingOrderRepositoryTest {
         List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByStatus(1);
 
         assertThat(parkingOrderList.get(0).getCarNumber()).isEqualTo("eree");
+    }
+
+    @Test
+    public void should_return_parkingOrder_list_when_invoke_findByCustomerAndStatus() {
+        Customer customer = new Customer();
+        customer.setId(1);
+        customer.setName("sean");
+        customer.setUsername("sean");
+        customer.setPhone("15574957517");
+        customer.setPassword("123");
+        ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,6,null,null);
+        parkingOrder.setCustomer(customer);
+        customerRepository.save(customer);
+        parkingOrderRepository.save(parkingOrder);
+
+
+        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByCustomerAndStatus(customer,6);
+
+        assertThat(parkingOrderList.get(0).getCustomer().getName()).isEqualTo(customer.getName());
     }
 
 
