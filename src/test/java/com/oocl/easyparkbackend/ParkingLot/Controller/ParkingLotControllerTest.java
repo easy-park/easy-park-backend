@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,14 +49,28 @@ public class ParkingLotControllerTest {
 
     @Test
     void should_return_parkingLots_when_invoke_getAllParkingLots() throws Exception {
-        List<ParkingLot> parkingLots =new ArrayList<>();
-        ParkingLot parkingLot1 = new ParkingLot("123","parkinglot1",40,20);
-        ParkingLot parkingLot2 = new ParkingLot("456","parkinglot2",40,30);
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingLot parkingLot1 = new ParkingLot("123", "parkinglot1", 40, 20);
+        ParkingLot parkingLot2 = new ParkingLot("456", "parkinglot2", 40, 30);
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
 
         when(parkingLotService.getAllParkingLot()).thenReturn(parkingLots);
         ResultActions resultActions = mvc.perform(get("/parking_lots"));
+
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void should_return_parkingLots_when_invoke_findParkingLotsByName() throws Exception {
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        ParkingLot parkingLot1 = new ParkingLot("123", "parkinglot1", 40, 20);
+        ParkingLot parkingLot2 = new ParkingLot("456", "parkinglot2", 40, 30);
+        parkingLots.add(parkingLot1);
+        parkingLots.add(parkingLot2);
+
+        when(parkingLotService.findParkingLotsByName(anyString())).thenReturn(parkingLots);
+        ResultActions resultActions = mvc.perform(get("/parking_lots").param("name", "lot1"));
 
         resultActions.andExpect(status().isOk());
     }
