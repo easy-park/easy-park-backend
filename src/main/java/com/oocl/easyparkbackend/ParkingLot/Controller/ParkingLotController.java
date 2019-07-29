@@ -21,7 +21,7 @@ public class ParkingLotController {
         return ResponseVO.success(parkingLotService.getParkingLotByParkingBoy());
     }
 
-    @GetMapping("/parkinglots")
+    @GetMapping("/parking_lots")
     public ResponseVO getAllParkingLot() {
         List<ParkingLot> parkingLots = parkingLotService.getAllParkingLot();
         return ResponseVO.success(parkingLots);
