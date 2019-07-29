@@ -30,4 +30,6 @@ dependencies {
 	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.0')
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.1.3.RELEASE'
 
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.0.4.RELEASE'
+
 }
