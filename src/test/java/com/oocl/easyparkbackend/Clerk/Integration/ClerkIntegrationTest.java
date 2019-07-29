@@ -54,6 +54,8 @@ public class ClerkIntegrationTest {
 
         result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[1].username", is("username")));
         result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].username", is("use8855me")));
+        manageRepository.deleteAll();
+        parkingBoyRepository.deleteAll();
     }
 
 
@@ -76,5 +78,7 @@ public class ClerkIntegrationTest {
         for (int i = 5; i < 15; i++) {
             result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[" + i + "].username", is("username" + (i - 5))));
         }
+        manageRepository.deleteAll();
+        parkingBoyRepository.deleteAll();
     }
 }
