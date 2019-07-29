@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClerkIntegrationTest {
 
     @Autowired
@@ -43,6 +43,8 @@ public class ClerkIntegrationTest {
 
     @Test
     public void should_return_real_clerk_list_when_get_to_clerks() throws Exception {
+        manageRepository.deleteAll();
+        parkingBoyRepository.deleteAll();
         ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
         Manage manage = new Manage(1, "use8855me", "199529", "st77fan", "13192545625", 1, "953188555@qq.com");
