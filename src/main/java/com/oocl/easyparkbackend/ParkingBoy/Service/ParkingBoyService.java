@@ -75,4 +75,24 @@ public class ParkingBoyService {
         returnParkingBoys.addAll(repository.findByPhoneNumberLike("%"+phoneNumber+"%"));
         return returnParkingBoys;
     }
+
+    public List<ParkingLot> findParkingLotList(Integer parkingBoyId) {
+        if (parkingBoyId != null && parkingBoyId != 0){
+            ParkingBoy parkingBoyFind = repository.findById(parkingBoyId).orElse(null);
+            if (parkingBoyFind != null){
+                return parkingBoyFind.getParkingLotList();
+            }
+        }
+        throw new ParkingBoyIdErrorException();
+    }
+
+    public ParkingBoy setParkingBoysParkingLot(List<ParkingLot> lots, Integer parkingBoyId) {
+        ParkingBoy parkingBoy = repository.findById(parkingBoyId).orElse(null);
+        if (parkingBoy != null){
+            parkingBoy.setParkingLotList(lots);
+            ParkingBoy parkingBoySave = repository.save(parkingBoy);
+            return parkingBoySave;
+        }
+        throw new ParkingBoyIdErrorException();
+    }
 }

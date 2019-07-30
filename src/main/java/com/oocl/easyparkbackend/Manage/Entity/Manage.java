@@ -1,6 +1,6 @@
 package com.oocl.easyparkbackend.Manage.Entity;
 
-import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
+import com.oocl.easyparkbackend.Employee.Entity.Clerk;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

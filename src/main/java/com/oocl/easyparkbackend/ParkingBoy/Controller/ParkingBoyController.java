@@ -5,6 +5,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.NotFindParkingBoyException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
+import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,12 @@ public class ParkingBoyController {
     public ResponseVO findParkingBoysByPhoneNumber(@RequestParam String phoneNumber) {
         List<ParkingBoy> parkingBoys = parkingBoyService.findParkingBoysByPhoneNumber(phoneNumber);
         return ResponseVO.success(parkingBoys);
+    }
+
+    @GetMapping(path = "/parkingLots")
+    public ResponseVO findParkingLotsByParkingBoyId(@RequestBody ParkingBoy parkingBoy) {
+        List<ParkingLot> parkingLotList = parkingBoyService.findParkingLotList(parkingBoy.getId());
+        return ResponseVO.success(parkingLotList);
     }
 
     @ExceptionHandler(UserNameOrPasswordErrorException.class)
