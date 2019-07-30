@@ -60,7 +60,7 @@ public class ClerkService {
         clerkList.addAll(employeeRepository.findByNameLike("%" + name + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public List<Clerk> findClerkMessageByPhone(String phone) {
@@ -70,17 +70,17 @@ public class ClerkService {
         clerkList.addAll(employeeRepository.findByPhoneNumberLike("%" + phone + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public List<Clerk> findClerkMessageById(Integer id) {
         List<Clerk> clerkList = new ArrayList<>();
-        clerkList.add(manageRepository.findById(id).orElse(null));
-        clerkList.add(parkingBoyRepository.findById(id).orElse(null));
-        clerkList.add(employeeRepository.findById(id).orElse(null));
+        manageRepository.findById(id).ifPresent(clerkList::add);
+        parkingBoyRepository.findById(id).ifPresent(clerkList::add);
+        employeeRepository.findById(id).ifPresent(clerkList::add);
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public List<Clerk> findClerkMessageByEmail(String email) {
@@ -90,7 +90,7 @@ public class ClerkService {
         clerkList.addAll(employeeRepository.findByEmailLike("%" + email + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public Clerk update(Clerk clerk) {
