@@ -13,19 +13,17 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
-@ServerEndpoint("/WebSocket/{userId}")
+@ServerEndpoint("/WebSocket")
 public class WebSocket {
 
     private Session session;
     private static CopyOnWriteArraySet<WebSocket> webSockets = new CopyOnWriteArraySet<>();
-    private static Map<String, Session> sessionPool = new HashMap<String, Session>();
 
 
     @OnOpen
-    public void onOpen(Session session, @PathParam(value="userId")String userId) {
+    public void onOpen(Session session) {
         this.session = session;
         webSockets.add(this);
-        sessionPool.put(userId, session);
     }
 
     @OnClose
@@ -48,14 +46,4 @@ public class WebSocket {
         }
     }
 
-    public void sendOneMessage(String userName, String message) {
-        Session session = sessionPool.get(userName);
-        if (session != null) {
-            try {
-                session.getAsyncRemote().sendText(message);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
