@@ -1,17 +1,22 @@
 package com.oocl.easyparkbackend.Clerk.Service;
 
 import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
+import com.oocl.easyparkbackend.Clerk.Exception.ClerkEmailAndPhoneNumberNotNullException;
+import com.oocl.easyparkbackend.Clerk.Exception.ClerkIdErrorException;
+import com.oocl.easyparkbackend.Clerk.Exception.NoSuchPositionException;
 import com.oocl.easyparkbackend.Employee.Entity.Employee;
 import com.oocl.easyparkbackend.Employee.Repository.EmployeeRepository;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
+import com.oocl.easyparkbackend.common.vo.ClerkPosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,5 +88,38 @@ public class ClerkService {
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
         return clerkList;
+    }
+
+    public Clerk update(Clerk clerk) {
+        if(clerk.getEmail() == null || clerk.getPhoneNumber() == null) {
+            throw new ClerkEmailAndPhoneNumberNotNullException();
+        }
+        if(clerk.getPosition() == null) {
+            throw new NoSuchPositionException();
+        }
+        if(clerk.getPosition().equals(ClerkPosition.MANAGER)) {
+            Optional<Manage> optionalManage = manageRepository.findById(clerk.getId());
+            if(optionalManage.isPresent()) {
+                Manage manage = optionalManage.get();
+                manage.setEmail(clerk.getEmail());
+                manage.setPhoneNumber(clerk.getPhoneNumber());
+                return manageRepository.save(manage);
+            }
+            throw new ClerkIdErrorException();
+        }
+        if(clerk.getPosition().equals(ClerkPosition.ADMIN)) {
+            // todo update admin entity
+        }
+        if(clerk.getPosition().equals(ClerkPosition.PARKINGBOY)) {
+            Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(clerk.getId());
+            if(optionalParkingBoy.isPresent()) {
+                ParkingBoy parkingBoy = optionalParkingBoy.get();
+                parkingBoy.setEmail(clerk.getEmail());
+                parkingBoy.setPhoneNumber(clerk.getPhoneNumber());
+                return parkingBoyRepository.save(parkingBoy);
+            }
+            throw new ClerkIdErrorException();
+        }
+        throw new NoSuchPositionException();
     }
 }
