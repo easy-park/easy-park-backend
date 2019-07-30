@@ -1,5 +1,7 @@
 package com.oocl.easyparkbackend.ParkingLot.Integration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -17,6 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,5 +74,18 @@ public class ParkingLotIntegrationTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.[0].name").value("parkinglot1"));
         assertThat(parkingLotRepository.findByCapacityBetween(1, 30).get(0).getName().equals("parkinglot1"));
+    }
+
+    @Test
+    public void should_return_parkingLot_when_invoke_updateParkingLot() throws Exception {
+        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+
+        ResultActions resultActions = mockMvc.perform(put("/parking_lots")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(parkingLot)));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name").value("parkinglot1"));
+        assertThat(parkingLotRepository.save(parkingLot).getName().equals("parkinglot1"));
     }
 }
