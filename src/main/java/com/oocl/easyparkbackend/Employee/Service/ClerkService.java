@@ -57,7 +57,7 @@ public class ClerkService {
         List<Clerk> clerkList = new ArrayList<>();
         clerkList.addAll(manageRepository.findAllByNameLike("%" + name + "%"));
         clerkList.addAll(parkingBoyRepository.findByNameLike("%" + name + "%"));
-        clerkList.addAll(employeeRepository.findAll());
+        clerkList.addAll(employeeRepository.findByNameLike("%" + name + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
         return clerkList;
@@ -67,6 +67,7 @@ public class ClerkService {
         List<Clerk> clerkList = new ArrayList<>();
         clerkList.addAll(manageRepository.findAllByPhoneNumberLike("%" + phone + "%"));
         clerkList.addAll(parkingBoyRepository.findByPhoneNumberLike("%" + phone + "%"));
+        clerkList.addAll(employeeRepository.findByPhoneNumberLike("%" + phone + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
         return clerkList;
@@ -76,6 +77,7 @@ public class ClerkService {
         List<Clerk> clerkList = new ArrayList<>();
         clerkList.add(manageRepository.findById(id).orElse(null));
         clerkList.add(parkingBoyRepository.findById(id).orElse(null));
+        clerkList.add(employeeRepository.findById(id).orElse(null));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
         return clerkList;
@@ -85,6 +87,7 @@ public class ClerkService {
         List<Clerk> clerkList = new ArrayList<>();
         clerkList.addAll(manageRepository.findAllByEmailLike("%" + email + "%"));
         clerkList.addAll(parkingBoyRepository.findByEmailLike("%" + email + "%"));
+        clerkList.addAll(employeeRepository.findByEmailLike("%" + email + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
         return clerkList;
