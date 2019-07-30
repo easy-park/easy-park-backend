@@ -32,11 +32,13 @@ public class ParkingLotIntegrationTest {
     private ParkingLotRepository parkingLotRepository;
 
     @BeforeEach
-    void setup(){ mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build(); }
+    void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    }
 
     @Test
     public void should_return_parkingLots_when_invoke_findByNameLike_given_name() throws Exception {
-        ParkingLot parkingLot = new ParkingLot("123","parkinglot1",20,10);
+        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
         parkingLotRepository.save(parkingLot);
 
         ResultActions resultActions = mockMvc.perform(get("/parking_lots").param("name", "lot1"));
@@ -44,5 +46,29 @@ public class ParkingLotIntegrationTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.[0].name").value("parkinglot1"));
         assertThat(parkingLotRepository.findByNameLike("%lot1%").get(0).getName().equals("parkinglot1"));
+    }
+
+    @Test
+    public void should_return_parkingLots_when_invoke_findAllParkingLot() throws Exception {
+        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+        parkingLotRepository.save(parkingLot);
+
+        ResultActions resultActions = mockMvc.perform(get("/parking_lots"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.[0].name").value("parkinglot1"));
+        assertThat(parkingLotRepository.findAll().get(0).getName().equals("parkinglot1"));
+    }
+
+    @Test
+    public void should_return_parkingLots_when_invoke_getParkingLotsByRange() throws Exception {
+        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+        parkingLotRepository.save(parkingLot);
+
+        ResultActions resultActions = mockMvc.perform(get("/parking_lots?start=1&end=30"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.[0].name").value("parkinglot1"));
+        assertThat(parkingLotRepository.findByCapacityBetween(1, 30).get(0).getName().equals("parkinglot1"));
     }
 }
