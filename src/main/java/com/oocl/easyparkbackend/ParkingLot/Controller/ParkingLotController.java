@@ -2,13 +2,13 @@ package com.oocl.easyparkbackend.ParkingLot.Controller;
 
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
+import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotNameAndCapacityNotNull;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -27,8 +27,20 @@ public class ParkingLotController {
         return ResponseVO.success(parkingLots);
     }
 
+    @PutMapping("/parking_lots")
+    public ResponseVO updateParkingLot(@RequestBody ParkingLot parkingLot) {
+        ParkingLot fetchedParkingLot = parkingLotService.update(parkingLot);
+        return ResponseVO.success(fetchedParkingLot);
+    }
+
     @ExceptionHandler(ParkingBoyIdErrorException.class)
     public ResponseVO handleParkingBoyIdErrorException(ParkingBoyIdErrorException exception){
         return ResponseVO.serviceFail(exception.getMessage());
     }
+
+    @ExceptionHandler(ParkingLotNameAndCapacityNotNull.class)
+    public ResponseVO handleParkingLotNameAndCapacityNotNull(ParkingLotNameAndCapacityNotNull exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
 }

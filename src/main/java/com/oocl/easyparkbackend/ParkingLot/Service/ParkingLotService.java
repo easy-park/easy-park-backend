@@ -6,10 +6,13 @@ import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
+import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotNameAndCapacityNotNull;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,5 +50,19 @@ public class ParkingLotService {
         List<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.addAll(parkingLotRepository.findByNameLike("%"+name+"%"));
         return parkingLots;
+    }
+
+    public ParkingLot update(ParkingLot parkingLot) {
+        if(parkingLot.getName() == null || parkingLot.getName().length() == 0 || parkingLot.getCapacity() == null) {
+            throw new ParkingLotNameAndCapacityNotNull();
+        }
+        Optional<ParkingLot> optionalParkingLot = parkingLotRepository.findById(parkingLot.getId());
+        if (!optionalParkingLot.isPresent()) {
+            throw new ParkingOrderIdErrorException();
+        }
+        ParkingLot fetchedParkingLot = optionalParkingLot.get();
+        fetchedParkingLot.setName(parkingLot.getName());
+        fetchedParkingLot.setCapacity(parkingLot.getCapacity());
+        return parkingLotRepository.save(fetchedParkingLot);
     }
 }
