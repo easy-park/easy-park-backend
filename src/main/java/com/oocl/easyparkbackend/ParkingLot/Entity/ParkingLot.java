@@ -11,6 +11,9 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "parking_lot")
 public class ParkingLot {
+    public static final int STATUS_FROZEN = 0;
+    public static final int STATUS_ACTIVE = 1;
+
     @Id
     @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
     @Column(name = "id")
@@ -29,7 +32,7 @@ public class ParkingLot {
     private Integer available;
 
     @Column(name = "status")
-    private Boolean status;
+    private Integer status;
 
     public ParkingLot() {
     }
@@ -41,7 +44,7 @@ public class ParkingLot {
         this.available = available;
     }
 
-    public ParkingLot(String id, @NotNull String name, @NotNull Integer capacity, @NotNull Integer available, Boolean status) {
+    public ParkingLot(String id, @NotNull String name, @NotNull Integer capacity, @NotNull Integer available, Integer status) {
         Id = id;
         this.name = name;
         this.capacity = capacity;
@@ -81,11 +84,11 @@ public class ParkingLot {
         this.available = available;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }

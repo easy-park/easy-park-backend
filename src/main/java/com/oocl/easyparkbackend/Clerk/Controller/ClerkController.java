@@ -1,12 +1,13 @@
 package com.oocl.easyparkbackend.Clerk.Controller;
 
 import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
+import com.oocl.easyparkbackend.Clerk.Exception.ClerkEmailAndPhoneNumberNotNullException;
+import com.oocl.easyparkbackend.Clerk.Exception.ClerkIdErrorException;
+import com.oocl.easyparkbackend.Clerk.Exception.NoSuchPositionException;
 import com.oocl.easyparkbackend.Clerk.Service.ClerkService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,5 +42,26 @@ public class ClerkController {
     public ResponseVO selectClerkMessageByPhone(@RequestParam String phone){
         List<Clerk> clerkList = clerkService.findClerkMessageByPhone(phone);
         return ResponseVO.success(clerkList);
+    }
+
+    @PutMapping("/clerks")
+    public ResponseVO updateClerkMessage(@RequestBody Clerk clerk) {
+        Clerk returnClerk = clerkService.update(clerk);
+        return ResponseVO.success(returnClerk);
+    }
+
+    @ExceptionHandler(ClerkEmailAndPhoneNumberNotNullException.class)
+    public ResponseVO handleClerkEmailAndPhoneNumberNotNullException(ClerkEmailAndPhoneNumberNotNullException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(ClerkIdErrorException.class)
+    public ResponseVO handleClerkIdErrorException(ClerkIdErrorException exception){
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchPositionException.class)
+    public ResponseVO handleNoSuchPositionException(NoSuchPositionException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
     }
 }

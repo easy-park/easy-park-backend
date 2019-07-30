@@ -139,13 +139,23 @@ public class ParkingOrderRepositoryTest {
         customer.setPassword("123");
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,6,null,null);
         parkingOrder.setCustomer(customer);
-        Customer returnCustomer = customerRepository.save(customer);
+        Customer customerSave =  customerRepository.save(customer);
         parkingOrderRepository.save(parkingOrder);
 
 
-        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByCustomerAndStatus(returnCustomer,6);
+        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByCustomerAndStatus(customerSave,6);
 
-        assertThat(parkingOrderList.get(0).getCustomer().getName()).isEqualTo(customer.getName());
+        assertThat(parkingOrderList.get(0).getCustomer().getName()).isEqualTo(customerSave.getName());
+    }
+
+    @Test
+    public void should_return_parkingOrder_list_when_invoke_findByCarNumberLike() {
+        ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,1,null,null);
+        parkingOrderRepository.save(parkingOrder);
+
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findByCarNumberLike("%ee%");
+
+        assertThat(parkingOrders.get(0).getCarNumber()).isEqualTo(parkingOrder.getCarNumber());
     }
 
 

@@ -1,13 +1,17 @@
 package com.oocl.easyparkbackend.Clerk.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
 import com.oocl.easyparkbackend.Clerk.Service.ClerkService;
+import com.oocl.easyparkbackend.Manage.Entity.Manage;
 import com.oocl.easyparkbackend.ParkingBoy.Controller.ParkingBoyController;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
+import com.oocl.easyparkbackend.common.vo.ClerkPosition;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -95,5 +100,22 @@ public class ClerkControllerTest {
         result.andExpect(status().isOk());
     }
 
+    @Test
+    public void should_update_clerk_message_when_invoke_update_given_clerk() throws Exception {
+        Manage manage = new Manage(1, "manager1", "password", "amy", "18432342334", 1, "123@qq.com");
+        Clerk clerk = new Clerk();
+        clerk.setId(1);
+        clerk.setPosition(ClerkPosition.MANAGER);
+        clerk.setPhoneNumber("18432342334");
+        clerk.setEmail("123@qq.com");
+
+        when(clerkService.update(any())).thenReturn(manage);
+        ResultActions resultActions = mockMvc.perform(put("/clerks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(clerk)));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email", Matchers.is("123@qq.com")));
+    }
 
 }
