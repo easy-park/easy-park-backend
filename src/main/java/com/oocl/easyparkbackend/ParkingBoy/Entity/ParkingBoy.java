@@ -40,6 +40,7 @@ public class ParkingBoy {
     private String email;
 
     @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "parking_boy_id")
     private List<ParkingLot> parkingLotList;
 
     public ParkingBoy() {

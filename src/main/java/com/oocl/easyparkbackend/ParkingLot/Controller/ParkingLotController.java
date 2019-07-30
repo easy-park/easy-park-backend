@@ -5,11 +5,11 @@ import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotNameAndCapacityNotNull;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotRangeErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
+import com.oocl.easyparkbackend.ParkingLot.Vo.LotsAndBoysLotsVo;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -38,6 +38,12 @@ public class ParkingLotController {
     public ResponseVO getParkingLotsByRange(int start, int end) {
         List<ParkingLot> parkingLots =  parkingLotService.getParkingLotsByRange(start, end);
         return ResponseVO.success(parkingLots);
+    }
+
+    @GetMapping(path = "/parking_lots_boys",params = "parkingBoyId")
+    public ResponseVO getAllParkingListAndParkingBoysParkingLot(Integer parkingBoyId) {
+        LotsAndBoysLotsVo lotsAndBoysLotsVo = parkingLotService.getAllParkingListAndParkingBoysParkingLot(parkingBoyId);
+        return ResponseVO.success(lotsAndBoysLotsVo);
     }
 
     @ExceptionHandler(ParkingBoyIdErrorException.class)
