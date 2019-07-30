@@ -72,6 +72,12 @@ public class ParkingOrderController {
         return ResponseVO.success(list);
     }
 
+    @GetMapping(path = "/parkingorderlist", params = "carnumber")
+    public ResponseVO searchParkingOrdersByName(String carnumber) {
+        List<ParkingOrder> list = parkingOrderService.searchParkingOrdersByCarNumber(carnumber);
+        return ResponseVO.success(list);
+    }
+
     @ExceptionHandler(AlreadyParkingException.class)
     public ResponseVO handleAlreadyParkingException(AlreadyParkingException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
