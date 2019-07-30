@@ -133,4 +133,15 @@ public class ParkingOrderControllerTest {
 
     }
 
+
+    @Test
+    public void should_return_all_parking_order_when_get_to_parking_order() throws Exception {
+        List<ParkingOrder> parkingOrderList = new ArrayList<>();
+        when(parkingOrderService.getAllParkingOrder()).thenReturn(parkingOrderList);
+
+        ResultActions result = mockMvc.perform(get("/parkingorderlist"));
+
+        result.andExpect(status().isOk());
+    }
+
 }
