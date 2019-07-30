@@ -163,8 +163,9 @@ public class ParkingOrderService {
         parkingOrder.setStatus(ParkingOrderStatus.RECEIVED_ORDER);
         parkingOrder.setParkingBoy(parkingBoy);
         parkingBoyRepository.save(parkingBoy);
+        ParkingOrder order = parkingOrderRepository.save(parkingOrder);
         redisLock.unlock(parkingOrderId.toString(), String.valueOf(time));
-        return parkingOrderRepository.save(parkingOrder);
+        return order;
     }
 
     public ParkingOrder generateParkingOrder(String carNumber) {
