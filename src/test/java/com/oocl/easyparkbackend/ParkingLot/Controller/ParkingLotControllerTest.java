@@ -1,6 +1,6 @@
 package com.oocl.easyparkbackend.ParkingLot.Controller;
 
-import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
 import org.junit.jupiter.api.Test;
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -15,10 +16,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +71,19 @@ public class ParkingLotControllerTest {
 
         when(parkingLotService.findParkingLotsByName(anyString())).thenReturn(parkingLots);
         ResultActions resultActions = mvc.perform(get("/parking_lots").param("name", "lot1"));
+
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void should_update_parkingLot_when_invoke_updateParkingLot_given_parkingLot() throws Exception {
+        ParkingLot parkingLot = new ParkingLot("123", "parkingLot", 10, 10);
+
+        when(parkingLotService.update(any())).thenReturn(parkingLot);
+
+        ResultActions resultActions = mvc.perform(put("/parking_lots")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(parkingLot)));
 
         resultActions.andExpect(status().isOk());
     }

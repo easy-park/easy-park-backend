@@ -1,6 +1,5 @@
 package com.oocl.easyparkbackend.ParkingLot.Repository;
 
-import com.oocl.easyparkbackend.ParkingLot.Controller.ParkingLotController;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
