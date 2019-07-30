@@ -68,7 +68,7 @@ public class ParkingLotService {
     }
 
     public List<ParkingLot> getParkingLotsByRange(int start, int end) {
-        if (start == 0 || end == 0) {
+        if (start < 0 || end == 0) {
             throw new ParkingLotRangeErrorException();
         }
         if (start > end) {
