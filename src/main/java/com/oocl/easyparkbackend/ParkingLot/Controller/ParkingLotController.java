@@ -3,6 +3,7 @@ package com.oocl.easyparkbackend.ParkingLot.Controller;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotNameAndCapacityNotNull;
+import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotRangeErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class ParkingLotController {
         return ResponseVO.success(fetchedParkingLot);
     }
 
+    @GetMapping(path = "/parking_lots", params = {"start", "end"})
+    public ResponseVO getParkingLotsByRange(int start, int end) {
+        List<ParkingLot> parkingLots =  parkingLotService.getParkingLotsByRange(start, end);
+        return ResponseVO.success(parkingLots);
+    }
+
     @ExceptionHandler(ParkingBoyIdErrorException.class)
     public ResponseVO handleParkingBoyIdErrorException(ParkingBoyIdErrorException exception){
         return ResponseVO.serviceFail(exception.getMessage());
@@ -40,6 +47,11 @@ public class ParkingLotController {
 
     @ExceptionHandler(ParkingLotNameAndCapacityNotNull.class)
     public ResponseVO handleParkingLotNameAndCapacityNotNull(ParkingLotNameAndCapacityNotNull exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(ParkingLotRangeErrorException.class)
+    public ResponseVO handleParkingLotRangeErrorException(ParkingLotRangeErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 
