@@ -1,10 +1,10 @@
-package com.oocl.easyparkbackend.Clerk.Controller;
+package com.oocl.easyparkbackend.Employee.Controller;
 
-import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
-import com.oocl.easyparkbackend.Clerk.Exception.ClerkEmailAndPhoneNumberNotNullException;
-import com.oocl.easyparkbackend.Clerk.Exception.ClerkIdErrorException;
-import com.oocl.easyparkbackend.Clerk.Exception.NoSuchPositionException;
-import com.oocl.easyparkbackend.Clerk.Service.ClerkService;
+import com.oocl.easyparkbackend.Employee.Entity.Clerk;
+import com.oocl.easyparkbackend.Employee.Exception.ClerkEmailAndPhoneNumberNotNullException;
+import com.oocl.easyparkbackend.Employee.Exception.ClerkIdErrorException;
+import com.oocl.easyparkbackend.Employee.Exception.NoSuchPositionException;
+import com.oocl.easyparkbackend.Employee.Service.ClerkService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

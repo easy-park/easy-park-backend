@@ -1,8 +1,7 @@
 package com.oocl.easyparkbackend.Clerk.Integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
+import com.oocl.easyparkbackend.Employee.Entity.Clerk;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;

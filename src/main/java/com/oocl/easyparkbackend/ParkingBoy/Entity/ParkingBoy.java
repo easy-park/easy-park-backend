@@ -1,8 +1,7 @@
 package com.oocl.easyparkbackend.ParkingBoy.Entity;
 
-import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
+import com.oocl.easyparkbackend.Employee.Entity.Clerk;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

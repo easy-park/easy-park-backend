@@ -1,15 +1,10 @@
 package com.oocl.easyparkbackend.Clerk.Controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oocl.easyparkbackend.Clerk.Entity.Clerk;
-import com.oocl.easyparkbackend.Clerk.Service.ClerkService;
+import com.oocl.easyparkbackend.Employee.Entity.Clerk;
+import com.oocl.easyparkbackend.Employee.Service.ClerkService;
+import com.oocl.easyparkbackend.Employee.Controller.ClerkController;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
-import com.oocl.easyparkbackend.ParkingBoy.Controller.ParkingBoyController;
-import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
-import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
-import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
-import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
 import com.oocl.easyparkbackend.common.vo.ClerkPosition;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -26,10 +20,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;

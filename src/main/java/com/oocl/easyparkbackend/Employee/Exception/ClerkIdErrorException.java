@@ -1,4 +1,4 @@
-package com.oocl.easyparkbackend.Clerk.Exception;
+package com.oocl.easyparkbackend.Employee.Exception;
 
 public class ClerkIdErrorException extends RuntimeException {
     @Override
