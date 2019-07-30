@@ -5,6 +5,7 @@ import com.oocl.easyparkbackend.Clerk.Service.ClerkService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
