@@ -148,5 +148,15 @@ public class ParkingOrderRepositoryTest {
         assertThat(parkingOrderList.get(0).getCustomer().getName()).isEqualTo(customerSave.getName());
     }
 
+    @Test
+    public void should_return_parkingOrder_list_when_invoke_findByCarNumberLike() {
+        ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,1,null,null);
+        parkingOrderRepository.save(parkingOrder);
+
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findByCarNumberLike("%ee%");
+
+        assertThat(parkingOrders.get(0).getCarNumber()).isEqualTo(parkingOrder.getCarNumber());
+    }
+
 
 }

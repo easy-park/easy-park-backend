@@ -11,6 +11,9 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "parking_lot")
 public class ParkingLot {
+    public static final int STATUS_FROZEN = 0;
+    public static final int STATUS_ACTIVE = 1;
+
     @Id
     @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
     @Column(name = "id")

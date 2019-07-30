@@ -57,14 +57,13 @@ public class ParkingLotService {
         if (parkingLot.getName() == null || parkingLot.getName().length() == 0 || parkingLot.getCapacity() == null) {
             throw new ParkingLotNameAndCapacityNotNull();
         }
-        Optional<ParkingLot> optionalParkingLot = parkingLotRepository.findById(parkingLot.getId());
-        if (!optionalParkingLot.isPresent()) {
-            throw new ParkingOrderIdErrorException();
-        }
-        ParkingLot fetchedParkingLot = optionalParkingLot.get();
-        fetchedParkingLot.setName(parkingLot.getName());
-        fetchedParkingLot.setCapacity(parkingLot.getCapacity());
-        return parkingLotRepository.save(fetchedParkingLot);
+        return parkingLotRepository.findById(parkingLot.getId())
+                .map(dbParkingLot -> {
+                    dbParkingLot.setName(parkingLot.getName());
+                    dbParkingLot.setCapacity(parkingLot.getCapacity());
+                    dbParkingLot.setStatus(parkingLot.getStatus());
+                    return parkingLotRepository.save(dbParkingLot);
+                }).orElseThrow(ParkingOrderIdErrorException::new);
     }
 
     public List<ParkingLot> getParkingLotsByRange(int start, int end) {
@@ -75,5 +74,10 @@ public class ParkingLotService {
             return parkingLotRepository.findByCapacityBetween(end, start);
         }
         return parkingLotRepository.findByCapacityBetween(start, end);
+    }
+
+    public List<ParkingLot> updateParkingLotStatus(ParkingLot parkingLot) {
+
+        return null;
     }
 }
