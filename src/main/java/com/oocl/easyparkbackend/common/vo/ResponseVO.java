@@ -1,5 +1,7 @@
 package com.oocl.easyparkbackend.common.vo;
 
+import org.springframework.http.HttpStatus;
+
 public class ResponseVO<M> {
     // 返回状态【0-成功，1-业务失败，999-表示系统异常】
     private int status;
@@ -12,42 +14,42 @@ public class ResponseVO<M> {
     private int nowPage;
     private int totalPage;
 
-    private ResponseVO(){}
+    private ResponseVO() {
+    }
 
-    public static<M> ResponseVO success(M m){
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setStatus(200);
+    public static <M> ResponseVO success(M m) {
+        ResponseVO<M> responseVO = new ResponseVO<>();
+        responseVO.setStatus(HttpStatus.OK.value());
         responseVO.setData(m);
 
         return responseVO;
     }
 
-    public static<M> ResponseVO successToken(String token){
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setStatus(200);
+    public static ResponseVO successToken(String token) {
+        ResponseVO<String> responseVO = new ResponseVO<>();
+        responseVO.setStatus(HttpStatus.OK.value());
         responseVO.setMsg("登录成功");
         responseVO.setData(token);
-
         return responseVO;
     }
 
-    public static<M> ResponseVO success(String msg){
+    public static <M> ResponseVO success(String msg) {
         ResponseVO responseVO = new ResponseVO();
-        responseVO.setStatus(200);
+        responseVO.setStatus(HttpStatus.OK.value());
         responseVO.setMsg(msg);
 
         return responseVO;
     }
 
-    public static<M> ResponseVO serviceFail(String msg){
+    public static <M> ResponseVO serviceFail(String msg) {
         ResponseVO responseVO = new ResponseVO();
-        responseVO.setStatus(400);
+        responseVO.setStatus(HttpStatus.BAD_REQUEST.value());
         responseVO.setMsg(msg);
 
         return responseVO;
     }
 
-    public static<M> ResponseVO appFail(String msg){
+    public static <M> ResponseVO appFail(String msg) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(999);
         responseVO.setMsg(msg);
