@@ -7,6 +7,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotNameAndCapacityNotNull;
+import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotRangeErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ParkingLotService {
     public List<ParkingLot> getParkingLotByParkingBoy() {
         User user = userOperator.getUser();
         Integer parkingBoyId = user.getId();
-        if(parkingBoyId == null) {
+        if (parkingBoyId == null) {
             throw new ParkingBoyIdErrorException();
         }
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
@@ -48,12 +49,12 @@ public class ParkingLotService {
 
     public List<ParkingLot> findParkingLotsByName(String name) {
         List<ParkingLot> parkingLots = new ArrayList<>();
-        parkingLots.addAll(parkingLotRepository.findByNameLike("%"+name+"%"));
+        parkingLots.addAll(parkingLotRepository.findByNameLike("%" + name + "%"));
         return parkingLots;
     }
 
     public ParkingLot update(ParkingLot parkingLot) {
-        if(parkingLot.getName() == null || parkingLot.getName().length() == 0 || parkingLot.getCapacity() == null) {
+        if (parkingLot.getName() == null || parkingLot.getName().length() == 0 || parkingLot.getCapacity() == null) {
             throw new ParkingLotNameAndCapacityNotNull();
         }
         Optional<ParkingLot> optionalParkingLot = parkingLotRepository.findById(parkingLot.getId());
@@ -64,5 +65,15 @@ public class ParkingLotService {
         fetchedParkingLot.setName(parkingLot.getName());
         fetchedParkingLot.setCapacity(parkingLot.getCapacity());
         return parkingLotRepository.save(fetchedParkingLot);
+    }
+
+    public List<ParkingLot> getParkingLotsByRange(int start, int end) {
+        if (start < 0 || end == 0) {
+            throw new ParkingLotRangeErrorException();
+        }
+        if (start > end) {
+            return parkingLotRepository.findByCapacityBetween(end, start);
+        }
+        return parkingLotRepository.findByCapacityBetween(start, end);
     }
 }

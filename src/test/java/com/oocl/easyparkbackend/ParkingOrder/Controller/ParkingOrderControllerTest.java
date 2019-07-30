@@ -139,7 +139,7 @@ public class ParkingOrderControllerTest {
         List<ParkingOrder> parkingOrderList = new ArrayList<>();
         when(parkingOrderService.getAllParkingOrder()).thenReturn(parkingOrderList);
 
-        ResultActions result = mockMvc.perform(get("/parkingOrderlist"));
+        ResultActions result = mockMvc.perform(get("/parkingorderlist"));
 
         result.andExpect(status().isOk());
     }

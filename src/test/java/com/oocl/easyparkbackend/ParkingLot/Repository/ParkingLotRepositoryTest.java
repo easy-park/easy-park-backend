@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
@@ -41,4 +43,25 @@ public class ParkingLotRepositoryTest {
         assertThat(fetchedParkingLot.getCapacity()).isNotEqualTo(parkingLot.getCapacity());
 
     }
+
+    @Test
+    public void should_return_corresponding_parkingLots_given_capacity_range() {
+        ParkingLot parkingLot1 = new ParkingLot("123", "parkingLot2", 10, 10);
+        ParkingLot parkingLot2 = new ParkingLot("124", "parkingLot2", 27, 10);
+        ParkingLot parkingLot3 = new ParkingLot("125", "parkingLot2", 80, 10);
+        parkingLotRepository.save(parkingLot1);
+        parkingLotRepository.save(parkingLot2);
+        parkingLotRepository.save(parkingLot3);
+        List<ParkingLot> returnParkingLots = new ArrayList<>();
+        returnParkingLots.add(parkingLot1);
+        returnParkingLots.add(parkingLot2);
+
+        int start = 10;
+        int end = 30;
+        List<ParkingLot> parkingLots = parkingLotRepository.findByCapacityBetween(start, end);
+
+        assertEquals(parkingLots.size(), 2);
+        assertThat(parkingLots.get(1).getName()).isEqualTo(returnParkingLots.get(1).getName());
+    }
+
 }

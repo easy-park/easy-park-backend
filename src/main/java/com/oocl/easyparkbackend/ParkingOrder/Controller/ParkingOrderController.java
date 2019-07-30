@@ -66,7 +66,7 @@ public class ParkingOrderController {
         return ResponseVO.success(list);
     }
 
-    @GetMapping("/parkingOrderlist")
+    @GetMapping("/parkingorderlist")
     public ResponseVO getAllParkingOrder(){
         List<ParkingOrder> list = parkingOrderService.getAllParkingOrder();
         return ResponseVO.success(list);
