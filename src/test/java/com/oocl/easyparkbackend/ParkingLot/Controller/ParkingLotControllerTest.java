@@ -87,4 +87,21 @@ public class ParkingLotControllerTest {
 
         resultActions.andExpect(status().isOk());
     }
+
+    @Test
+    void should_return_corresponding_parkingLots_given_capacity_range() throws Exception {
+        ParkingLot parkingLot1 = new ParkingLot("123", "parkingLot", 10, 10);
+        ParkingLot parkingLot2 = new ParkingLot("123", "parkingLot", 24, 10);
+        ParkingLot parkingLot3 = new ParkingLot("123", "parkingLot", 23, 10);
+        List<ParkingLot> parkingLots = new ArrayList<>();
+        parkingLots.add(parkingLot1);
+        parkingLots.add(parkingLot2);
+        parkingLots.add(parkingLot3);
+
+        when(parkingLotService.getParkingLotsByRange(anyInt(), anyInt())).thenReturn(parkingLots);
+        ResultActions resultActions = mvc.perform(get("/parking_lots")
+                .param("start", "10").param("end", "30"));
+
+        resultActions.andExpect(status().isOk());
+    }
 }
