@@ -14,10 +14,8 @@ pipeline {
         sh './gradlew build'
         sh 'mv ./build/libs/easy-park-backend-0.0.1-SNAPSHOT.jar ./EasyPark.jar'
         sh 'cp -rf ./EasyPark.jar /usr/local/bin/jar'
-        sh 'pid=$(jps | grep jar | cut -d \' \' -f 1)'
-        sh '''if [ ! -n $pid ]; then
-     kill -9 $pid
-    fi'''
+        sh 'pid=$(jps | grep jar | cut -d \' \' -f 1);kill -9 $pid'
+
         sh '''JENKINS_NODE_COOKIE=dontKillMe
         nohup java -jar EasyPark.jar > out.log & sleep 20s'''
       }
