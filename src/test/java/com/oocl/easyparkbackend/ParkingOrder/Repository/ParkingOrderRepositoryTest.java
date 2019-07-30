@@ -133,18 +133,17 @@ public class ParkingOrderRepositoryTest {
     @Test
     public void should_return_parkingOrder_list_when_invoke_findByCustomerAndStatus() {
         Customer customer = new Customer();
-        customer.setId(1);
         customer.setName("sean");
         customer.setUsername("sean");
         customer.setPhone("15574957517");
         customer.setPassword("123");
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,6,null,null);
         parkingOrder.setCustomer(customer);
-        customerRepository.save(customer);
+        Customer returnCustomer = customerRepository.save(customer);
         parkingOrderRepository.save(parkingOrder);
 
 
-        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByCustomerAndStatus(customer,6);
+        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByCustomerAndStatus(returnCustomer,6);
 
         assertThat(parkingOrderList.get(0).getCustomer().getName()).isEqualTo(customer.getName());
     }
