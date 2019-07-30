@@ -66,6 +66,12 @@ public class ParkingOrderController {
         return ResponseVO.success(list);
     }
 
+    @GetMapping("/parkingOrderlist")
+    public ResponseVO getAllParkingOrder(){
+        List<ParkingOrder> list = parkingOrderService.getAllParkingOrder();
+        return ResponseVO.success(list);
+    }
+
     @ExceptionHandler(AlreadyParkingException.class)
     public ResponseVO handleAlreadyParkingException(AlreadyParkingException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
