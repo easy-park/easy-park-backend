@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -142,6 +143,19 @@ public class ParkingOrderControllerTest {
         ResultActions result = mockMvc.perform(get("/parkingorderlist"));
 
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_return_parking_order_list_when_invoke_searchParkingOrdersByCarNumber() throws Exception {
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 1, null, null);
+        List<ParkingOrder> parkingOrders = new ArrayList<>();
+        parkingOrders.add(order);
+        when(parkingOrderService.searchParkingOrdersByCarNumber(anyString())).thenReturn(parkingOrders);
+
+        ResultActions result = mockMvc.perform(get("/parkingorderlist?carnumber=5"));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.[0].carNumber").value("55555"));
     }
 
 }

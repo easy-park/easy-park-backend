@@ -1,4 +1,4 @@
-package com.oocl.easyparkbackend.Clerk.Entity;
+package com.oocl.easyparkbackend.Employee.Entity;
 
 public class Clerk {
 

@@ -1,11 +1,13 @@
 package com.oocl.easyparkbackend.Manage.Entity;
 
+import com.oocl.easyparkbackend.Employee.Entity.Clerk;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "manage")
-public class Manage {
+public class Manage  extends Clerk {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")

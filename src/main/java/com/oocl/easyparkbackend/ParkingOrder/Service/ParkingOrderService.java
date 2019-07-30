@@ -210,4 +210,10 @@ public class ParkingOrderService {
         parkingOrderList.addAll(parkingOrderRepository.findAll());
         return parkingOrderList;
     }
+
+    public List<ParkingOrder> searchParkingOrdersByCarNumber(String carNumber) {
+        List<ParkingOrder> parkingOrders = new ArrayList<>();
+        parkingOrders.addAll(parkingOrderRepository.findByCarNumberLike("%"+carNumber+"%"));
+        return parkingOrders;
+    }
 }

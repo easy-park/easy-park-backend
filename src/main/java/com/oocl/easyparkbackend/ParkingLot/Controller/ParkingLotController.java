@@ -28,10 +28,10 @@ public class ParkingLotController {
         return ResponseVO.success(parkingLots);
     }
 
-    @PutMapping("/parking_lots")
-    public ResponseVO updateParkingLot(@RequestBody ParkingLot parkingLot) {
-        ParkingLot fetchedParkingLot = parkingLotService.update(parkingLot);
-        return ResponseVO.success(fetchedParkingLot);
+    @GetMapping(path = "/parking_lots", params = "name")
+    public ResponseVO searchParkingLotsByName(String name) {
+        List<ParkingLot> parkingLots = parkingLotService.findParkingLotsByName(name);
+        return ResponseVO.success(parkingLots);
     }
 
     @GetMapping(path = "/parking_lots", params = {"start", "end"})
@@ -44,6 +44,12 @@ public class ParkingLotController {
     public ResponseVO getAllParkingListAndParkingBoysParkingLot(Integer parkingBoyId) {
         LotsAndBoysLotsVo lotsAndBoysLotsVo = parkingLotService.getAllParkingListAndParkingBoysParkingLot(parkingBoyId);
         return ResponseVO.success(lotsAndBoysLotsVo);
+    }
+    
+    @PutMapping("/parking_lots")
+    public ResponseVO updateParkingLot(@RequestBody ParkingLot parkingLot) {
+        ParkingLot fetchedParkingLot = parkingLotService.update(parkingLot);
+        return ResponseVO.success(fetchedParkingLot);
     }
 
     @ExceptionHandler(ParkingBoyIdErrorException.class)

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "employee")
-public class Employee {
+public class Employee extends Clerk {
     @javax.persistence.Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")

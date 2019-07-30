@@ -1,7 +1,7 @@
 package com.oocl.easyparkbackend.ParkingBoy.Entity;
 
+import com.oocl.easyparkbackend.Employee.Entity.Clerk;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "parking_boy")
-public class ParkingBoy {
+public class ParkingBoy  extends Clerk {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
