@@ -2,6 +2,8 @@ package com.oocl.easyparkbackend.Clerk.Integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.Employee.Entity.Clerk;
+import com.oocl.easyparkbackend.Employee.Exception.ClerkEmailAndPhoneNumberNotNullException;
+import com.oocl.easyparkbackend.Employee.Service.ClerkService;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import static org.hamcrest.Matchers.is;
 
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -41,6 +45,9 @@ public class ClerkIntegrationTest {
     private ManageRepository manageRepository;
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
+
+    @Autowired
+    private ClerkService clerkService;
 
     @BeforeEach
     void setup() {
@@ -152,5 +159,21 @@ public class ClerkIntegrationTest {
                 .andExpect(jsonPath("$.data.email", is("16547@qq.com")))
                 .andExpect(jsonPath("$.data.phoneNumber", not("18365426432")));
         parkingBoyRepository.deleteAll();
+    }
+
+    @Test
+    public void should_return_ClerkEmailAndPhoneNumberNotNullException_when_invoke_update_given_null_email_and_phone() throws Exception {
+
+        Clerk clerk = new Clerk();
+        clerk.setPosition("ParkingBoy");
+
+        ResultActions resultActions = mockMvc.perform(put("/clerks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(clerk)));
+        resultActions.andExpect(jsonPath("$.msg",is("clerk's email and phone number can't be null.")));
+
+        assertThrows(ClerkEmailAndPhoneNumberNotNullException.class,()->{
+            clerkService.update(clerk);
+        });
     }
 }

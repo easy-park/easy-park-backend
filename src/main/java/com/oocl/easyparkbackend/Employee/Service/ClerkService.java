@@ -57,37 +57,40 @@ public class ClerkService {
         List<Clerk> clerkList = new ArrayList<>();
         clerkList.addAll(manageRepository.findAllByNameLike("%" + name + "%"));
         clerkList.addAll(parkingBoyRepository.findByNameLike("%" + name + "%"));
-        clerkList.addAll(employeeRepository.findAll());
+        clerkList.addAll(employeeRepository.findByNameLike("%" + name + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public List<Clerk> findClerkMessageByPhone(String phone) {
         List<Clerk> clerkList = new ArrayList<>();
         clerkList.addAll(manageRepository.findAllByPhoneNumberLike("%" + phone + "%"));
         clerkList.addAll(parkingBoyRepository.findByPhoneNumberLike("%" + phone + "%"));
+        clerkList.addAll(employeeRepository.findByPhoneNumberLike("%" + phone + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public List<Clerk> findClerkMessageById(Integer id) {
         List<Clerk> clerkList = new ArrayList<>();
-        clerkList.add(manageRepository.findById(id).orElse(null));
-        clerkList.add(parkingBoyRepository.findById(id).orElse(null));
+        manageRepository.findById(id).ifPresent(clerkList::add);
+        parkingBoyRepository.findById(id).ifPresent(clerkList::add);
+        employeeRepository.findById(id).ifPresent(clerkList::add);
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public List<Clerk> findClerkMessageByEmail(String email) {
         List<Clerk> clerkList = new ArrayList<>();
         clerkList.addAll(manageRepository.findAllByEmailLike("%" + email + "%"));
         clerkList.addAll(parkingBoyRepository.findByEmailLike("%" + email + "%"));
+        clerkList.addAll(employeeRepository.findByEmailLike("%" + email + "%"));
         List<Clerk> returnList = new ArrayList<>();
         returnList.addAll(updatePosition(clerkList));
-        return clerkList;
+        return returnList;
     }
 
     public Clerk update(Clerk clerk) {
