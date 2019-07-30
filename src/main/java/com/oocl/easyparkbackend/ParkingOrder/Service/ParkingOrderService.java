@@ -204,4 +204,10 @@ public class ParkingOrderService {
         }
         return null;
     }
+
+    public List<ParkingOrder> getAllParkingOrder() {
+        List<ParkingOrder> parkingOrderList = new ArrayList<>();
+        parkingOrderList.addAll(parkingOrderRepository.findAll());
+        return parkingOrderList;
+    }
 }
