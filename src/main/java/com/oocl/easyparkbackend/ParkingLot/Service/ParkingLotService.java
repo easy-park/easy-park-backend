@@ -61,6 +61,7 @@ public class ParkingLotService {
                 .map(dbParkingLot -> {
                     dbParkingLot.setName(parkingLot.getName());
                     dbParkingLot.setCapacity(parkingLot.getCapacity());
+                    dbParkingLot.setAvailable(parkingLot.getCapacity());
                     dbParkingLot.setStatus(parkingLot.getStatus());
                     return parkingLotRepository.save(dbParkingLot);
                 }).orElseThrow(ParkingOrderIdErrorException::new);
