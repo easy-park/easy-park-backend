@@ -15,10 +15,10 @@ import java.sql.Timestamp;
 public class ParkingOrder {
     @Id
     @GeneratedValue(generator = "jpa-uuid")
-    @Column(name = "id")
+    @Column(name = "id",length = 50)
     private String Id;
 
-    @Column(name = "car_number")
+    @Column(name = "car_number",length = 15)
     @NotNull
     private String carNumber;
 
@@ -28,10 +28,10 @@ public class ParkingOrder {
     @Column(name = "end_time")
     private Timestamp endTime;
 
-    @Column(name = "price")
+    @Column(name = "price",length = 10)
     private Double price;
 
-    @Column(name = "status")
+    @Column(name = "status",length = 2)
     @NotNull
     private Integer status;
 
