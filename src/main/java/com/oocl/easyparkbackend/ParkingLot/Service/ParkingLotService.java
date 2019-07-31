@@ -15,9 +15,11 @@ import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorExcept
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,5 +106,13 @@ public class ParkingLotService {
 
         return null;
     }
+
+    public ParkingLot addParkingLot(@Valid ParkingLot parkingLot) {
+        parkingLot.setStatus(1);
+        parkingLot.setId(UUID.randomUUID().toString());
+        ParkingLot returnParkingLot = parkingLotRepository.save(parkingLot);
+        return returnParkingLot;
+    }
+
 
 }
