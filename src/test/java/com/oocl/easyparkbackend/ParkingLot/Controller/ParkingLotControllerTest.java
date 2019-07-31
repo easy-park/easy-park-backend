@@ -120,4 +120,14 @@ public class ParkingLotControllerTest {
 
         resultActions.andExpect(status().isOk());
     }
+
+    @Test
+    public void should_reutrn_dashboard_message_when_get_to_parkingLotDashboard() throws Exception {
+        when(parkingLotService.getParkingLotDashboard()).thenReturn(new ArrayList<>());
+
+        ResultActions resultActions = mvc.perform(get("/parkingDashboard"));
+
+        resultActions.andExpect(status().isOk());
+    }
+
 }

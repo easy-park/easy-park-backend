@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClerkService {
+    private final static int ADMIN_POSITION = 50;
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
     @Autowired
@@ -46,7 +47,11 @@ public class ClerkService {
                     } else if (x instanceof Employee) {
                         x.setPosition("Employee");
                     } else if (x instanceof Manage) {
-                        x.setPosition("Manage");
+                        if(x.getStatus()==ADMIN_POSITION){
+                            x.setPosition("Admin");
+                        }else {
+                            x.setPosition("Manage");
+                        }
                     }
                     return x;
                 }
