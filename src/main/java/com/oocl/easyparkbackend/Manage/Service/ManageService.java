@@ -76,13 +76,14 @@ public class ManageService {
         }
 
         if (optionalManager.isPresent()) {
+            Manage dbManager = optionalManager.get();
             String position="manager";
-            if (manage.getStatus() == 50) {
+            if (dbManager.getStatus() == 50) {
                 position = "admin";
             }
             User user = User.builder()
-                    .id(Integer.valueOf(optionalManager.get().getId()))
-                    .username(optionalManager.get().getUsername())
+                    .id(Integer.valueOf(dbManager.getId()))
+                    .username(dbManager.getUsername())
                     .roles(Arrays.asList(position))
                     .build();
             return jwtOperator.generateToken(user);
