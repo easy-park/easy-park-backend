@@ -6,11 +6,8 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.TypeErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
-import com.oocl.easyparkbackend.ParkingOrder.Exception.AlreadyParkingException;
-import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
-import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.*;
 
-import com.oocl.easyparkbackend.ParkingOrder.Exception.StatusErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,20 +53,20 @@ public class ParkingOrderController {
         return ResponseVO.success(parkingOrderService.getOrderById(id));
     }
 
-    @PostMapping(value = "/parkingOrders",params = "carNumber")
-    public ResponseVO generateParkingOrder(@RequestParam String carNumber){
+    @PostMapping(value = "/parkingOrders", params = "carNumber")
+    public ResponseVO generateParkingOrder(@RequestParam String carNumber) {
         ParkingOrder parkingOrder = parkingOrderService.generateParkingOrder(carNumber);
         return ResponseVO.success(parkingOrder);
     }
 
     @GetMapping("/parking_orders_customer")
-    public ResponseVO getParkingOrderByCustomer(){
+    public ResponseVO getParkingOrderByCustomer() {
         List<ParkingOrder> list = parkingOrderService.getNotFinishParkingOrderByUser();
         return ResponseVO.success(list);
     }
 
     @GetMapping("/parkingorderlist")
-    public ResponseVO getAllParkingOrder(){
+    public ResponseVO getAllParkingOrder() {
         List<ParkingOrder> list = parkingOrderService.getAllParkingOrder();
         return ResponseVO.success(list);
     }
@@ -90,6 +87,12 @@ public class ParkingOrderController {
     public ResponseVO getParkingOrdersByStatus(String status) {
         List<ParkingOrder> list = parkingOrderService.getParkingOrderByStatus(status);
         return ResponseVO.success(list);
+    }
+
+    @GetMapping(path = "/parkingorderlist", params = {"parkingOrderId","parkingBoyId"})
+    public ResponseVO assignParkingBoy(String parkingOrderId, int parkingBoyId) {
+        ParkingOrder parkingOrder = parkingOrderService.assignParkingBoy(parkingOrderId,parkingBoyId);
+        return ResponseVO.success(parkingOrder);
     }
 
     @ExceptionHandler(AlreadyParkingException.class)
@@ -124,12 +127,17 @@ public class ParkingOrderController {
     }
 
     @ExceptionHandler(TypeErrorException.class)
-    public  ResponseVO handleTypeErrorException(TypeErrorException exception) {
+    public ResponseVO handleTypeErrorException(TypeErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 
     @ExceptionHandler(StatusErrorException.class)
     public ResponseVO handleStatusErrorException(StatusErrorException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(OrderRobedException.class)
+    public ResponseVO handleOrderRobedException(OrderRobedException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 
