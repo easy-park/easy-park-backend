@@ -1,6 +1,7 @@
 package com.oocl.easyparkbackend.Customer.Controller;
 
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
+import com.oocl.easyparkbackend.Customer.Exception.RegisterFailedException;
 import com.oocl.easyparkbackend.Customer.Service.CustomerService;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
@@ -26,9 +27,8 @@ public class CustomerController {
 
     @PostMapping("/register")
     public ResponseVO register(@RequestBody Customer customer){
-        Customer customerSave = customerService.save(customer);
-        customerSave.setPassword(null);
-        return ResponseVO.success(customerSave);
+        String token  = customerService.save(customer);
+        return ResponseVO.successToken(token);
     }
 
     @GetMapping()
@@ -46,6 +46,11 @@ public class CustomerController {
 
     @ExceptionHandler(UserNameOrPasswordErrorException.class)
     public ResponseVO handleUserNameOrPasswordErrorException(UserNameOrPasswordErrorException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(RegisterFailedException.class)
+    public ResponseVO registerErrorException(RegisterFailedException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 
