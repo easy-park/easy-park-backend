@@ -45,12 +45,14 @@ public class ParkingOrderControllerTest {
     protected MockMvc mockMvc;
 
     @BeforeEach
-    void setup(){ mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build(); }
+    void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    }
 
     @Test
     public void should_return_historical_order_when_get_to_parking_order_given_status_is_finish() throws Exception {
         List<ParkingOrder> parkingOrderList = new ArrayList<>();
-        ParkingOrder parkingOrder =  new ParkingOrder("123","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,6,new ParkingBoy(),new ParkingLot());
+        ParkingOrder parkingOrder = new ParkingOrder("123", "eree", new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), 5.0, 6, new ParkingBoy(), new ParkingLot());
         parkingOrderList.add(parkingOrder);
         when(parkingOrderService.findParkingOrderByStatus(anyInt())).thenReturn(parkingOrderList);
 
@@ -61,10 +63,10 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingOrder_when_put_to_parking_orders_given_status() throws Exception {
-        ParkingOrder parkingOrder =  new ParkingOrder("123","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,6,new ParkingBoy(),new ParkingLot());
-        when(parkingOrderService.updateParkingOrderStatus(anyString(),anyInt())).thenReturn(parkingOrder);
+        ParkingOrder parkingOrder = new ParkingOrder("123", "eree", new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), 5.0, 6, new ParkingBoy(), new ParkingLot());
+        when(parkingOrderService.updateParkingOrderStatus(anyString(), anyInt())).thenReturn(parkingOrder);
 
-        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}","sdfasf").param("status","2"));
+        ResultActions result = mockMvc.perform(put("/parkingOrders/{orderId}", "sdfasf").param("status", "2"));
 
         result.andExpect(status().isOk());
 
@@ -73,7 +75,7 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingBoy_unfinished_orders_and_will_fetch_first_given_parkingBoy_id() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
         List<ParkingOrder> orders = new ArrayList<>();
         orders.add(order);
@@ -88,11 +90,11 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingOrder_when_invoke_finishRobOrder_given_parkingOrderId_and_parkingLotId() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
-        when(parkingOrderService.finishRobOrder(anyString(),anyString())).thenReturn(order);
+        when(parkingOrderService.finishRobOrder(anyString(), anyString())).thenReturn(order);
 
-        ResultActions resultActions = mockMvc.perform(get("/parkingOrders").param("parkingOrderId","123456").param("parkingLotId","123456"));
+        ResultActions resultActions = mockMvc.perform(get("/parkingOrders").param("parkingOrderId", "123456").param("parkingLotId", "123456"));
 
         resultActions.andExpect(status().isOk());
 
@@ -100,7 +102,7 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingOrder_when_invoke_getParkingOrder_given_parkingOrderId() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
 
         when(parkingOrderService.getOrderById(anyString())).thenReturn(order);
@@ -112,12 +114,12 @@ public class ParkingOrderControllerTest {
 
     @Test
     public void should_return_parkingOrder_when_invoke_receiveOrder_given_parkingOrderId() throws Exception {
-        ParkingBoy parkingBoy = new ParkingBoy("username","199729","stefan","13192269125",1,"953181215@qq.com",null);
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
         when(parkingOrderService.receiveOrder(anyString())).thenReturn(order);
 
         ResultActions resultActions = mockMvc.perform(put("/parkingOrders").contentType(MediaType.APPLICATION_JSON_UTF8)
-        .content(new ObjectMapper().writeValueAsString(order)));
+                .content(new ObjectMapper().writeValueAsString(order)));
 
         resultActions.andExpect(status().isOk());
 
@@ -128,7 +130,7 @@ public class ParkingOrderControllerTest {
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 1, null, null);
         when(parkingOrderService.generateParkingOrder(anyString())).thenReturn(order);
 
-        ResultActions resultActions = mockMvc.perform(post("/parkingOrders").param("carNumber","123"));
+        ResultActions resultActions = mockMvc.perform(post("/parkingOrders").param("carNumber", "123"));
 
         resultActions.andExpect(status().isOk());
 
@@ -181,6 +183,18 @@ public class ParkingOrderControllerTest {
         ResultActions resultActions = mockMvc.perform(get("/parkingorderlist?status=无人处理"));
 
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].carNumber").value("55555"));
+    }
+
+    @Test
+    public void should_return_new_parking_order_list_when_invoke_assignParkingBoy() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
+        when(parkingOrderService.assignParkingBoy(anyString(), anyInt())).thenReturn(order);
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingorderlist?parkingOrderId=1&parkingBoyId=1"));
+
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.carNumber").value("55555"));
+
     }
 
 }

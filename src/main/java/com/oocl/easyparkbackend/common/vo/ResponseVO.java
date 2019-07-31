@@ -49,6 +49,14 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
+    public static <M> ResponseVO serviceFail(int status,String msg) {
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setStatus(status);
+        responseVO.setMsg(msg);
+
+        return responseVO;
+    }
+
     public static <M> ResponseVO appFail(String msg) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(999);
