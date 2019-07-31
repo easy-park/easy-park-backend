@@ -113,7 +113,17 @@ public class ClerkService {
         if(clerk.getPosition().equals(ClerkPosition.ADMIN)) {
             // todo update admin entity
         }
-        if(clerk.getPosition().equals(ClerkPosition.PARKINGBOY)) {
+        if(clerk.getPosition().equals(ClerkPosition.Employee)) {
+            Optional<Employee> optionalEmployee = employeeRepository.findById(clerk.getId());
+            if(optionalEmployee.isPresent()) {
+                Employee employee = optionalEmployee.get();
+                employee.setEmail(clerk.getEmail());
+                employee.setPhoneNumber(clerk.getPhoneNumber());
+                return employeeRepository.save(employee);
+            }
+            throw new ClerkIdErrorException();
+        }
+        if(clerk.getPosition().equals(ClerkPosition.PARKING_BOY)) {
             Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(clerk.getId());
             if(optionalParkingBoy.isPresent()) {
                 ParkingBoy parkingBoy = optionalParkingBoy.get();
