@@ -2,7 +2,9 @@ package com.oocl.easyparkbackend.Manage.Service;
 
 import com.itmuch.lightsecurity.jwt.JwtOperator;
 import com.itmuch.lightsecurity.jwt.User;
+import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
+import com.oocl.easyparkbackend.Manage.Exception.NotFindManagerException;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.Manage.Vo.BoysLotVo;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
@@ -10,6 +12,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorExce
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
+import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,8 @@ public class ManageService {
     private ManageRepository manageRepository;
     @Autowired
     private JwtOperator jwtOperator;
+    @Autowired
+    private UserOperator userOperator;
 
     public ParkingBoy setParkingBoysParkingLots(BoysLotVo vo) {
         List<ParkingLot> lots = new ArrayList<>();
@@ -71,20 +76,27 @@ public class ManageService {
         }
 
         if (optionalManager.isPresent()) {
-            String position;
-            position = manage.getStatus() == 3 ? "manager" : "";
-            if (manage.getStatus() == 3) {
-                position = "manager";
-            } else if (manage.getStatus() == 4) {
+            Manage dbManager = optionalManager.get();
+            String position="manager";
+            if (dbManager.getStatus() == 50) {
                 position = "admin";
             }
             User user = User.builder()
-                    .id(Integer.valueOf(optionalManager.get().getId()))
-                    .username(optionalManager.get().getUsername())
+                    .id(Integer.valueOf(dbManager.getId()))
+                    .username(dbManager.getUsername())
                     .roles(Arrays.asList(position))
                     .build();
             return jwtOperator.generateToken(user);
         }
         throw new UserNameOrPasswordErrorException();
+    }
+
+    public Manage getManager() {
+        User user = userOperator.getUser();
+        Manage manager = manageRepository.findById(user.getId()).orElse(null);
+        if (manager == null) {
+            throw new NotFindManagerException();
+        }
+        return manager;
     }
 }
