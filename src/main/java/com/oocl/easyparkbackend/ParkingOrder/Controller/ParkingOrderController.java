@@ -4,6 +4,7 @@ package com.oocl.easyparkbackend.ParkingOrder.Controller;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
+import com.oocl.easyparkbackend.ParkingLot.Exception.TypeErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.AlreadyParkingException;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
@@ -78,6 +79,12 @@ public class ParkingOrderController {
         return ResponseVO.success(list);
     }
 
+    @GetMapping(path = "/parkingorderlist", params = "type")
+    public ResponseVO getSaveParkingOrder(String type) {
+        List<ParkingOrder> list = parkingOrderService.getParkingOrderByType(type);
+        return ResponseVO.success(list);
+    }
+
     @ExceptionHandler(AlreadyParkingException.class)
     public ResponseVO handleAlreadyParkingException(AlreadyParkingException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
@@ -106,6 +113,11 @@ public class ParkingOrderController {
 
     @ExceptionHandler(OrderNotExistException.class)
     public ResponseVO handleUserOrderNotExistException(OrderNotExistException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(TypeErrorException.class)
+    public  ResponseVO handleTypeErrorException(TypeErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 

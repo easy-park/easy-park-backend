@@ -5,6 +5,7 @@ import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.Customer.Exception.NotFindCustomerExcepetion;
 import com.oocl.easyparkbackend.Customer.Repository.CustomerRepository;
+import com.oocl.easyparkbackend.ParkingLot.Exception.TypeErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
 import com.oocl.easyparkbackend.Util.RedisLock;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
@@ -53,11 +54,11 @@ public class ParkingOrderService {
     private UserOperator userOperator;
 
 
-    public List<ParkingOrder> findParkingOrderByStatus( int status) {
+    public List<ParkingOrder> findParkingOrderByStatus(int status) {
         User user = userOperator.getUser();
         List<ParkingOrder> parkingOrderList = new ArrayList<>();
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(user.getId());
-        if(!optionalParkingBoy.isPresent()) {
+        if (!optionalParkingBoy.isPresent()) {
             throw new LoginTokenExpiredException();
         }
         ParkingBoy parkingBoy = optionalParkingBoy.get();
@@ -65,21 +66,21 @@ public class ParkingOrderService {
         if (status == 1 && parkingLotListIsFull(returnParkingLotList)) {
             return parkingOrderList;
         }
-        parkingOrderList.addAll(parkingOrderRepository.findAllByStatus( status));
+        parkingOrderList.addAll(parkingOrderRepository.findAllByStatus(status));
         return parkingOrderList;
     }
 
     private boolean parkingLotListIsFull(List<ParkingLot> parkingLotList) {
-        return parkingLotList.stream().map(ParkingLot::getAvailable).reduce(0,(a,b) -> a + b)==0;
+        return parkingLotList.stream().map(ParkingLot::getAvailable).reduce(0, (a, b) -> a + b) == 0;
     }
 
-    public ParkingOrder updateParkingOrderStatus(String orderId,int status) {
+    public ParkingOrder updateParkingOrderStatus(String orderId, int status) {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
-        if (parkingOrder == null){
+        if (parkingOrder == null) {
             throw new LoginTokenExpiredException();
         }
         ParkingBoy parkingBoy = parkingOrder.getParkingBoy();
-        switch (status){
+        switch (status) {
             case 3:
             case 6:
                 parkingBoy.setStatus(0);
@@ -100,14 +101,14 @@ public class ParkingOrderService {
 
     private ParkingLot addParkingLotAvailable(String id) {
         ParkingLot parkingLot = parkingLotRepository.findById(id).orElse(null);
-        parkingLot.setAvailable(parkingLot.getAvailable()+1);
+        parkingLot.setAvailable(parkingLot.getAvailable() + 1);
         return parkingLotRepository.save(parkingLot);
     }
 
     public List<ParkingOrder> findParkingBoyUnfinishedOrders() {
         Integer parkingBoyId = userOperator.getUser().getId();
         Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
-        if(!optionalParkingBoy.isPresent()) {
+        if (!optionalParkingBoy.isPresent()) {
             throw new LoginTokenExpiredException();
         }
         ParkingBoy parkingBoy = optionalParkingBoy.get();
@@ -133,7 +134,7 @@ public class ParkingOrderService {
 
     public ParkingOrder getOrderById(String id) {
         Optional<ParkingOrder> optionalParkingOrder = parkingOrderRepository.findById(id);
-        if(optionalParkingOrder.isPresent()) {
+        if (optionalParkingOrder.isPresent()) {
             return optionalParkingOrder.get();
         }
         throw new ParkingOrderIdErrorException();
@@ -144,7 +145,7 @@ public class ParkingOrderService {
         if (!redisLock.lock(parkingOrderId.toString(), String.valueOf(time))) {
             throw new OrderNotExistException();
         }
-        if(parkingOrderRepository.findById(parkingOrderId).get().getStatus() != 1){
+        if (parkingOrderRepository.findById(parkingOrderId).get().getStatus() != 1) {
             throw new OrderNotExistException();
         }
         User user = userOperator.getUser();
@@ -171,8 +172,8 @@ public class ParkingOrderService {
     public ParkingOrder generateParkingOrder(String carNumber) {
         User user = userOperator.getUser();
         Customer customer = customerRepository.findById(user.getId()).orElse(null);
-        if (customer != null ){
-            if (parkingOrderRepository.findByCarNumberAndEndTime(carNumber,null) == null){
+        if (customer != null) {
+            if (parkingOrderRepository.findByCarNumberAndEndTime(carNumber, null) == null) {
                 ParkingOrder parkingOrder = new ParkingOrder();
                 parkingOrder.setCarNumber(carNumber);
                 parkingOrder.setCustomer(customer);
@@ -188,7 +189,7 @@ public class ParkingOrderService {
 
     public List<ParkingOrder> getNotFinishParkingOrderByUser() {
         Customer customer = customerRepository.findById(userOperator.getUser().getId()).orElse(null);
-        if (customer != null ) {
+        if (customer != null) {
             List<ParkingOrder> statusOne = parkingOrderRepository.findAllByCustomerAndStatus(customer, 1);
             List<ParkingOrder> statusTwo = parkingOrderRepository.findAllByCustomerAndStatus(customer, 2);
             List<ParkingOrder> statusThree = parkingOrderRepository.findAllByCustomerAndStatus(customer, 3);
@@ -213,7 +214,25 @@ public class ParkingOrderService {
 
     public List<ParkingOrder> searchParkingOrdersByCarNumber(String carNumber) {
         List<ParkingOrder> parkingOrders = new ArrayList<>();
-        parkingOrders.addAll(parkingOrderRepository.findByCarNumberLike("%"+carNumber+"%"));
+        parkingOrders.addAll(parkingOrderRepository.findByCarNumberLike("%" + carNumber + "%"));
         return parkingOrders;
+    }
+
+    public List<ParkingOrder> getParkingOrderByType(String types) {
+        if (types.equals("存车")) {
+            List<ParkingOrder> parkingOrders = new ArrayList<>();
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(1));
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(2));
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(3));
+            return parkingOrders;
+        } else if (types.equals("取车")) {
+            List<ParkingOrder> parkingOrders = new ArrayList<>();
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(4));
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(5));
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(6));
+            return parkingOrders;
+        }
+        throw new TypeErrorException();
+
     }
 }

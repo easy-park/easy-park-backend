@@ -158,4 +158,17 @@ public class ParkingOrderControllerTest {
                 .andExpect(jsonPath("$.data.[0].carNumber").value("55555"));
     }
 
+    @Test
+    public void should_return_parking_order_list_when_invoke_getParkingOrderByType() throws Exception {
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 1, null, null);
+        List<ParkingOrder> parkingOrders = new ArrayList<>();
+        parkingOrders.add(order);
+        when(parkingOrderService.getParkingOrderByType(anyString())).thenReturn(parkingOrders);
+
+        ResultActions result = mockMvc.perform(get("/parkingorderlist?type=取车"));
+
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].carNumber").value("55555"));
+
+    }
+
 }
