@@ -95,4 +95,12 @@ public class ParkingBoyService {
         }
         throw new ParkingBoyIdErrorException();
     }
+
+    public ParkingBoy findParkingBoyById(int id) {
+        Optional<ParkingBoy> optionalParkingBoy = repository.findById(id);
+        if( !optionalParkingBoy.isPresent()) {
+            throw new NotFindParkingBoyException();
+        }
+        return optionalParkingBoy.get();
+    }
 }
