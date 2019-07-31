@@ -14,11 +14,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -45,4 +48,20 @@ public class ManagerControllerTest {
         verify(manageService).login(any());
     }
 
+    @Test
+    public void should_return_manager_when_invoke_getManager() throws Exception {
+        Manage manager = new Manage();
+        manager.setId(1);
+        manager.setEmail("123@qq.com");
+        manager.setName("123");
+        manager.setPassword("123");
+        manager.setPhoneNumber("123");
+        manager.setUsername("123");
+        manager.setStatus(3);
+        when(manageService.getManager()).thenReturn(manager);
+
+        ResultActions resultActions = mvc.perform(get("/manager"));
+
+        resultActions.andExpect(status().isOk());
+    }
 }
