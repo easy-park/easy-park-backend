@@ -270,6 +270,7 @@ public class ParkingOrderService {
         }
         ParkingOrder parkingOrder = optionalParkingOrder.get();
         parkingOrder.setParkingBoy(optionalParkingBoy.get());
+        parkingOrder.setStatus(2);
         return parkingOrderRepository.save(parkingOrder);
     }
 }

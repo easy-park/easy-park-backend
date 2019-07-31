@@ -35,7 +35,7 @@ public class ParkingBoyController {
         return ResponseVO.success(parkingBoys);
     }
 
-    @GetMapping(path = "/list", params ="name")
+    @GetMapping(path = "/list", params = "name")
     public ResponseVO findParkingBoysByName(@RequestParam String name) {
         List<ParkingBoy> parkingBoys = parkingBoyService.findParkingBoysByName(name);
         return ResponseVO.success(parkingBoys);
@@ -45,6 +45,12 @@ public class ParkingBoyController {
     public ResponseVO findParkingBoysByPhoneNumber(@RequestParam String phoneNumber) {
         List<ParkingBoy> parkingBoys = parkingBoyService.findParkingBoysByPhoneNumber(phoneNumber);
         return ResponseVO.success(parkingBoys);
+    }
+
+    @GetMapping(path = "/one", params = "parkingBoyId")
+    public ResponseVO findParkingBoyById(int parkingBoyId) {
+        ParkingBoy parkingBoy = parkingBoyService.findParkingBoyById(parkingBoyId);
+        return ResponseVO.success(parkingBoy);
     }
 
     @GetMapping(path = "/parkingLots")
