@@ -197,4 +197,16 @@ public class ParkingOrderControllerTest {
 
     }
 
+    @Test
+    public void should_return_parkingOrder_list_when_invoke_getUnrepeatOrders() throws Exception {
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, null, null);List<ParkingOrder> parkingOrders = new ArrayList<>();
+        List<String> historyCarNumber = new ArrayList<>();
+        historyCarNumber.add("55555");
+
+        when(parkingOrderService.getUnrepeatOrders()).thenReturn(historyCarNumber);
+        ResultActions resultActions = mockMvc.perform(get("/unrepeatcarnumbers"));
+
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0]").value("55555"));
+    }
+
 }

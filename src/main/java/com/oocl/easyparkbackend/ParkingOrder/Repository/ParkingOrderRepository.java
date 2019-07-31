@@ -21,4 +21,6 @@ public interface ParkingOrderRepository extends JpaRepository<ParkingOrder,Strin
     ParkingOrder findByCarNumberAndEndTime(String number, Timestamp timestamp);
 
     List<ParkingOrder> findByCarNumberLike(String carNumber);
+
+    List<ParkingOrder> findAllByCustomer(Customer customer);
 }
