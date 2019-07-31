@@ -5,6 +5,7 @@ import com.itmuch.lightsecurity.jwt.User;
 import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.Customer.Exception.NotFindCustomerExcepetion;
+import com.oocl.easyparkbackend.Customer.Exception.RegisterFailedException;
 import com.oocl.easyparkbackend.Customer.Repository.CustomerRepository;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
@@ -61,10 +62,20 @@ public class CustomerService {
         throw new NotFindCustomerExcepetion();
     }
 
-    public Customer save(Customer customer) {
+    public String save(Customer customer) {
         String md5DigestAsHex = DigestUtils.md5DigestAsHex(customer.getPassword().getBytes());
         customer.setPassword(md5DigestAsHex);
-        return customerRepository.save(customer);
+        Customer customerSave = customerRepository.save(customer);
+        if (customerSave != null){
+            User user = User.builder()
+                    .id(customerSave.getId())
+                    .username(customerSave.getUsername())
+                    .roles(Arrays.asList("customer"))
+                    .build();
+            String token = jwtOperator.generateToken(user);
+            return token;
+        }
+        throw new RegisterFailedException();
     }
 
     public List<ParkingOrder> getHistoryOrder() {

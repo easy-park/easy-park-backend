@@ -69,7 +69,7 @@ public class CustomerControllerTest {
         customer.setUsername("15574957517");
         customer.setPassword("123");
 
-        when(customerService.save(any())).thenReturn(customer);
+        when(customerService.save(any())).thenReturn(String.valueOf(customer));
 
         ResultActions resultActions = mvc.perform(post("/customer/register")
                 .accept(MediaType.APPLICATION_JSON_UTF8)

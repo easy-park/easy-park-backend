@@ -147,4 +147,18 @@ public class ParkingBoyControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.[0].phoneNumber").value("15574957517"));
     }
+
+    @Test
+    public void should_return_parkingBoy_when_invoke_findParkingBoyById() throws Exception {
+        ParkingBoy parkingBoy1 = new ParkingBoy();
+        parkingBoy1.setId(1);
+        parkingBoy1.setName("sean");
+        parkingBoy1.setPhoneNumber("15574957517");
+
+        when(parkingBoyService.findParkingBoyById(anyInt())).thenReturn(parkingBoy1);
+        ResultActions resultActions = mvc.perform(get("/parkingBoys/one").param("parkingBoyId","1"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name").value("sean"));
+    }
 }
