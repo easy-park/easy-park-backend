@@ -2,6 +2,7 @@ package com.oocl.easyparkbackend.ParkingLot.Controller;
 
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
+import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLotDashboradVO;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotNameAndCapacityNotNull;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotRangeErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
@@ -57,6 +58,12 @@ public class ParkingLotController {
     public ResponseVO addNewParkingLot(@RequestBody ParkingLot parkingLot){
         ParkingLot parkingLot1 = parkingLotService.addParkingLot(parkingLot);
         return ResponseVO.success(parkingLot1);
+    }
+
+    @GetMapping("/parkingDashboard")
+    public ResponseVO ShowParkingLotDashboard(){
+        List<ParkingLotDashboradVO> parkingLotDashboradVOList = parkingLotService.getParkingLotDashboard();
+        return ResponseVO.success(parkingLotDashboradVOList);
     }
 
 

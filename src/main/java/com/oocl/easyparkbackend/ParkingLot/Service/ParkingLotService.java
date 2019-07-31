@@ -7,6 +7,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
+import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLotDashboradVO;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotNameAndCapacityNotNull;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotRangeErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
@@ -16,10 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,7 +100,7 @@ public class ParkingLotService {
         ParkingLot parkingLotSave = parkingLotRepository.save(parkingLot);
         return parkingLotSave;
     }
-    
+
     public List<ParkingLot> updateParkingLotStatus(ParkingLot parkingLot) {
 
         return null;
@@ -114,4 +113,35 @@ public class ParkingLotService {
     }
 
 
+    public List<ParkingLotDashboradVO> getParkingLotDashboard() {
+        List<ParkingLotDashboradVO> parkingLotDashboradVOList = new ArrayList<>();
+        List<ParkingLot> parkingLotList = parkingLotRepository.findAll();
+        List<ParkingBoy> parkingBoyList = parkingBoyRepository.findAll();
+        for (ParkingBoy parkingBoy : parkingBoyList) {
+            parkingLotDashboradVOList.addAll(getParkingLotDashboardByBoy(parkingBoy));
+        }
+        for (ParkingLot parkingLot : parkingLotList) {
+            if (getParkingLotDashboardByLot(parkingLotDashboradVOList,parkingLot)){
+                parkingLotDashboradVOList.add(new ParkingLotDashboradVO(parkingLot,null));
+            }
+        }
+        return parkingLotDashboradVOList;
+    }
+
+    private boolean getParkingLotDashboardByLot(List<ParkingLotDashboradVO> parkingLotDashboradVOList, ParkingLot parkingLot) {
+        for(ParkingLotDashboradVO parkingLotDashboradVO:parkingLotDashboradVOList){
+            if(parkingLotDashboradVO.getId() == parkingLot.getId()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<ParkingLotDashboradVO> getParkingLotDashboardByBoy(ParkingBoy parkingBoy) {
+        List<ParkingLotDashboradVO> parkingLotDashboradVOList = new ArrayList<>();
+        for (int i = 0; i < parkingBoy.getParkingLotList().size(); i++) {
+            parkingLotDashboradVOList.add(new ParkingLotDashboradVO(parkingBoy.getParkingLotList().get(i), parkingBoy));
+        }
+        return parkingLotDashboradVOList;
+    }
 }
