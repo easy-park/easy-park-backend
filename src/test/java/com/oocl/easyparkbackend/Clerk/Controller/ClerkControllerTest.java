@@ -1,7 +1,9 @@
 package com.oocl.easyparkbackend.Clerk.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.Employee.Entity.Clerk;
+import com.oocl.easyparkbackend.Employee.Entity.Employee;
 import com.oocl.easyparkbackend.Employee.Service.ClerkService;
 import com.oocl.easyparkbackend.Employee.Controller.ClerkController;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
@@ -108,6 +110,23 @@ public class ClerkControllerTest {
 
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.email", Matchers.is("123@qq.com")));
+    }
+
+    @Test
+    public void should_update_clerk_status_when_invoke_updateClerkStatus() throws Exception {
+        Employee employee = new Employee("username", "password", "name", "car2344", 1, "14234@qq.com");
+        employee.setId(4);
+        Clerk clerk = new Clerk();
+        clerk.setId(4);
+        clerk.setStatus(1);
+        clerk.setPosition("Employee");
+
+        when(clerkService.updateClerkStatus(any())).thenReturn(employee);
+        ResultActions resultActions = mockMvc.perform(put("/clerks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(clerk)));
+
+        resultActions.andExpect(status().isOk());
     }
 
 }
