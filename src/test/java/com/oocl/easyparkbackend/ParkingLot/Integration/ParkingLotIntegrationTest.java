@@ -2,6 +2,8 @@ package com.oocl.easyparkbackend.ParkingLot.Integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
+import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +38,8 @@ public class ParkingLotIntegrationTest {
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
+    @Autowired
+    private ParkingBoyRepository parkingBoyRepository;
 
     @BeforeEach
     void setup() {
@@ -108,5 +113,24 @@ public class ParkingLotIntegrationTest {
         parkingLotRepository.deleteAll();
 
 
+    }
+
+    @Test
+    public void should_reutrn_dashboard_message_when_get_to_parkingLotDashboard() throws Exception {
+        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+        ParkingLot parkingLot2 = new ParkingLot("124", "parkinglot2", 20, 10);
+        ParkingLot parkingLot3 = new ParkingLot("125", "parkinglot3", 20, 10);
+        parkingLotRepository.save(parkingLot);
+        parkingLotRepository.save(parkingLot2);
+        ParkingLot returnParkingLot = parkingLotRepository.save(parkingLot3);
+        List<ParkingLot> parkingLotList = new ArrayList<>();
+        parkingLotList.add(returnParkingLot);
+        ParkingBoy parkingBoy = new ParkingBoy("userme", "199729", "stefan", "13192269125", 1, "953181215@qq.com", parkingLotList);
+        parkingBoyRepository.save(parkingBoy);
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingDashboard"));
+
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].parkingBoy.name").value("stefan"));
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[1].name").value("parkinglot1"));
     }
 }
