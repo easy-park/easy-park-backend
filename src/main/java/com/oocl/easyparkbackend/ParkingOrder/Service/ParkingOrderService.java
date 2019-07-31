@@ -68,6 +68,7 @@ public class ParkingOrderService {
             return parkingOrderList;
         }
         parkingOrderList.addAll(parkingOrderRepository.findAllByStatus(status));
+        parkingOrderList.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy,2));
         return parkingOrderList;
     }
 
