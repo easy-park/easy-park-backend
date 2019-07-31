@@ -50,6 +50,12 @@ public class ClerkController {
         return ResponseVO.success(returnClerk);
     }
 
+    @PutMapping("/clerklist")
+    public ResponseVO updateClerkStatus(@RequestBody Clerk clerk) {
+        Clerk returnClerk = clerkService.updateClerkStatus(clerk);
+        return ResponseVO.success(returnClerk);
+    }
+
     @ExceptionHandler(ClerkEmailAndPhoneNumberNotNullException.class)
     public ResponseVO handleClerkEmailAndPhoneNumberNotNullException(ClerkEmailAndPhoneNumberNotNullException exception) {
         return ResponseVO.serviceFail(exception.getMessage());

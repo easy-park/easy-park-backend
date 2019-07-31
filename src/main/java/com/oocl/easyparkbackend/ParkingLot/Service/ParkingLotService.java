@@ -117,7 +117,6 @@ public class ParkingLotService {
 
     public ParkingLot addParkingLot(@Valid ParkingLot parkingLot) {
         parkingLot.setStatus(1);
-        parkingLot.setId(UUID.randomUUID().toString());
         ParkingLot returnParkingLot = parkingLotRepository.save(parkingLot);
         return returnParkingLot;
     }

@@ -67,7 +67,7 @@ public class ParkingLotIntegrationTest {
 
     @Test
     public void should_return_parkingLots_when_invoke_getParkingLotsByRange() throws Exception {
-        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+        ParkingLot parkingLot = new ParkingLot("parkinglot1", 20, 10);
         parkingLotRepository.save(parkingLot);
 
         ResultActions resultActions = mockMvc.perform(get("/parking_lots?start=1&end=30"));
@@ -79,15 +79,18 @@ public class ParkingLotIntegrationTest {
 
     @Test
     public void should_return_parkingLot_when_invoke_updateParkingLot() throws Exception {
-        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+        ParkingLot parkingLot = new ParkingLot("parkinglot1", 20, 10);
+        ParkingLot lot = parkingLotRepository.save(parkingLot);
+        ParkingLot parkingLotChanage = lot;
+        parkingLotChanage.setName("parkinglot2");
 
         ResultActions resultActions = mockMvc.perform(put("/parking_lots")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(parkingLot)));
+                .content(new ObjectMapper().writeValueAsString(parkingLotChanage)));
 
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.name").value("parkinglot1"));
-        assertThat(parkingLotRepository.save(parkingLot).getName().equals("parkinglot1"));
+                .andExpect(jsonPath("$.data.name").value("parkinglot2"));
+        assertThat(parkingLotRepository.findById(parkingLot.getId()).get().getName().equals("parkinglot2"));
     }
 
     @Test
