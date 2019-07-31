@@ -3,22 +3,22 @@ package com.oocl.easyparkbackend.Manage.Vo;
 import java.util.List;
 
 public class BoysLotVo {
-    private List<Integer> list;
+    private List<String> list;
     private Integer id;
 
     public BoysLotVo() {
     }
 
-    public BoysLotVo(List<Integer> list, Integer id) {
+    public BoysLotVo(List<String> list, Integer id) {
         this.list = list;
         this.id = id;
     }
 
-    public List<Integer> getList() {
+    public List<String> getList() {
         return list;
     }
 
-    public void setList(List<Integer> list) {
+    public void setList(List<String> list) {
         this.list = list;
     }
 

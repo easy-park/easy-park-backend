@@ -5,8 +5,9 @@ import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.Customer.Exception.NotFindCustomerExcepetion;
 import com.oocl.easyparkbackend.Customer.Repository.CustomerRepository;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.NotFindParkingBoyException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.TypeErrorException;
-import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.*;
 import com.oocl.easyparkbackend.Util.RedisLock;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
@@ -16,8 +17,6 @@ import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
-import com.oocl.easyparkbackend.ParkingOrder.Exception.AlreadyParkingException;
-import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Repository.ParkingOrderRepository;
 import com.oocl.easyparkbackend.common.vo.ParkingBoyStatus;
 import com.oocl.easyparkbackend.common.vo.ParkingOrderStatus;
@@ -67,6 +66,7 @@ public class ParkingOrderService {
             return parkingOrderList;
         }
         parkingOrderList.addAll(parkingOrderRepository.findAllByStatus(status));
+        parkingOrderList.addAll(parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy, 2));
         return parkingOrderList;
     }
 
@@ -234,5 +234,42 @@ public class ParkingOrderService {
         }
         throw new TypeErrorException();
 
+    }
+
+    public List<ParkingOrder> getParkingOrderByStatus(String status) {
+        if (status.equals("无人处理")) {
+            List<ParkingOrder> parkingOrders = new ArrayList<>();
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(1));
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(4));
+            return parkingOrders;
+        } else if (status.equals("已完成")) {
+            List<ParkingOrder> parkingOrders = new ArrayList<>();
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(6));
+            return parkingOrders;
+        } else if (status.equals("存取中")) {
+            List<ParkingOrder> parkingOrders = new ArrayList<>();
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(2));
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(3));
+            parkingOrders.addAll(parkingOrderRepository.findAllByStatus(5));
+            return parkingOrders;
+        }
+        throw new StatusErrorException();
+    }
+
+    public ParkingOrder assignParkingBoy(String parkingOrderId, int parkingBoyId) {
+        Optional<ParkingOrder> optionalParkingOrder = parkingOrderRepository.findById(parkingOrderId);
+        Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(parkingBoyId);
+        if (!optionalParkingBoy.isPresent()) {
+            throw new ParkingBoyIdErrorException();
+        }
+        if (!optionalParkingOrder.isPresent()) {
+            throw new OrderNotExistException();
+        }
+        if (optionalParkingOrder.get().getParkingBoy() != null) {
+            throw new OrderRobedException();
+        }
+        ParkingOrder parkingOrder = optionalParkingOrder.get();
+        parkingOrder.setParkingBoy(optionalParkingBoy.get());
+        return parkingOrderRepository.save(parkingOrder);
     }
 }
