@@ -87,7 +87,7 @@ public class ParkingOrderController {
 
     @ExceptionHandler(AlreadyParkingException.class)
     public ResponseVO handleAlreadyParkingException(AlreadyParkingException exception) {
-        return ResponseVO.serviceFail(exception.getMessage());
+        return ResponseVO.serviceFail(600,exception.getMessage());
     }
 
 
