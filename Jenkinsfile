@@ -5,19 +5,19 @@ pipeline {
       steps {
         sh 'chmod 777 ./gradlew'
         sh 'rm -f ./src/main/resources/application/*'
-        sh 'cp /usr/local/bin/application.properties ./src/main/resources/application.properties'
+        sh 'cp /usr/local/bin/prod/application.properties ./src/main/resources/application.properties'
         sh './gradlew test'
       }
     }
-    stage('QA') {
+    stage('deploy') {
       steps {
         sh './gradlew build'
         sh 'mv ./build/libs/easy-park-backend-0.0.1-SNAPSHOT.jar ./EasyPark.jar'
-        sh 'cp -rf ./EasyPark.jar /usr/local/bin/jar'
-        sh 'pid=$(jps | grep jar | cut -d \' \' -f 1);kill -9 $pid'
-
-        sh '''JENKINS_NODE_COOKIE=dontKillMe
-        nohup java -jar EasyPark.jar > out.log & sleep 20s'''
+        sh 'chmod 777 ./EasyPark.jar'
+        sh 'scp -i /root/ooclserver_rsa ./EasyPark.jar root@39.98.52.38:/usr/local/bin/'
+        sh 'ssh -i /root/ooclserver_rsa root@39.98.52.38 "pid=\\$(jps | grep jar | cut -d \' \' -f 1);kill -9 \\$pid"'
+        sh 'ssh -i /root/ooclserver_rsa root@39.98.52.38 "rm -f /usr/local/bin/application.log"'
+        sh 'ssh -i /root/ooclserver_rsa root@39.98.52.38 "cd /usr/local/bin;nohup java -jar EasyPark.jar > application.log &"'
       }
     }
   }
