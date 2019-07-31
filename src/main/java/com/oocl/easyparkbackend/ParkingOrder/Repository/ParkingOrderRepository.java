@@ -24,4 +24,6 @@ public interface ParkingOrderRepository extends JpaRepository<ParkingOrder,Strin
     List<ParkingOrder> findByCarNumberLike(String carNumber);
 
     List<ParkingOrder> findAllByParkingBoyAndStatusIsLessThan(ParkingBoy parkingBoy, int status);
+    
+    List<ParkingOrder> findAllByCustomer(Customer customer);
 }

@@ -2,7 +2,9 @@ package com.oocl.easyparkbackend.Manage.Service;
 
 import com.itmuch.lightsecurity.jwt.JwtOperator;
 import com.itmuch.lightsecurity.jwt.User;
+import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
+import com.oocl.easyparkbackend.Manage.Exception.NotFindManagerException;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.Manage.Vo.BoysLotVo;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
@@ -10,6 +12,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorExce
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
+import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,33 +32,35 @@ public class ManageService {
     private ManageRepository manageRepository;
     @Autowired
     private JwtOperator jwtOperator;
+    @Autowired
+    private UserOperator userOperator;
 
     public ParkingBoy setParkingBoysParkingLots(BoysLotVo vo) {
         List<ParkingLot> lots = new ArrayList<>();
         List<ParkingLot> lotList = parkingBoyService.findParkingLotList(vo.getId());
         for (String id : vo.getList()) {
             ParkingLot parkingLot = parkingLotService.findParkingLotsById(String.valueOf(id));
-            if (parkingLot != null){
+            if (parkingLot != null) {
                 parkingLot.setStatus(2);
                 ParkingLot parkingLotSave = parkingLotService.save(parkingLot);
                 lots.add(parkingLotSave);
             }
         }
         lotList.addAll(lots);
-        return parkingBoyService.setParkingBoysParkingLot(lotList,vo.getId());
+        return parkingBoyService.setParkingBoysParkingLot(lotList, vo.getId());
     }
 
     public ParkingBoy changeParkingBoysParkingLots(BoysLotVo vo) {
         List<ParkingLot> lotList = parkingBoyService.findParkingLotList(vo.getId());
         for (String id : vo.getList()) {
             ParkingLot parkingLot = parkingLotService.findParkingLotsById(String.valueOf(id));
-            if (parkingLot != null){
-                lotList = lotList.stream().filter(item-> !item.getId().equals(String.valueOf(id))).collect(Collectors.toList());
+            if (parkingLot != null) {
+                lotList = lotList.stream().filter(item -> !item.getId().equals(String.valueOf(id))).collect(Collectors.toList());
                 parkingLot.setStatus(1);
                 parkingLotService.save(parkingLot);
             }
         }
-        return parkingBoyService.setParkingBoysParkingLot(lotList,vo.getId());
+        return parkingBoyService.setParkingBoysParkingLot(lotList, vo.getId());
     }
 
     public String login(Manage manage) {
@@ -69,14 +74,29 @@ public class ManageService {
         if (manage.getPhoneNumber() != null && manage.getPassword() != null) {
             optionalManager = manageRepository.getByPhoneNumberAndPassword(manage.getPhoneNumber(), manage.getPassword());
         }
+
         if (optionalManager.isPresent()) {
+            Manage dbManager = optionalManager.get();
+            String position="manager";
+            if (dbManager.getStatus() == 50) {
+                position = "admin";
+            }
             User user = User.builder()
-                    .id(Integer.valueOf(optionalManager.get().getId()))
-                    .username(optionalManager.get().getUsername())
-                    .roles(Arrays.asList("manager"))
+                    .id(Integer.valueOf(dbManager.getId()))
+                    .username(dbManager.getUsername())
+                    .roles(Arrays.asList(position))
                     .build();
             return jwtOperator.generateToken(user);
         }
         throw new UserNameOrPasswordErrorException();
+    }
+
+    public Manage getManager() {
+        User user = userOperator.getUser();
+        Manage manager = manageRepository.findById(user.getId()).orElse(null);
+        if (manager == null) {
+            throw new NotFindManagerException();
+        }
+        return manager;
     }
 }

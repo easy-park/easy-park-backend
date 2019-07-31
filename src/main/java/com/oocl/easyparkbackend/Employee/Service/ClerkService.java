@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClerkService {
+    private final static int ADMIN_POSITION = 50;
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
     @Autowired
@@ -46,7 +47,11 @@ public class ClerkService {
                     } else if (x instanceof Employee) {
                         x.setPosition("Employee");
                     } else if (x instanceof Manage) {
-                        x.setPosition("Manage");
+                        if(x.getStatus()==ADMIN_POSITION){
+                            x.setPosition("Admin");
+                        }else {
+                            x.setPosition("Manage");
+                        }
                     }
                     return x;
                 }
@@ -100,7 +105,7 @@ public class ClerkService {
         if(clerk.getPosition() == null) {
             throw new NoSuchPositionException();
         }
-        if(clerk.getPosition().equals(ClerkPosition.MANAGER)) {
+        if(clerk.getPosition().equals(ClerkPosition.MANAGER) || clerk.getPosition().equals(ClerkPosition.ADMIN)) {
             Optional<Manage> optionalManage = manageRepository.findById(clerk.getId());
             if(optionalManage.isPresent()) {
                 Manage manage = optionalManage.get();
@@ -109,9 +114,6 @@ public class ClerkService {
                 return manageRepository.save(manage);
             }
             throw new ClerkIdErrorException();
-        }
-        if(clerk.getPosition().equals(ClerkPosition.ADMIN)) {
-            // todo update admin entity
         }
         if(clerk.getPosition().equals(ClerkPosition.Employee)) {
             Optional<Employee> optionalEmployee = employeeRepository.findById(clerk.getId());
@@ -140,7 +142,7 @@ public class ClerkService {
         if(clerk.getPosition() == null) {
             throw new NoSuchPositionException();
         }
-        if(clerk.getPosition().equals(ClerkPosition.MANAGER)) {
+        if(clerk.getPosition().equals(ClerkPosition.MANAGER) || clerk.getPosition().equals(ClerkPosition.ADMIN)) {
             Optional<Manage> optionalManage = manageRepository.findById(clerk.getId());
             if(optionalManage.isPresent()) {
                 Manage manage = optionalManage.get();
@@ -148,9 +150,6 @@ public class ClerkService {
                 return manageRepository.save(manage);
             }
             throw new ClerkIdErrorException();
-        }
-        if(clerk.getPosition().equals(ClerkPosition.ADMIN)) {
-            // todo update admin entity
         }
         if(clerk.getPosition().equals(ClerkPosition.Employee)) {
             Optional<Employee> optionalEmployee = employeeRepository.findById(clerk.getId());

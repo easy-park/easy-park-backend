@@ -1,6 +1,8 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
 
+import com.itmuch.lightsecurity.jwt.User;
+import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
@@ -93,6 +95,12 @@ public class ParkingOrderController {
     public ResponseVO assignParkingBoy(String parkingOrderId, int parkingBoyId) {
         ParkingOrder parkingOrder = parkingOrderService.assignParkingBoy(parkingOrderId,parkingBoyId);
         return ResponseVO.success(parkingOrder);
+    }
+
+    @GetMapping(path = "/unrepeatcarnumbers")
+    public ResponseVO getUnrepeatCarNumbers() {
+        List<String> historyCarNumber = parkingOrderService.getUnrepeatOrders();
+        return ResponseVO.success(historyCarNumber);
     }
 
     @ExceptionHandler(AlreadyParkingException.class)
