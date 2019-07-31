@@ -65,14 +65,14 @@ public class ParkingLotService {
         return parkingLotRepository.findById(parkingLot.getId())
                 .map(dbParkingLot -> {
                     dbParkingLot.setName(parkingLot.getName());
-                    if (dbParkingLot.getAvailable() >= dbParkingLot.getCapacity()) {
-                        dbParkingLot.setAvailable(parkingLot.getCapacity());
-                    } else {
+                    if (parkingLot.getCapacity() >= dbParkingLot.getCapacity()) {
                         dbParkingLot.setAvailable(
-                                dbParkingLot.getAvailable() +
                                 parkingLot.getCapacity() -
-                                dbParkingLot.getCapacity()
+                                dbParkingLot.getCapacity() +
+                                dbParkingLot.getAvailable()
                         );
+                    } else if (parkingLot.getCapacity() < dbParkingLot.getAvailable()) {
+                        parkingLot.setCapacity(dbParkingLot.getAvailable());
                     }
                     dbParkingLot.setCapacity(parkingLot.getCapacity());
                     dbParkingLot.setStatus(parkingLot.getStatus());
@@ -129,16 +129,16 @@ public class ParkingLotService {
             parkingLotDashboradVOList.addAll(getParkingLotDashboardByBoy(parkingBoy));
         }
         for (ParkingLot parkingLot : parkingLotList) {
-            if (getParkingLotDashboardByLot(parkingLotDashboradVOList,parkingLot)){
-                parkingLotDashboradVOList.add(new ParkingLotDashboradVO(parkingLot,null));
+            if (getParkingLotDashboardByLot(parkingLotDashboradVOList, parkingLot)) {
+                parkingLotDashboradVOList.add(new ParkingLotDashboradVO(parkingLot, null));
             }
         }
         return parkingLotDashboradVOList;
     }
 
     private boolean getParkingLotDashboardByLot(List<ParkingLotDashboradVO> parkingLotDashboradVOList, ParkingLot parkingLot) {
-        for(ParkingLotDashboradVO parkingLotDashboradVO:parkingLotDashboradVOList){
-            if(parkingLotDashboradVO.getId() == parkingLot.getId()){
+        for (ParkingLotDashboradVO parkingLotDashboradVO : parkingLotDashboradVOList) {
+            if (parkingLotDashboradVO.getId() == parkingLot.getId()) {
                 return false;
             }
         }

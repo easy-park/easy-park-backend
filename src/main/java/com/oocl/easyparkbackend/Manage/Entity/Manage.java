@@ -4,6 +4,8 @@ import com.oocl.easyparkbackend.Employee.Entity.Clerk;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "manage")
@@ -104,5 +106,13 @@ public class Manage  extends Clerk {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<String> roles() {
+        String position = "manager";
+        if (status != null && status == 50) {
+            position = "admin";
+        }
+        return Collections.singletonList(position);
     }
 }
