@@ -50,6 +50,13 @@ public class ParkingLot {
         this.status = status;
     }
 
+    public ParkingLot(@NotNull String name, @NotNull Integer capacity, @NotNull Integer available) {
+        this.name = name;
+        this.capacity = capacity;
+        this.available = available;
+        this.status = status;
+    }
+
     public String getId() {
         return Id;
     }
