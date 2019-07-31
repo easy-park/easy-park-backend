@@ -46,7 +46,11 @@ public class ClerkService {
                     } else if (x instanceof Employee) {
                         x.setPosition("Employee");
                     } else if (x instanceof Manage) {
-                        x.setPosition("Manage");
+                        if(x.getStatus()==50){
+                            x.setPosition("Manage");
+                        }else {
+                            x.setPosition("Admin");
+                        }
                     }
                     return x;
                 }
