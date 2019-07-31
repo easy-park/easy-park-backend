@@ -104,4 +104,20 @@ public class ParkingLotControllerTest {
 
         resultActions.andExpect(status().isOk());
     }
+
+    @Test
+    void should_save_the_parkingLot_message_when_post_to_parking_lots() throws Exception {
+        ParkingLot parkingLot = new ParkingLot("123", "parkingLot", 10, 10);
+        when(parkingLotService.addParkingLot(any())).thenReturn(parkingLot);
+
+        String jsonString="        {\n" +
+                "            \"name\": \"kkddd\",\n" +
+                "            \"capacity\": 50,\n" +
+                "            \"available\": 50\n" +
+                "        }";
+
+        ResultActions resultActions = mvc.perform(post("/parking_lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(jsonString));
+
+        resultActions.andExpect(status().isOk());
+    }
 }
