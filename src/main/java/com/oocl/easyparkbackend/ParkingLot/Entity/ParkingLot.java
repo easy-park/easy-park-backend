@@ -2,20 +2,18 @@ package com.oocl.easyparkbackend.ParkingLot.Entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "parking_lot")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class ParkingLot {
     public static final int STATUS_FROZEN = 0;
     public static final int STATUS_ACTIVE = 1;
 
     @Id
-    @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "jpa-uuid")
     @Column(name = "id")
     private String Id;
 
@@ -46,6 +44,13 @@ public class ParkingLot {
 
     public ParkingLot(String id, @NotNull String name, @NotNull Integer capacity, @NotNull Integer available, Integer status) {
         Id = id;
+        this.name = name;
+        this.capacity = capacity;
+        this.available = available;
+        this.status = status;
+    }
+
+    public ParkingLot(@NotNull String name, @NotNull Integer capacity, @NotNull Integer available) {
         this.name = name;
         this.capacity = capacity;
         this.available = available;
