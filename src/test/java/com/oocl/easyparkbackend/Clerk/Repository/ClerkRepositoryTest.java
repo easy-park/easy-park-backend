@@ -3,6 +3,7 @@ package com.oocl.easyparkbackend.Clerk.Repository;
 import com.oocl.easyparkbackend.Employee.Entity.Clerk;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
+import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.common.vo.ClerkPosition;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,6 +87,27 @@ public class ClerkRepositoryTest {
             }
         }
 
+    }
+
+
+    @Test
+    public void should_update_clerk_status_when_invoke_updateClerkStatus() {
+        Manage manage = new Manage(5, "manager1", "password", "amy", "18432342334", 1, "123@qq.com");
+        manageRepository.save(manage);
+        Clerk clerk = new Clerk();
+        clerk.setId(5);
+        clerk.setStatus(0);
+        clerk.setPosition("Manage");
+
+        if(clerk.getPosition().equals(ClerkPosition.MANAGER)) {
+            Optional<Manage> optionalManage = manageRepository.findById(clerk.getId());
+            if(optionalManage.isPresent()) {
+                Manage fetchedManage = optionalManage.get();
+                fetchedManage.setStatus(clerk.getStatus());
+                Manage returnManage = manageRepository.save(fetchedManage);
+                assertThat(returnManage.getStatus()).isNotEqualTo(manage.getStatus());
+            }
+        }
     }
 
 

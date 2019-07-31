@@ -55,7 +55,7 @@ public class ParkingOrderIntegrationTest {
     public void should_return_parking_order_and_update_parking_order_when_put_to_parking_order_given_order_id_and_status() throws Exception {
         ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         ParkingBoy returnParkingBoy = parkingBoyRepository.save(parkingBoy);
-        ParkingLot parkingLot = new ParkingLot("224","456",5,5);
+        ParkingLot parkingLot = new ParkingLot("456",5,5);
         parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,1,returnParkingBoy,parkingLot);
         ParkingOrder orderSave = parkingOrderRepository.save(parkingOrder);
@@ -71,7 +71,7 @@ public class ParkingOrderIntegrationTest {
     public void should_update_parking_order_and_parking_boy_status_when_update_parking_order_status() throws Exception {
         ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         ParkingBoy returnParkingBoy = parkingBoyRepository.save(parkingBoy);
-        ParkingLot parkingLot = new ParkingLot("224","456",5,5);
+        ParkingLot parkingLot = new ParkingLot("456",5,5);
         parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,2,returnParkingBoy,parkingLot);
         ParkingOrder orderSave = parkingOrderRepository.save(parkingOrder);
@@ -87,8 +87,8 @@ public class ParkingOrderIntegrationTest {
     public void should_update_parking_order_and_parking_boy_status_and_parking_lots_capacity_when_update_parking_order_status() throws Exception {
         ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         ParkingBoy returnParkingBoy = parkingBoyRepository.save(parkingBoy);
-        ParkingLot parkingLot = new ParkingLot("224","456",5,3);
-        parkingLotRepository.save(parkingLot);
+        ParkingLot parkingLot = new ParkingLot("456",5,3);
+        ParkingLot parkingLotSave = parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,2,returnParkingBoy,parkingLot);
         ParkingOrder orderSave = parkingOrderRepository.save(parkingOrder);
 
@@ -97,6 +97,6 @@ public class ParkingOrderIntegrationTest {
         result.andExpect(status().isOk()).andExpect(jsonPath("$.data.status",is(5)));
         assertThat(parkingOrderRepository.findById(orderSave.getId()).get().getStatus().equals(5));
         assertThat(parkingBoyRepository.findById(returnParkingBoy.getId()).get().getStatus().equals(1));
-        assertThat(parkingLotRepository.findById("224").get().getAvailable().equals(4));
+        assertThat(parkingLotRepository.findById(parkingLotSave.getId()).get().getAvailable().equals(4));
     }
 }

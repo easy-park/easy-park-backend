@@ -52,6 +52,14 @@ public class ParkingLotController {
         return ResponseVO.success(fetchedParkingLot);
     }
 
+
+    @PostMapping("/parking_lots")
+    public ResponseVO addNewParkingLot(@RequestBody ParkingLot parkingLot){
+        ParkingLot parkingLot1 = parkingLotService.addParkingLot(parkingLot);
+        return ResponseVO.success(parkingLot1);
+    }
+
+
     @ExceptionHandler(ParkingBoyIdErrorException.class)
     public ResponseVO handleParkingBoyIdErrorException(ParkingBoyIdErrorException exception){
         return ResponseVO.serviceFail(exception.getMessage());

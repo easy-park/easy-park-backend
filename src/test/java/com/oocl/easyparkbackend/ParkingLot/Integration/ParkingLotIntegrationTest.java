@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,7 +67,7 @@ public class ParkingLotIntegrationTest {
 
     @Test
     public void should_return_parkingLots_when_invoke_getParkingLotsByRange() throws Exception {
-        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+        ParkingLot parkingLot = new ParkingLot("parkinglot1", 20, 10);
         parkingLotRepository.save(parkingLot);
 
         ResultActions resultActions = mockMvc.perform(get("/parking_lots?start=1&end=30"));
@@ -78,14 +79,34 @@ public class ParkingLotIntegrationTest {
 
     @Test
     public void should_return_parkingLot_when_invoke_updateParkingLot() throws Exception {
-        ParkingLot parkingLot = new ParkingLot("123", "parkinglot1", 20, 10);
+        ParkingLot parkingLot = new ParkingLot("parkinglot1", 20, 10);
+        ParkingLot lot = parkingLotRepository.save(parkingLot);
+        ParkingLot parkingLotChanage = lot;
+        parkingLotChanage.setName("parkinglot2");
 
         ResultActions resultActions = mockMvc.perform(put("/parking_lots")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(parkingLot)));
+                .content(new ObjectMapper().writeValueAsString(parkingLotChanage)));
 
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.name").value("parkinglot1"));
-        assertThat(parkingLotRepository.save(parkingLot).getName().equals("parkinglot1"));
+                .andExpect(jsonPath("$.data.name").value("parkinglot2"));
+        assertThat(parkingLotRepository.findById(parkingLot.getId()).get().getName().equals("parkinglot2"));
+    }
+
+    @Test
+    public void should_save_the_parkingLot_message_when_post_to_parking_lots() throws Exception {
+        String jsonString="        {\n" +
+                "            \"name\": \"kkddd\",\n" +
+                "            \"capacity\": 50,\n" +
+                "            \"available\": 50\n" +
+                "        }";
+
+        ResultActions result = mockMvc.perform(post("/parking_lots").contentType(MediaType.APPLICATION_JSON_UTF8).content(jsonString));
+
+        result.andExpect(status().isOk()).andExpect(jsonPath("$.data.name").value("kkddd"));
+        assertThat(parkingLotRepository.findByNameLike("kkddd").get(0).getCapacity()).isEqualTo(50);
+        parkingLotRepository.deleteAll();
+
+
     }
 }

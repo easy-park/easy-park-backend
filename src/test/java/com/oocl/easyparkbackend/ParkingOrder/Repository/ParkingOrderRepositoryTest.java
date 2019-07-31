@@ -37,7 +37,7 @@ public class ParkingOrderRepositoryTest {
     public void should_return_parkingOrder_list_when_invoke_findAllByStatus_given_status(){
         ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
-        ParkingLot parkingLot = new ParkingLot("123","456",5,5);
+        ParkingLot parkingLot = new ParkingLot("456",5,5);
         parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("123","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,6,parkingBoy,parkingLot);
 
@@ -75,7 +75,7 @@ public class ParkingOrderRepositoryTest {
     public void should_update_parkingOrder_status_when_invoke_save_given_parkingOrder(){
         ParkingBoy parkingBoy = new ParkingBoy("123","123","123","sdfsf",1,"12345",new ArrayList<>());
         parkingBoyRepository.save(parkingBoy);
-        ParkingLot parkingLot = new ParkingLot("224","456",5,5);
+        ParkingLot parkingLot = new ParkingLot("456",5,5);
         parkingLotRepository.save(parkingLot);
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),new Timestamp(new Date().getTime()),5.0,1,parkingBoy,parkingLot);
 

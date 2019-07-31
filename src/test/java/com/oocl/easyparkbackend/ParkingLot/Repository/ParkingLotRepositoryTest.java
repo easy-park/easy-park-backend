@@ -31,16 +31,17 @@ public class ParkingLotRepositoryTest {
 
     @Test
     public void should_update_parkingLot_when_invoke_updateParkingLot_given_parkingLot() {
-        ParkingLot parkingLot = new ParkingLot("123", "parkingLot2", 10, 10);
-        parkingLotRepository.save(parkingLot);
+        ParkingLot parkingLot = new ParkingLot("parkingLot2", 10, 10);
+        ParkingLot parkingLotSave = parkingLotRepository.save(parkingLot);
+        parkingLotSave.setName("parkingLot3");
+        parkingLotSave.setAvailable(10);
+        parkingLotSave.setCapacity(11);
+        parkingLotRepository.save(parkingLotSave);
+        ParkingLot fetchedParkingLot = parkingLotRepository.findById(parkingLotSave.getId()).get();
 
-        ParkingLot updateParkingLot = new ParkingLot("123", "parkingLot3", 11, 10);
-        parkingLotRepository.save(updateParkingLot);
-        ParkingLot fetchedParkingLot = parkingLotRepository.findById("123").get();
-
-        assertThat(fetchedParkingLot.getAvailable().equals(updateParkingLot.getAvailable()));
-        assertThat(fetchedParkingLot.getName()).isNotEqualTo(parkingLot.getName());
-        assertThat(fetchedParkingLot.getCapacity()).isNotEqualTo(parkingLot.getCapacity());
+        assertThat(fetchedParkingLot.getAvailable().equals(parkingLot.getAvailable()));
+        assertThat(fetchedParkingLot.getName()).isNotEqualTo("parkingLot2");
+        assertThat(fetchedParkingLot.getCapacity()).isNotEqualTo(10);
 
     }
 

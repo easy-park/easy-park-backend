@@ -22,7 +22,7 @@ public class ManageService {
     public ParkingBoy setParkingBoysParkingLots(BoysLotVo vo) {
         List<ParkingLot> lots = new ArrayList<>();
         List<ParkingLot> lotList = parkingBoyService.findParkingLotList(vo.getId());
-        for (Integer id : vo.getList()) {
+        for (String id : vo.getList()) {
             ParkingLot parkingLot = parkingLotService.findParkingLotsById(String.valueOf(id));
             if (parkingLot != null){
                 parkingLot.setStatus(2);
@@ -36,7 +36,7 @@ public class ManageService {
 
     public ParkingBoy changeParkingBoysParkingLots(BoysLotVo vo) {
         List<ParkingLot> lotList = parkingBoyService.findParkingLotList(vo.getId());
-        for (Integer id : vo.getList()) {
+        for (String id : vo.getList()) {
             ParkingLot parkingLot = parkingLotService.findParkingLotsById(String.valueOf(id));
             if (parkingLot != null){
                 lotList = lotList.stream().filter(item-> !item.getId().equals(String.valueOf(id))).collect(Collectors.toList());

@@ -15,9 +15,11 @@ import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorExcept
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,8 +66,16 @@ public class ParkingLotService {
         return parkingLotRepository.findById(parkingLot.getId())
                 .map(dbParkingLot -> {
                     dbParkingLot.setName(parkingLot.getName());
+                    if (dbParkingLot.getAvailable() >= dbParkingLot.getCapacity()) {
+                        dbParkingLot.setAvailable(parkingLot.getCapacity());
+                    } else {
+                        dbParkingLot.setAvailable(
+                                dbParkingLot.getAvailable() +
+                                parkingLot.getCapacity() -
+                                dbParkingLot.getCapacity()
+                        );
+                    }
                     dbParkingLot.setCapacity(parkingLot.getCapacity());
-                    dbParkingLot.setAvailable(parkingLot.getCapacity());
                     dbParkingLot.setStatus(parkingLot.getStatus());
                     return parkingLotRepository.save(dbParkingLot);
                 }).orElseThrow(ParkingOrderIdErrorException::new);
@@ -99,10 +109,17 @@ public class ParkingLotService {
         ParkingLot parkingLotSave = parkingLotRepository.save(parkingLot);
         return parkingLotSave;
     }
-    
+
     public List<ParkingLot> updateParkingLotStatus(ParkingLot parkingLot) {
 
         return null;
     }
+
+    public ParkingLot addParkingLot(@Valid ParkingLot parkingLot) {
+        parkingLot.setStatus(1);
+        ParkingLot returnParkingLot = parkingLotRepository.save(parkingLot);
+        return returnParkingLot;
+    }
+
 
 }
