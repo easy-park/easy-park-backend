@@ -4,6 +4,7 @@ import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -21,4 +22,6 @@ public interface ParkingOrderRepository extends JpaRepository<ParkingOrder,Strin
     ParkingOrder findByCarNumberAndEndTime(String number, Timestamp timestamp);
 
     List<ParkingOrder> findByCarNumberLike(String carNumber);
+
+    List<ParkingOrder> findAllByParkingBoyAndStatusIsLessThan(ParkingBoy parkingBoy, int status);
 }
