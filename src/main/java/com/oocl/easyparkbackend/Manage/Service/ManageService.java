@@ -35,27 +35,27 @@ public class ManageService {
         List<ParkingLot> lotList = parkingBoyService.findParkingLotList(vo.getId());
         for (String id : vo.getList()) {
             ParkingLot parkingLot = parkingLotService.findParkingLotsById(String.valueOf(id));
-            if (parkingLot != null){
+            if (parkingLot != null) {
                 parkingLot.setStatus(2);
                 ParkingLot parkingLotSave = parkingLotService.save(parkingLot);
                 lots.add(parkingLotSave);
             }
         }
         lotList.addAll(lots);
-        return parkingBoyService.setParkingBoysParkingLot(lotList,vo.getId());
+        return parkingBoyService.setParkingBoysParkingLot(lotList, vo.getId());
     }
 
     public ParkingBoy changeParkingBoysParkingLots(BoysLotVo vo) {
         List<ParkingLot> lotList = parkingBoyService.findParkingLotList(vo.getId());
         for (String id : vo.getList()) {
             ParkingLot parkingLot = parkingLotService.findParkingLotsById(String.valueOf(id));
-            if (parkingLot != null){
-                lotList = lotList.stream().filter(item-> !item.getId().equals(String.valueOf(id))).collect(Collectors.toList());
+            if (parkingLot != null) {
+                lotList = lotList.stream().filter(item -> !item.getId().equals(String.valueOf(id))).collect(Collectors.toList());
                 parkingLot.setStatus(1);
                 parkingLotService.save(parkingLot);
             }
         }
-        return parkingBoyService.setParkingBoysParkingLot(lotList,vo.getId());
+        return parkingBoyService.setParkingBoysParkingLot(lotList, vo.getId());
     }
 
     public String login(Manage manage) {
@@ -69,11 +69,19 @@ public class ManageService {
         if (manage.getPhoneNumber() != null && manage.getPassword() != null) {
             optionalManager = manageRepository.getByPhoneNumberAndPassword(manage.getPhoneNumber(), manage.getPassword());
         }
+
         if (optionalManager.isPresent()) {
+            String position;
+            position = manage.getStatus() == 3 ? "manager" : "";
+            if (manage.getStatus() == 3) {
+                position = "manager";
+            } else if (manage.getStatus() == 4) {
+                position = "admin";
+            }
             User user = User.builder()
                     .id(Integer.valueOf(optionalManager.get().getId()))
                     .username(optionalManager.get().getUsername())
-                    .roles(Arrays.asList("manager"))
+                    .roles(Arrays.asList(position))
                     .build();
             return jwtOperator.generateToken(user);
         }
