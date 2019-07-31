@@ -135,4 +135,41 @@ public class ClerkService {
         }
         throw new NoSuchPositionException();
     }
+
+    public Clerk updateClerkStatus(Clerk clerk) {
+        if(clerk.getPosition() == null) {
+            throw new NoSuchPositionException();
+        }
+        if(clerk.getPosition().equals(ClerkPosition.MANAGER)) {
+            Optional<Manage> optionalManage = manageRepository.findById(clerk.getId());
+            if(optionalManage.isPresent()) {
+                Manage manage = optionalManage.get();
+                manage.setStatus(clerk.getStatus());
+                return manageRepository.save(manage);
+            }
+            throw new ClerkIdErrorException();
+        }
+        if(clerk.getPosition().equals(ClerkPosition.ADMIN)) {
+            // todo update admin entity
+        }
+        if(clerk.getPosition().equals(ClerkPosition.Employee)) {
+            Optional<Employee> optionalEmployee = employeeRepository.findById(clerk.getId());
+            if(optionalEmployee.isPresent()) {
+                Employee employee = optionalEmployee.get();
+                employee.setStatus(clerk.getStatus());
+                return employeeRepository.save(employee);
+            }
+            throw new ClerkIdErrorException();
+        }
+        if(clerk.getPosition().equals(ClerkPosition.PARKING_BOY)) {
+            Optional<ParkingBoy> optionalParkingBoy = parkingBoyRepository.findById(clerk.getId());
+            if(optionalParkingBoy.isPresent()) {
+                ParkingBoy parkingBoy = optionalParkingBoy.get();
+                parkingBoy.setStatus(clerk.getStatus());
+                return parkingBoyRepository.save(parkingBoy);
+            }
+            throw new ClerkIdErrorException();
+        }
+        throw new NoSuchPositionException();
+    }
 }
