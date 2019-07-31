@@ -14,22 +14,22 @@ public class ParkingLot {
 
     @Id
     @GeneratedValue(generator = "jpa-uuid")
-    @Column(name = "id")
+    @Column(name = "id", length = 50)
     private String Id;
 
-    @Column(name = "name")
+    @Column(name = "name",length = 25)
     @NotNull
     private String name;
 
-    @Column(name = "capacity")
+    @Column(name = "capacity",length = 10)
     @NotNull
     private Integer capacity;
 
-    @Column(name = "available")
+    @Column(name = "available",length = 10)
     @NotNull
     private Integer available;
 
-    @Column(name = "status")
+    @Column(name = "status",length = 2)
     private Integer status;
 
     public ParkingLot() {
