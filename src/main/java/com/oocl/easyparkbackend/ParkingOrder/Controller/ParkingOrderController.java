@@ -10,6 +10,7 @@ import com.oocl.easyparkbackend.ParkingOrder.Exception.AlreadyParkingException;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
 import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 
+import com.oocl.easyparkbackend.ParkingOrder.Exception.StatusErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,12 @@ public class ParkingOrderController {
         return ResponseVO.success(list);
     }
 
+    @GetMapping(path = "/parkingorderlist", params = "status")
+    public ResponseVO getParkingOrdersByStatus(String status) {
+        List<ParkingOrder> list = parkingOrderService.getParkingOrderByStatus(status);
+        return ResponseVO.success(list);
+    }
+
     @ExceptionHandler(AlreadyParkingException.class)
     public ResponseVO handleAlreadyParkingException(AlreadyParkingException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
@@ -118,6 +125,11 @@ public class ParkingOrderController {
 
     @ExceptionHandler(TypeErrorException.class)
     public  ResponseVO handleTypeErrorException(TypeErrorException exception) {
+        return ResponseVO.serviceFail(exception.getMessage());
+    }
+
+    @ExceptionHandler(StatusErrorException.class)
+    public ResponseVO handleStatusErrorException(StatusErrorException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
 

@@ -171,4 +171,16 @@ public class ParkingOrderControllerTest {
 
     }
 
+    @Test
+    public void should_return_parking_order_list_when_invoke_getParkingOrderByStatus() throws Exception {
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 1, null, null);
+        List<ParkingOrder> parkingOrders = new ArrayList<>();
+        parkingOrders.add(order);
+        when(parkingOrderService.getParkingOrderByStatus(anyString())).thenReturn(parkingOrders);
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingorderlist?status=无人处理"));
+
+        resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].carNumber").value("55555"));
+    }
+
 }
