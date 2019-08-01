@@ -325,7 +325,7 @@ public class ParkingOrderService {
                 } else if (i == 2) {
                     free[i - 1] = (arr[i] - startHour - 1) * 8;
                     price += (60 - startMinute) / 60.0 * 8;
-                } else if (i == 3) {
+                } else {
                     free[i - 1] = (arr[i] - startHour - 1) * 5;
                     price += (60 - startMinute) / 60.0 * 5;
                 }
@@ -342,7 +342,7 @@ public class ParkingOrderService {
                 } else if (i == 2) {
                     free[i - 1] = (endHour - arr[i - 1]) * 8;
                     price += endMinute / 60.0 * 8;
-                } else if (i == 3) {
+                } else {
                     free[i - 1] = (endHour - arr[i - 1]) * 5;
                     price += endMinute / 60.0 * 5;
                 }
@@ -364,7 +364,6 @@ public class ParkingOrderService {
         }
 
         BigDecimal bg = new BigDecimal(price);
-        double precisePrice = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        return precisePrice;
+        return bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 }
