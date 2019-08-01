@@ -23,6 +23,8 @@ import com.oocl.easyparkbackend.common.vo.ParkingOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -86,6 +88,10 @@ public class ParkingOrderService {
             case 6:
                 parkingOrder.setEndTime(new Timestamp(new Date().getTime()));
                 parkingBoy.setStatus(0);
+                break;
+            case 4:
+                double price = calculatePrice(parkingOrder.getStartTime());
+                parkingOrder.setPrice(price);
                 break;
             case 5:
                 parkingBoy.setStatus(1);
@@ -291,5 +297,74 @@ public class ParkingOrderService {
         }
 
         return historyCarNumber;
+    }
+
+    private double calculatePrice(Timestamp timestamp) {
+        LocalDateTime startTime = timestamp.toLocalDateTime();
+        LocalDateTime endTime = LocalDateTime.now();
+
+        int startHour = startTime.getHour();
+        int startMinute = startTime.getMinute();
+        int startIndex = 0;
+
+        int endHour = endTime.getHour();
+        int endMinute = endTime.getMinute();
+        int endIndex = 0;
+
+        int[] arr = {0, 10, 17, 24};
+        int[] free = {30, 56, 35};
+
+        double price = 0.0;
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > startHour) {
+                arr[i - 1] = startHour + 1;
+                startIndex = i - 1;
+                if (i == 1) {
+                    free[i - 1] = (arr[i] - startHour - 1) * 3;
+                    price += (60 - startMinute) / 60.0 * 3;
+                } else if (i == 2) {
+                    free[i - 1] = (arr[i] - startHour - 1) * 8;
+                    price += (60 - startMinute) / 60.0 * 8;
+                } else if (i == 3) {
+                    free[i - 1] = (arr[i] - startHour - 1) * 5;
+                    price += (60 - startMinute) / 60.0 * 5;
+                }
+                break;
+            }
+        }
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > endHour) {
+                arr[i] = endHour;
+                endIndex = i;
+                if (i == 1) {
+                    free[i - 1] = (endHour - arr[i - 1]) * 3;
+                    price += endMinute / 60.0 * 3;
+                } else if (i == 2) {
+                    free[i - 1] = (endHour - arr[i - 1]) * 8;
+                    price += endMinute / 60.0 * 8;
+                } else if (i == 3) {
+                    free[i - 1] = (endHour - arr[i - 1]) * 5;
+                    price += endMinute / 60.0 * 5;
+                }
+                break;
+            }
+        }
+
+        if (startIndex < endIndex) {
+            for (int i = startIndex; i < endIndex; i++) {
+                price += free[i];
+            }
+        } else {
+            for (int i = endIndex; i < arr.length; i++) {
+                price += arr[i];
+            }
+            for (int i = 0; i < startIndex; i++) {
+                price += arr[i];
+            }
+        }
+
+        BigDecimal bg = new BigDecimal(price);
+        double precisePrice = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return precisePrice;
     }
 }
