@@ -53,6 +53,7 @@ public class ParkingBoyIntegrationTest {
 
     @Test
     public void should_return_parkingBoy_list_invoke_getAllParkingBoy() throws Exception {
+        parkingBoyRepository.deleteAll();
         ParkingBoy parkingBoy = new ParkingBoy("username1", "username1", "username1", "1313215", 1, "123", new ArrayList<ParkingLot>());
         ParkingBoy parkingBoy1 = new ParkingBoy("username2", "123", "123", "1313215452", 1, "123", new ArrayList<ParkingLot>());
 
@@ -67,6 +68,8 @@ public class ParkingBoyIntegrationTest {
 
 
         assertEquals(parkingBoys.size(), 2);
+        parkingBoyRepository.deleteAll();
+
     }
 
     @Test
@@ -84,6 +87,7 @@ public class ParkingBoyIntegrationTest {
         List<ParkingBoy> parkingBoys = parkingBoyRepository.findByNameLike("%ming%");
 
         assertEquals(1,parkingBoys.size());
+        parkingBoyRepository.deleteAll();
     }
-    
+
 }
