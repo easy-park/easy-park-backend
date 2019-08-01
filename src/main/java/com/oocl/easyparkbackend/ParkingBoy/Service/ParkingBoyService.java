@@ -4,6 +4,7 @@ import com.itmuch.lightsecurity.jwt.JwtOperator;
 import com.itmuch.lightsecurity.jwt.User;
 import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.FrozenParkingBoyException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.NotFindParkingBoyException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
@@ -39,6 +40,9 @@ public class ParkingBoyService {
             optionalParkingBoy = repository.getByPhoneNumberAndPassword(parkingBoy.getPhoneNumber(), parkingBoy.getPassword());
         }
         if (optionalParkingBoy.isPresent()) {
+            if (optionalParkingBoy.get().getStatus() == 5) {
+                throw new FrozenParkingBoyException();
+            }
             User user = User.builder()
                     .id(Integer.valueOf(optionalParkingBoy.get().getId()))
                     .username(optionalParkingBoy.get().getUsername())
@@ -72,14 +76,14 @@ public class ParkingBoyService {
 
     public List<ParkingBoy> findParkingBoysByPhoneNumber(String phoneNumber) {
         List<ParkingBoy> returnParkingBoys = new ArrayList<>();
-        returnParkingBoys.addAll(repository.findByPhoneNumberLike("%"+phoneNumber+"%"));
+        returnParkingBoys.addAll(repository.findByPhoneNumberLike("%" + phoneNumber + "%"));
         return returnParkingBoys;
     }
 
     public List<ParkingLot> findParkingLotList(Integer parkingBoyId) {
-        if (parkingBoyId != null && parkingBoyId != 0){
+        if (parkingBoyId != null && parkingBoyId != 0) {
             ParkingBoy parkingBoyFind = repository.findById(parkingBoyId).orElse(null);
-            if (parkingBoyFind != null){
+            if (parkingBoyFind != null) {
                 return parkingBoyFind.getParkingLotList();
             }
         }
@@ -88,7 +92,7 @@ public class ParkingBoyService {
 
     public ParkingBoy setParkingBoysParkingLot(List<ParkingLot> lots, Integer parkingBoyId) {
         ParkingBoy parkingBoy = repository.findById(parkingBoyId).orElse(null);
-        if (parkingBoy != null){
+        if (parkingBoy != null) {
             parkingBoy.setParkingLotList(lots);
             ParkingBoy parkingBoySave = repository.save(parkingBoy);
             return parkingBoySave;
@@ -98,7 +102,7 @@ public class ParkingBoyService {
 
     public ParkingBoy findParkingBoyById(int id) {
         Optional<ParkingBoy> optionalParkingBoy = repository.findById(id);
-        if( !optionalParkingBoy.isPresent()) {
+        if (!optionalParkingBoy.isPresent()) {
             throw new NotFindParkingBoyException();
         }
         return optionalParkingBoy.get();
