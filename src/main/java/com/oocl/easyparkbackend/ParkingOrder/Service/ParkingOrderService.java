@@ -366,4 +366,13 @@ public class ParkingOrderService {
         BigDecimal bg = new BigDecimal(price);
         return bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
+
+    public List<ParkingOrder> findAllByParkingBoyAndStatus(int status) {
+        User user = userOperator.getUser();
+        ParkingBoy parkingBoy = parkingBoyRepository.findById(user.getId()).orElse(null);
+        if(parkingBoy == null){
+            throw new ParkingBoyIdErrorException();
+        }
+        return parkingOrderRepository.findAllByParkingBoyAndStatus(parkingBoy,status);
+    }
 }

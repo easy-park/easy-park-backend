@@ -12,6 +12,7 @@ import com.oocl.easyparkbackend.ParkingOrder.Exception.*;
 
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,11 @@ public class ParkingOrderController {
     @GetMapping(path = "/parkingOrders", params = "status")
     public ResponseVO findParkingOrderByStatus(@RequestParam int status) {
         return ResponseVO.success(parkingOrderService.findParkingOrderByStatus(status));
+    }
+
+    @GetMapping(value = "/parkingHistoryOrders",params = "status")
+    public ResponseVO findParkingBoyByStatusAndParkingBoyId(@RequestParam int status){
+        return ResponseVO.success(parkingOrderService.findAllByParkingBoyAndStatus(status));
     }
 
     @PutMapping(path = "/parkingOrders/{orderId}", params = "status")
@@ -148,5 +154,4 @@ public class ParkingOrderController {
     public ResponseVO handleOrderRobedException(OrderRobedException exception) {
         return ResponseVO.serviceFail(exception.getMessage());
     }
-
 }
