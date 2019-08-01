@@ -7,8 +7,8 @@ import com.oocl.easyparkbackend.ParkingBoy.Exception.ParkingBoyIdErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
-import com.oocl.easyparkbackend.base.BaseException;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
+import com.oocl.easyparkbackend.exception.BaseResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +77,7 @@ public class ParkingBoyController {
     }
 
     @ExceptionHandler(FrozenParkingBoyException.class)
-    public ResponseVO handleFrozenParkingBoyException(BaseException exception) {
+    public ResponseVO handleFrozenParkingBoyException(BaseResponseException exception) {
         return ResponseVO.serviceFail(exception.getStatus(), exception.getMessage());
     }
 }

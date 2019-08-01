@@ -52,7 +52,7 @@ public class ManageController {
     }
 
     @ExceptionHandler(FrozenManagerException.class)
-    public ResponseVO handleFrozenManagerException(BaseException exception){
+    public ResponseVO handleFrozenManagerException(BaseResponseException exception){
         return ResponseVO.serviceFail(exception.getStatus(),exception.getMessage());
     }
 }
