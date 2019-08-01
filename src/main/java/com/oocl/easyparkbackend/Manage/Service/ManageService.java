@@ -7,19 +7,19 @@ import com.oocl.easyparkbackend.Manage.Entity.Manage;
 import com.oocl.easyparkbackend.Manage.Exception.NotFindManagerException;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.Manage.Vo.BoysLotVo;
+import com.oocl.easyparkbackend.Manage.Vo.ManageVo;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
+import com.oocl.easyparkbackend.authentication.AuthenticateException;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,39 +64,28 @@ public class ManageService {
     }
 
     public String login(Manage manage) {
-        Optional<Manage> optionalManager = Optional.empty();
-        if (manage.getEmail() != null && manage.getPassword() != null) {
-            optionalManager = manageRepository.getByEmailAndPassword(manage.getEmail(), manage.getPassword());
+        Optional<Manage> optionalManage = Optional.empty();
+        if (manage.getEmail() != null) {
+            optionalManage = manageRepository.getByEmailAndPassword(manage.getEmail(), manage.getPassword());
+        } else if (manage.getUsername() != null) {
+            optionalManage = manageRepository.getByEmailAndPassword(manage.getEmail(), manage.getPassword());
+        } else if (manage.getPhoneNumber() != null) {
+            optionalManage = manageRepository.getByPhoneNumberAndPassword(manage.getPhoneNumber(), manage.getPassword());
+        } else {
+            optionalManage = Optional.empty();
         }
-        if (manage.getUsername() != null && manage.getPassword() != null) {
-            optionalManager = manageRepository.getByUsernameAndPassword(manage.getUsername(), manage.getPassword());
-        }
-        if (manage.getPhoneNumber() != null && manage.getPassword() != null) {
-            optionalManager = manageRepository.getByPhoneNumberAndPassword(manage.getPhoneNumber(), manage.getPassword());
-        }
-
-        if (optionalManager.isPresent()) {
-            Manage dbManager = optionalManager.get();
-            String position="manager";
-            if (dbManager.getStatus() == 50) {
-                position = "admin";
-            }
+        return optionalManage.map(dbManage -> {
             User user = User.builder()
-                    .id(Integer.valueOf(dbManager.getId()))
-                    .username(dbManager.getUsername())
-                    .roles(Arrays.asList(position))
+                    .id(dbManage.getId())
+                    .username(dbManage.getUsername())
+                    .roles(manage.roles())
                     .build();
             return jwtOperator.generateToken(user);
-        }
-        throw new UserNameOrPasswordErrorException();
+        }).orElseThrow(AuthenticateException::new);
     }
 
     public Manage getManager() {
         User user = userOperator.getUser();
-        Manage manager = manageRepository.findById(user.getId()).orElse(null);
-        if (manager == null) {
-            throw new NotFindManagerException();
-        }
-        return manager;
+        return manageRepository.findById(user.getId()).orElseThrow(NotFindManagerException::new);
     }
 }

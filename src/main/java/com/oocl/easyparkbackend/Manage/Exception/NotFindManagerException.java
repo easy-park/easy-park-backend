@@ -1,9 +1,9 @@
 package com.oocl.easyparkbackend.Manage.Exception;
 
-public class NotFindManagerException extends RuntimeException {
+import com.oocl.easyparkbackend.base.BaseException;
 
-    @Override
-    public String getMessage() {
-        return "not find manager";
+public class NotFindManagerException extends BaseException {
+    public NotFindManagerException() {
+        super(400, "Account not exists");
     }
 }

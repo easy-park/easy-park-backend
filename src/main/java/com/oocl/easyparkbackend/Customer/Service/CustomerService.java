@@ -42,7 +42,7 @@ public class CustomerService {
             String md5DigestAsHex = DigestUtils.md5DigestAsHex(customer.getPassword().getBytes());
             customerFind = customerRepository.findByPhoneAndPassword(customer.getPhone(), md5DigestAsHex);
         }
-        if (customerFind != null) {
+        if (customerFind != null && customerFind.getId() != null && customerFind.getUsername() != null ) {
             User user = User.builder()
                     .id(customerFind.getId())
                     .username(customerFind.getUsername())

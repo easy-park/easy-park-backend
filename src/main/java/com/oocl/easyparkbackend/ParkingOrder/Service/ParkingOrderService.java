@@ -274,4 +274,22 @@ public class ParkingOrderService {
         parkingOrder.setStatus(2);
         return parkingOrderRepository.save(parkingOrder);
     }
+
+    public List<String> getUnrepeatOrders() {
+        User user = userOperator.getUser();
+        Optional<Customer> optionalCustomer = customerRepository.findById(user.getId());
+        if (!optionalCustomer.isPresent()) {
+            throw new NotFindCustomerExcepetion();
+        }
+        List<String> historyCarNumber = new ArrayList<>();
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByCustomer(optionalCustomer.get());
+        for (ParkingOrder parkingOrder : parkingOrders
+        ) {
+            if (!historyCarNumber.contains(parkingOrder.getCarNumber())) {
+                historyCarNumber.add(parkingOrder.getCarNumber());
+            }
+        }
+
+        return historyCarNumber;
+    }
 }
