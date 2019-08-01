@@ -3,8 +3,12 @@ package com.oocl.easyparkbackend.ParkingOrder.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.easyparkbackend.ParkingBoy.Controller.ParkingBoyController;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
+import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
+import com.oocl.easyparkbackend.ParkingLot.Exception.ParkingLotIdErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Entity.ParkingOrder;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.OrderNotExistException;
+import com.oocl.easyparkbackend.ParkingOrder.Exception.ParkingOrderIdErrorException;
 import com.oocl.easyparkbackend.ParkingOrder.Service.ParkingOrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.NestedServletException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -29,8 +34,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ParkingOrderController.class)
@@ -59,6 +64,20 @@ public class ParkingOrderControllerTest {
         ResultActions result = mockMvc.perform(get("/parkingOrders").param("status", "6"));
 
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void throw_exception_when_get_to_parking_order_given_status_is_finish() throws Exception{
+        when(parkingOrderService.findParkingOrderByStatus(anyInt())).thenThrow(new LoginTokenExpiredException());
+
+        try {
+            ResultActions result = mockMvc.perform(get("/parkingOrders").param("status", "6"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.msg").value("登录过期，请重新登陆！"))
+                    .andDo(print());
+        } catch (LoginTokenExpiredException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -101,6 +120,20 @@ public class ParkingOrderControllerTest {
     }
 
     @Test
+    public void throw_exception_invoke_finishRobOrder_given_parkingOrderId_and_parkingLotId() throws Exception {
+        when(parkingOrderService.finishRobOrder(anyString(), anyString())).thenThrow(new ParkingLotIdErrorException());
+
+        try {
+            ResultActions result = mockMvc.perform(get("/parkingOrders").param("parkingOrderId", "123456").param("parkingLotId", "123456"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.msg").value("ParkingLotId Error"))
+                    .andDo(print());
+        } catch (ParkingLotIdErrorException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void should_return_parkingOrder_when_invoke_getParkingOrder_given_parkingOrderId() throws Exception {
         ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
@@ -113,6 +146,20 @@ public class ParkingOrderControllerTest {
     }
 
     @Test
+    public void should_throw_exception_when_invoke_getParkingOrder_given_parkingOrderId() throws Exception {
+        when(parkingOrderService.getOrderById(anyString())).thenThrow(new ParkingOrderIdErrorException());
+
+        try {
+        ResultActions resultActions = mockMvc.perform(get("/parkingOrders/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.msg").value("ParkingOrderId Error"))
+                .andDo(print());
+        } catch (ParkingLotIdErrorException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void should_return_parkingOrder_when_invoke_receiveOrder_given_parkingOrderId() throws Exception {
         ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
         ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
@@ -122,7 +169,23 @@ public class ParkingOrderControllerTest {
                 .content(new ObjectMapper().writeValueAsString(order)));
 
         resultActions.andExpect(status().isOk());
+    }
 
+    @Test
+    public void should_throw_exception_when_invoke_receiveOrder_given_parkingOrderId() throws Exception {
+        ParkingBoy parkingBoy = new ParkingBoy("username", "199729", "stefan", "13192269125", 1, "953181215@qq.com", null);
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 3, parkingBoy, null);
+        when(parkingOrderService.receiveOrder(anyString())).thenThrow(new OrderNotExistException());
+
+        try{
+        ResultActions resultActions = mockMvc.perform(put("/parkingOrders").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(new ObjectMapper().writeValueAsString(order)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.msg").value("Order not exist"))
+                .andDo(print());
+        } catch (OrderNotExistException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -134,6 +197,19 @@ public class ParkingOrderControllerTest {
 
         resultActions.andExpect(status().isOk());
 
+    }
+
+    @Test
+    public void should_return_parkingOrder_when_invoke_getNotFinishParkingOrderByUser() throws Exception {
+        ParkingOrder order = new ParkingOrder("1", "55555", new Timestamp(System.currentTimeMillis()), null, null, 1, null, null);
+        List<ParkingOrder> lots = new ArrayList<>();
+        lots.add(order);
+        when(parkingOrderService.getNotFinishParkingOrderByUser()).thenReturn(lots);
+
+        ResultActions resultActions = mockMvc.perform(get("/parking_orders_customer"));
+
+        resultActions.andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.[0].carNumber").value("55555"));
     }
 
 
@@ -208,5 +284,7 @@ public class ParkingOrderControllerTest {
 
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0]").value("55555"));
     }
+
+
 
 }

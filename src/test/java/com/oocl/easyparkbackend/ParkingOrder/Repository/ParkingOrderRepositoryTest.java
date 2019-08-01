@@ -121,13 +121,23 @@ public class ParkingOrderRepositoryTest {
 
 
     @Test
-    public void should_return_parkingOrder_list_when_invoke_findAllByStatus(){
+    public void should_return_parkingOrder_list_when_invoke_findAllByStatusOne(){
         ParkingOrder parkingOrder = new ParkingOrder("324","eree",new Timestamp(new Date().getTime()),null,null,1,null,null);
         parkingOrderRepository.save(parkingOrder);
 
         List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByStatus(1);
 
         assertThat(parkingOrderList.get(0).getCarNumber()).isEqualTo("eree");
+    }
+
+    @Test
+    public void should_return_parkingOrder_list_when_invoke_findAllByStatusTwo(){
+        ParkingOrder parkingOrder = new ParkingOrder("123","stefan",new Timestamp(new Date().getTime()),null,null,2,null,null);
+        parkingOrderRepository.save(parkingOrder);
+
+        List<ParkingOrder> parkingOrderList = parkingOrderRepository.findAllByStatus(2);
+
+        assertThat(parkingOrderList.get(0).getCarNumber()).isEqualTo("stefan");
     }
 
     @Test
@@ -154,6 +164,28 @@ public class ParkingOrderRepositoryTest {
         parkingOrderRepository.save(parkingOrder);
 
         List<ParkingOrder> parkingOrders = parkingOrderRepository.findByCarNumberLike("%ee%");
+
+        assertThat(parkingOrders.get(0).getCarNumber()).isEqualTo(parkingOrder.getCarNumber());
+    }
+
+    @Test
+    public void should_return_parkingOrder_list_when_invoke_findAllByParkingBoyAndStatusIsLessThan(){
+        ParkingLot parkingLot = new ParkingLot("parking_lot",10,20);
+        parkingLotRepository.save(parkingLot);
+        List<ParkingLot> lots = new ArrayList<>();
+        lots.add(parkingLot);
+        ParkingBoy parkingBoy = new ParkingBoy("parkingBoy","123","parkingBoy","13192269125",0,"953181215@qq.com",lots);
+        parkingBoyRepository.save(parkingBoy);
+        ParkingOrder parkingOrder = new ParkingOrder("123","stefan",new Timestamp(new Date().getTime()),null,null,1,parkingBoy,null);
+        ParkingOrder parkingOrder1 = new ParkingOrder("123","stefan1",new Timestamp(new Date().getTime()),null,null,2,parkingBoy,null);
+        ParkingOrder parkingOrder2 = new ParkingOrder("123","stefan2",new Timestamp(new Date().getTime()),null,null,3,parkingBoy,null);
+        ParkingOrder parkingOrder3 = new ParkingOrder("123","stefan3",new Timestamp(new Date().getTime()),null,null,4,parkingBoy,null);
+        parkingOrderRepository.save(parkingOrder);
+        parkingOrderRepository.save(parkingOrder1);
+        parkingOrderRepository.save(parkingOrder2);
+        parkingOrderRepository.save(parkingOrder3);
+
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByParkingBoyAndStatusIsLessThan(parkingBoy,2);
 
         assertThat(parkingOrders.get(0).getCarNumber()).isEqualTo(parkingOrder.getCarNumber());
     }
