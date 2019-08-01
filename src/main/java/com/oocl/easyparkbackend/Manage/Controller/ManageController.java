@@ -6,10 +6,8 @@ import com.oocl.easyparkbackend.Manage.Exception.NotFindManagerException;
 import com.oocl.easyparkbackend.Manage.Service.ManageService;
 import com.oocl.easyparkbackend.Manage.Vo.BoysLotVo;
 import com.oocl.easyparkbackend.Manage.Vo.ManageVo;
-import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
-import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
-import com.oocl.easyparkbackend.authentication.AuthenticateException;
-import com.oocl.easyparkbackend.base.BaseException;
+import com.oocl.easyparkbackend.exception.authentication.AuthenticateException;
+import com.oocl.easyparkbackend.exception.BaseResponseException;
 import com.oocl.easyparkbackend.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,17 +42,17 @@ public class ManageController {
     }
 
     @ExceptionHandler(AuthenticateException.class)
-    public ResponseVO handleUserNameOrPasswordErrorException(BaseException exception) {
+    public ResponseVO handleUserNameOrPasswordErrorException(BaseResponseException exception) {
         return ResponseVO.serviceFail(exception.getStatus(), exception.getMessage());
     }
 
     @ExceptionHandler(NotFindManagerException.class)
-    public ResponseVO handleNotFindManagerException(BaseException exception) {
+    public ResponseVO handleNotFindManagerException(BaseResponseException exception) {
         return ResponseVO.serviceFail(exception.getStatus(), exception.getMessage());
     }
 
     @ExceptionHandler(FrozenManagerException.class)
-    public ResponseVO handleFrozenManagerException(BaseException exception){
+    public ResponseVO handleFrozenManagerException(BaseResponseException exception){
         return ResponseVO.serviceFail(exception.getStatus(),exception.getMessage());
     }
 }

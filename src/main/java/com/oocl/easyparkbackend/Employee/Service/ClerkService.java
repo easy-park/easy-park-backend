@@ -142,7 +142,7 @@ public class ClerkService {
         if(clerk.getPosition() == null) {
             throw new NoSuchPositionException();
         }
-        if(clerk.getPosition().equals(ClerkPosition.MANAGER) || clerk.getPosition().equals(ClerkPosition.ADMIN)) {
+        if(clerk.getPosition().equals(ClerkPosition.MANAGER)) {
             Optional<Manage> optionalManage = manageRepository.findById(clerk.getId());
             if(optionalManage.isPresent()) {
                 Manage manage = optionalManage.get();

@@ -1,10 +1,7 @@
 package com.oocl.easyparkbackend.Customer.Entity;
 
-import com.oocl.easyparkbackend.Car.Entity.Car;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Entity
 @Table(name = "customer")
