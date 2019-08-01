@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,11 +84,11 @@ public class ParkingOrderService {
         switch (status) {
             case 3:
             case 6:
+                parkingOrder.setEndTime(new Timestamp(new Date().getTime()));
                 parkingBoy.setStatus(0);
                 break;
             case 5:
                 parkingBoy.setStatus(1);
-                parkingOrder.setEndTime(new Timestamp(new Date().getTime()));
                 parkingOrder.setParkingLot(addParkingLotAvailable(parkingOrder.getParkingLot().getId()));
                 break;
             default:
