@@ -73,9 +73,11 @@ public class EmployeeService {
         } else if (newPosition.equalsIgnoreCase(ADMIN_POSITION) || newPosition.equalsIgnoreCase(MANAGE_POSITION)) {
             Manage manage = clerkToAdmin(clerk);
             if (originPosition.equalsIgnoreCase(ADMIN_POSITION)) {
-                manage.setStatus(50);
-            } else if (originPosition.equalsIgnoreCase(MANAGE_POSITION)) {
                 manage.setStatus(0);
+            } else if (originPosition.equalsIgnoreCase(MANAGE_POSITION)) {
+                manage.setStatus(50);
+            }else {
+                deleteFromOriginPosition(clerk.getId(), originPosition);
             }
             clerk = manageRepository.save(manage);
         } else {

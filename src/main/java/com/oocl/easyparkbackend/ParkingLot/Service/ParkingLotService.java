@@ -148,7 +148,7 @@ public class ParkingLotService {
 
     private boolean getParkingLotDashboardByLot(List<ParkingLotDashboradVO> parkingLotDashboradVOList, ParkingLot parkingLot) {
         for (ParkingLotDashboradVO parkingLotDashboradVO : parkingLotDashboradVOList) {
-            if (parkingLotDashboradVO.getId() == parkingLot.getId()) {
+            if (parkingLotDashboradVO.getId().equals(parkingLot.getId())) {
                 return false;
             }
         }
