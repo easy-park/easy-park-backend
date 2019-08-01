@@ -7,16 +7,12 @@ import com.oocl.easyparkbackend.Manage.Entity.Manage;
 import com.oocl.easyparkbackend.Manage.Exception.NotFindManagerException;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.Manage.Vo.BoysLotVo;
-import com.oocl.easyparkbackend.Manage.Vo.ManageVo;
 import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
-import com.oocl.easyparkbackend.ParkingBoy.Exception.UserNameOrPasswordErrorException;
 import com.oocl.easyparkbackend.ParkingBoy.Service.ParkingBoyService;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Service.ParkingLotService;
-import com.oocl.easyparkbackend.authentication.AuthenticateException;
-import com.oocl.easyparkbackend.common.vo.ResponseVO;
+import com.oocl.easyparkbackend.exception.authentication.AuthenticateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

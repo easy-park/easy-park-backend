@@ -1,9 +1,9 @@
-package com.oocl.easyparkbackend.base;
+package com.oocl.easyparkbackend.exception;
 
-public class BaseException extends RuntimeException {
+public class BaseResponseException extends RuntimeException {
     private int status;
 
-    public BaseException(int status, String message) {
+    public BaseResponseException(int status, String message) {
         super(message);
         this.status = status;
     }

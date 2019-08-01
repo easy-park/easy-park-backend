@@ -1,4 +1,4 @@
-package com.oocl.easyparkbackend.Car.Entity;
+package com.oocl.easyparkbackend.car.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
