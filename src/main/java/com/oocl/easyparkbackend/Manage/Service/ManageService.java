@@ -64,11 +64,11 @@ public class ManageService {
     }
 
     public String login(Manage manage) {
-        Optional<Manage> optionalManage = Optional.empty();
+        Optional<Manage> optionalManage;
         if (manage.getEmail() != null) {
             optionalManage = manageRepository.getByEmailAndPassword(manage.getEmail(), manage.getPassword());
         } else if (manage.getUsername() != null) {
-            optionalManage = manageRepository.getByEmailAndPassword(manage.getEmail(), manage.getPassword());
+            optionalManage = manageRepository.getByUsernameAndPassword(manage.getUsername(), manage.getPassword());
         } else if (manage.getPhoneNumber() != null) {
             optionalManage = manageRepository.getByPhoneNumberAndPassword(manage.getPhoneNumber(), manage.getPassword());
         } else {
