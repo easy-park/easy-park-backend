@@ -1,5 +1,6 @@
 package com.oocl.easyparkbackend.Customer.Controller;
 
+import com.itmuch.lightsecurity.annotation.PreAuthorize;
 import com.oocl.easyparkbackend.Customer.Entity.Customer;
 import com.oocl.easyparkbackend.Customer.Exception.RegisterFailedException;
 import com.oocl.easyparkbackend.Customer.Service.CustomerService;
@@ -32,6 +33,7 @@ public class CustomerController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAllRoles('customer')")
     public ResponseVO getUserInfo(){
         Customer customer = customerService.findById();
         customer.setPassword(null);
