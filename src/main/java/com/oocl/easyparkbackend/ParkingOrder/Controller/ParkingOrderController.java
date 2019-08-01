@@ -1,6 +1,7 @@
 package com.oocl.easyparkbackend.ParkingOrder.Controller;
 
 
+import com.itmuch.lightsecurity.annotation.PreAuthorize;
 import com.itmuch.lightsecurity.jwt.User;
 import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.ParkingBoy.Exception.LoginTokenExpiredException;
@@ -39,11 +40,13 @@ public class ParkingOrderController {
         return ResponseVO.success(parkingOrderService.findParkingBoyUnfinishedOrders());
     }
 
+    @PreAuthorize("hasAllRoles('parkingBoy')")
     @GetMapping(path = "/parkingOrders", params = {"parkingOrderId", "parkingLotId"})
     public ResponseVO finishRobOrder(@RequestParam String parkingOrderId, @RequestParam String parkingLotId) {
         return ResponseVO.success(parkingOrderService.finishRobOrder(parkingOrderId, parkingLotId));
     }
 
+    @PreAuthorize("hasAllRoles('parkingBoy')")
     @PutMapping(path = "/parkingOrders")
     public ResponseVO receiveOrder(@RequestBody ParkingOrder order) {
         ParkingOrder parkingOrder = parkingOrderService.receiveOrder(order.getId());
@@ -55,6 +58,7 @@ public class ParkingOrderController {
         return ResponseVO.success(parkingOrderService.getOrderById(id));
     }
 
+    @PreAuthorize("hasAllRoles('customer')")
     @PostMapping(value = "/parkingOrders", params = "carNumber")
     public ResponseVO generateParkingOrder(@RequestParam String carNumber) {
         ParkingOrder parkingOrder = parkingOrderService.generateParkingOrder(carNumber);
