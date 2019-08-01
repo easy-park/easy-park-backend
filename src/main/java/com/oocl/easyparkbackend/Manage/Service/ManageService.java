@@ -4,6 +4,7 @@ import com.itmuch.lightsecurity.jwt.JwtOperator;
 import com.itmuch.lightsecurity.jwt.User;
 import com.itmuch.lightsecurity.jwt.UserOperator;
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
+import com.oocl.easyparkbackend.Manage.Exception.FrozenManagerException;
 import com.oocl.easyparkbackend.Manage.Exception.NotFindManagerException;
 import com.oocl.easyparkbackend.Manage.Repository.ManageRepository;
 import com.oocl.easyparkbackend.Manage.Vo.BoysLotVo;
@@ -64,15 +65,20 @@ public class ManageService {
     }
 
     public String login(Manage manage) {
-        Optional<Manage> optionalManage = Optional.empty();
+        Optional<Manage> optionalManage;
         if (manage.getEmail() != null) {
             optionalManage = manageRepository.getByEmailAndPassword(manage.getEmail(), manage.getPassword());
         } else if (manage.getUsername() != null) {
-            optionalManage = manageRepository.getByEmailAndPassword(manage.getEmail(), manage.getPassword());
+            optionalManage = manageRepository.getByUsernameAndPassword(manage.getUsername(), manage.getPassword());
         } else if (manage.getPhoneNumber() != null) {
             optionalManage = manageRepository.getByPhoneNumberAndPassword(manage.getPhoneNumber(), manage.getPassword());
         } else {
             optionalManage = Optional.empty();
+        }
+        if (optionalManage.isPresent()) {
+            if (optionalManage.get().getStatus() == 5) {
+                throw new FrozenManagerException();
+            }
         }
         return optionalManage.map(dbManage -> {
             User user = User.builder()

@@ -64,17 +64,27 @@ public class ParkingLotService {
         }
         return parkingLotRepository.findById(parkingLot.getId())
                 .map(dbParkingLot -> {
-                    dbParkingLot.setName(parkingLot.getName());
+                    final int parkedCount = dbParkingLot.getCapacity() - dbParkingLot.getAvailable();
                     if (parkingLot.getCapacity() >= dbParkingLot.getCapacity()) {
                         dbParkingLot.setAvailable(
                                 parkingLot.getCapacity() -
                                 dbParkingLot.getCapacity() +
                                 dbParkingLot.getAvailable()
                         );
-                    } else if (parkingLot.getCapacity() < dbParkingLot.getAvailable()) {
-                        parkingLot.setCapacity(dbParkingLot.getAvailable());
+                        dbParkingLot.setCapacity(parkingLot.getCapacity());
+                    } else if (parkingLot.getCapacity() < parkedCount) {
+                        dbParkingLot.setCapacity(parkedCount);
+                        dbParkingLot.setAvailable(0);
+                    } else {
+                        dbParkingLot.setAvailable(
+                                dbParkingLot.getAvailable() -
+                                dbParkingLot.getCapacity() +
+                                parkingLot.getCapacity()
+                        );
+                        dbParkingLot.setCapacity(parkingLot.getCapacity());
                     }
-                    dbParkingLot.setCapacity(parkingLot.getCapacity());
+                    dbParkingLot.setName(parkingLot.getName());
+
                     dbParkingLot.setStatus(parkingLot.getStatus());
                     return parkingLotRepository.save(dbParkingLot);
                 }).orElseThrow(ParkingOrderIdErrorException::new);

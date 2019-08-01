@@ -6,6 +6,7 @@ import com.oocl.easyparkbackend.ParkingBoy.Entity.ParkingBoy;
 import com.oocl.easyparkbackend.ParkingBoy.Repository.ParkingBoyRepository;
 import com.oocl.easyparkbackend.ParkingLot.Entity.ParkingLot;
 import com.oocl.easyparkbackend.ParkingLot.Repository.ParkingLotRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +15,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -37,12 +41,19 @@ public class ParkingLotIntegrationTest {
     @Autowired
     private WebApplicationContext wac;
 
-    protected MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
     @Autowired
     private ParkingBoyRepository parkingBoyRepository;
+
+    private static ObjectMapper objectMapper;
+
+    @BeforeAll
+    static void beforeAll() {
+        objectMapper = new ObjectMapper();
+    }
 
     @BeforeEach
     void setup() {
@@ -135,5 +146,44 @@ public class ParkingLotIntegrationTest {
 
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[0].parkingBoy.name").value("stefan"));
         resultActions.andExpect(status().isOk()).andExpect(jsonPath("$.data.[1].name").value("parkinglot1"));
+    }
+
+    @Test
+    void should_update_parking_lot_capacity_correct_given_a_new_parking_lot() throws Exception {
+        ParkingLot parkingLot = new ParkingLot("parkinglot1", 20, 10);
+        ParkingLot parkingLot2 = new ParkingLot("parkinglot2", 20, 10);
+        ParkingLot parkingLot3 = new ParkingLot("parkinglot3", 20, 10);
+        ParkingLot dbParkingLot = parkingLotRepository.save(parkingLot);
+        dbParkingLot.setCapacity(30);
+        ParkingLot dbParkingLot2 = parkingLotRepository.save(parkingLot2);
+        dbParkingLot2.setCapacity(15);
+        ParkingLot dbParkingLot3 = parkingLotRepository.save(parkingLot3);
+        dbParkingLot3.setCapacity(5);
+
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.put("/parking_lots")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(objectMapper.writeValueAsString(dbParkingLot))
+        );
+        ResultActions result2 = mockMvc.perform(
+                MockMvcRequestBuilders.put("/parking_lots")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(objectMapper.writeValueAsString(dbParkingLot2))
+        );
+        ResultActions result3 = mockMvc.perform(
+                MockMvcRequestBuilders.put("/parking_lots")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(objectMapper.writeValueAsString(dbParkingLot3))
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.capacity").value(30))
+                .andExpect(jsonPath("$.data.available").value(20));
+        result2.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.capacity").value(15))
+                .andExpect(jsonPath("$.data.available").value(5));
+        result3.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.capacity").value(10))
+                .andExpect(jsonPath("$.data.available").value(0));
     }
 }

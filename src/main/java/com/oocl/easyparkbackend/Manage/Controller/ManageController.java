@@ -1,6 +1,7 @@
 package com.oocl.easyparkbackend.Manage.Controller;
 
 import com.oocl.easyparkbackend.Manage.Entity.Manage;
+import com.oocl.easyparkbackend.Manage.Exception.FrozenManagerException;
 import com.oocl.easyparkbackend.Manage.Exception.NotFindManagerException;
 import com.oocl.easyparkbackend.Manage.Service.ManageService;
 import com.oocl.easyparkbackend.Manage.Vo.BoysLotVo;
@@ -50,5 +51,10 @@ public class ManageController {
     @ExceptionHandler(NotFindManagerException.class)
     public ResponseVO handleNotFindManagerException(BaseException exception) {
         return ResponseVO.serviceFail(exception.getStatus(), exception.getMessage());
+    }
+
+    @ExceptionHandler(FrozenManagerException.class)
+    public ResponseVO handleFrozenManagerException(BaseException exception){
+        return ResponseVO.serviceFail(exception.getStatus(),exception.getMessage());
     }
 }
